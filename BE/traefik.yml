@@ -1,0 +1,22 @@
+log:
+  level: INFO
+
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+  format: common
+
+api:
+  dashboard: true
+  insecure: true   # dev only
+
+entryPoints:
+  web:
+    address: ":80"
+
+providers:
+  docker:
+    exposedByDefault: false   # only containers with labels
+    network: demo-net         # must match your Docker network
+  file:
+    directory: "/etc/traefik/dynamic"
+    watch: true

@@ -1,0 +1,144 @@
+version: "3.9"
+
+services:
+
+
+  traefik:
+    image: traefik:v3.7.9
+    container_name: traefik
+    restart: always
+    command:
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080" # optional dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "./traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./dynamic:/etc/traefik/dynamic:ro" # Dynamic configuration files
+      - "./logs:/var/log/traefik" # Log files
+    develop: # Enable live reload of dynamic configuration files on Windows, if using Unix based system needs to be commented out
+      watch:
+       - path: ./dynamic                   # watch the whole folder
+         action: restart
+    networks:
+      - demo-net
+  # ---------------- KAFKA ----------------
+
+  kafka:
+    image: apache/kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092, EXTERNAL://0.0.0.0:9092, CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092, EXTERNAL://localhost:9092, CONTROLLER://kafka:9093
+
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT, EXTERNAL:PLAINTEXT, CONTROLLER:PLAINTEXT
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    volumes:
+      - kafka_data:/kafka/data
+    networks:
+      - demo-net
+
+
+
+  # ---------------- USERS ----------------
+  users_db:
+    image: postgres:18
+    container_name: users_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: users_db
+    volumes:
+      - users_db:/var/lib/postgresql
+    networks:
+      - demo-net
+
+  user:
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    image: user:latest
+    container_name: user
+    depends_on:
+      - users_db
+    environment:
+      - DB_IP=users_db
+      - DB_PORT=5432
+      - DB_DBNAME=users_db
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.user.rule=Host(`user.localhost`)"
+      - "traefik.http.services.user.loadbalancer.server.port=8080"
+    networks:
+      - demo-net
+
+  # ---------------- AUTH ----------------
+  auth_db:
+    image: postgres:18
+    container_name: auth_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: auth_db
+    volumes:
+      - auth_db:/var/lib/postgresql
+    networks:
+      - demo-net
+
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    image: auth:latest
+    container_name: auth
+    
+    depends_on:
+      - auth_db
+    environment:
+      - DB_IP=auth_db
+      - DB_PORT=5432
+      - DB_DBNAME=auth_db
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth.rule=Host(`auth.localhost`)"
+      - "traefik.http.services.auth.loadbalancer.server.port=8080"
+    networks:
+      - demo-net
+
+ 
+
+
+
+
+volumes:
+  users_db:
+  auth_db:
+  kafka_data:
+
+networks:
+  demo-net:
+    external: true

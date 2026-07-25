@@ -1,0 +1,36 @@
+http:
+  routers:
+    # ---- USER ROUTER ----
+    user-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/user`)"
+      service: user
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+
+    # ---- AUTH ROUTER ----
+    auth-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/auth`)"
+      service: auth
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+
+  middlewares:
+    strip-api-prefix:
+      stripPrefix:
+        prefixes:
+          - "/api"
+
+  services:
+    user:
+      loadBalancer:
+        servers:
+          - url: "http://user:8080"
+
+    auth:
+      loadBalancer:
+        servers:
+          - url: "http://auth:8080"
