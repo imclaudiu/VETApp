@@ -41,3 +41,4 @@
 172.18.0.1 - - [25/Jul/2026:19:22:26 +0000] "GET /api/user/get/b8f027d6-cd41-4ace-9fc4-715e46b426df HTTP/1.1" 404 129 "-" "-" 13 "user-router@file" "http://user:8080" 8ms
 172.18.0.1 - - [25/Jul/2026:19:22:31 +0000] "PUT /api/user/update/b8f027d6-cd41-4ace-9fc4-715e46b426df HTTP/1.1" 404 132 "-" "-" 14 "user-router@file" "http://user:8080" 10ms
 172.18.0.1 - - [25/Jul/2026:19:22:39 +0000] "POST /api/user/addUser HTTP/1.1" 201 38 "-" "-" 15 "user-router@file" "http://user:8080" 34ms
+172.18.0.1 - - [26/Jul/2026:12:26:09 +0000] "POST /api/auth/register HTTP/1.1" 201 22 "-" "-" 1 "auth-router@file" "http://auth:8080" 7308ms

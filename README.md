@@ -1,1 +1,1 @@
-bcrypt, 3layered, docker, kafka, traefik
+bcrypt, 3layered, docker, kafka(producer, consumer, json), traefik

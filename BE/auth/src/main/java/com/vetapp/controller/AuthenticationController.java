@@ -3,6 +3,7 @@ package com.vetapp.controller;
 import com.vetapp.DTO.AuthenticationPublic;
 import com.vetapp.entity.Authentication;
 import com.vetapp.service.AuthenticationService;
+import com.vetapp.service.KafkaMessageProducer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +16,17 @@ import java.util.UUID;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final KafkaMessageProducer kafkaMessageProducer;
 
-    public AuthenticationController(AuthenticationService authenticationService) {
+    public AuthenticationController(AuthenticationService authenticationService, KafkaMessageProducer kafkaMessageProducer) {
         this.authenticationService = authenticationService;
+        this.kafkaMessageProducer = kafkaMessageProducer;
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationPublic> register(@RequestBody Authentication authentication) {
         AuthenticationPublic saved = authenticationService.insertAuth(authentication);
+        kafkaMessageProducer.sendMessage(authentication);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
