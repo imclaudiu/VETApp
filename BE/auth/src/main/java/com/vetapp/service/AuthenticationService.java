@@ -93,6 +93,7 @@ public class AuthenticationService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Username sau parolă incorectă.");
         }
 
+
         return AuthenticationBuilder.toPublicAuthentication(authentication);
     }
 
