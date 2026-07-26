@@ -20,3 +20,5 @@ providers:
   file:
     directory: "/etc/traefik/dynamic"
     watch: true
+
+    
