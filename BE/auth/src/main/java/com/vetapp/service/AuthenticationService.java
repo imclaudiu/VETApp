@@ -2,42 +2,54 @@ package com.vetapp.service;
 
 
 import com.vetapp.DTO.AuthenticationPublic;
+import com.vetapp.DTO.RegisterRequest;
+import com.vetapp.DTO.UserRegistrationEvent;
 import com.vetapp.DTO.builder.AuthenticationBuilder;
 import com.vetapp.entity.Authentication;
 import com.vetapp.repository.AuthenticationRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class AuthenticationService {
 
-    AuthenticationRepository authenticationRepository;
+    private final AuthenticationRepository authenticationRepository;
     private final BCryptPasswordEncoder encoder;
+    private final KafkaMessageProducer kafkaMessageProducer;
 
-    public AuthenticationService(AuthenticationRepository authenticationRepository) {
+    public AuthenticationService(AuthenticationRepository authenticationRepository, KafkaMessageProducer kafkaMessageProducer) {
         this.authenticationRepository = authenticationRepository;
-        this.encoder = new BCryptPasswordEncoder(16);
+        this.kafkaMessageProducer = kafkaMessageProducer;
+        this.encoder = new BCryptPasswordEncoder(4);
     }
 
-    public AuthenticationPublic insertAuth(Authentication authentication){
-        if(authenticationRepository.findByUsername(authentication.getUsername()).isPresent()){
+    public AuthenticationPublic register(RegisterRequest request) {
+
+        if (authenticationRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already in use!");
         }
-        String encryptedPass = encoder.encode(authentication.getPassword());
-        authentication.setPassword(encryptedPass);
 
-        authenticationRepository.save(authentication);
-        AuthenticationPublic authenticationPublic = AuthenticationBuilder.toPublicAuthentication(authentication);
+        Authentication authentication = new Authentication();
+        authentication.setUsername(request.getUsername());
+        authentication.setPassword(encoder.encode(request.getPassword()));
 
-        return authenticationPublic;
+        Authentication saved = authenticationRepository.save(authentication);
+
+        UserRegistrationEvent event = new UserRegistrationEvent(
+                saved.getId(),
+                request.getName(),
+                request.getEmail(),
+                request.getPhone(),
+                request.getAddress()
+        );
+        kafkaMessageProducer.publishUserRegistered(event);
+
+        return AuthenticationBuilder.toPublicAuthentication(saved);
     }
 
 //    public List<AuthenticationPublic> getAll() {

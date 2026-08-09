@@ -10,25 +10,25 @@ import java.util.UUID;
 @Entity
 public class Users {
     @Id
-    @GeneratedValue
-    @UuidGenerator
-    @JdbcTypeCode(SqlTypes.UUID)
+//    @GeneratedValue
+//    @UuidGenerator
+//    @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", unique = false, nullable = false)
     private String name;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "telefon", nullable = false, unique = true)
+    @Column(name = "telefon", unique = true, nullable = false) /*ADAUGA NULLABLE FALSE CAND INREGISTREZI DIN FRONTEND*/
     private String telefon;
 
-    @Column(name = "adresa", nullable = false)
+    @Column(name = "adresa", nullable = false) /*ADAUGA NULLABLE FALSE CAND INREGISTREZI DIN FRONTEND*/
     private String adresa;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private RolUser rol;
 
     public Users() {

@@ -23,7 +23,7 @@ public class UserService {
 
     public UUID addUser(Users user){
 
-        validateUniqueFields(user, null);
+   //     validateUniqueFields(user, null);
 
         userRepository.save(user);
         return user.getId();

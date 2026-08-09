@@ -1,6 +1,8 @@
 package com.vetapp.controller;
 
 import com.vetapp.DTO.AuthenticationPublic;
+import com.vetapp.DTO.RegisterRequest;
+import com.vetapp.DTO.builder.AuthenticationBuilder;
 import com.vetapp.entity.Authentication;
 import com.vetapp.service.AuthenticationService;
 import com.vetapp.service.KafkaMessageProducer;
@@ -24,10 +26,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationPublic> register(@RequestBody Authentication authentication) {
-        AuthenticationPublic saved = authenticationService.insertAuth(authentication);
-        kafkaMessageProducer.sendMessage(authentication);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    public ResponseEntity<AuthenticationPublic> register(@RequestBody RegisterRequest request) {
+        AuthenticationPublic result = authenticationService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PostMapping("/login")
