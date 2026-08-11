@@ -15,9 +15,11 @@ import java.util.UUID;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final KafkaMessageProducer kafkaMessageProducer;
 
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, KafkaMessageProducer kafkaMessageProducer){
         this.userRepository = userRepository;
+        this.kafkaMessageProducer = kafkaMessageProducer;
     }
 
 
@@ -58,8 +60,11 @@ public class UserService {
     public void deleteUser(UUID id) {
         Users existingUser = userRepository.findById(id).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilizatorul cu ID-ul " + id + " nu a fost găsit."));
+
+        kafkaMessageProducer.publishUserDeleted(id);
         userRepository.delete(existingUser);
     }
+
 
     private void validateUniqueFields(Users user, UUID currentUserId) {
         userRepository.findByName(user.getName())

@@ -15,11 +15,7 @@ public class KafkaMessageProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publishUserRegistered(UserRegistrationEvent event) {
-        kafkaTemplate.send("register-topic", event);
-    }
-
     public void publishUserDeleted(UUID userId) {
-        kafkaTemplate.send("delete-topic", userId);
+        kafkaTemplate.send("delete-owner-topic", userId);
     }
 }

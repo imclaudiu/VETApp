@@ -95,6 +95,7 @@ public class AuthenticationService {
         Authentication existingAuth = authenticationRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilizatorul cu ID-ul " + id + " nu a fost găsit."));
         authenticationRepository.delete(existingAuth);
+        kafkaMessageProducer.publishUserDeleted(id);
     }
 
     public AuthenticationPublic login(String username, String rawPassword) {

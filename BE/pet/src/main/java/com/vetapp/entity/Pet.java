@@ -17,7 +17,7 @@ public class Pet {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "ownerID", nullable = false, unique = true)
+    @Column(name = "ownerID", nullable = true, unique = false)
     private UUID ownerID;
 
     @Column(name = "name", nullable = false)

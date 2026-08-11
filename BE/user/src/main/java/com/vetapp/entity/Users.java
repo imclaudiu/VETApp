@@ -90,4 +90,6 @@ public class Users {
     public void setRol(RolUser rol) {
         this.rol = rol;
     }
+
+
 }

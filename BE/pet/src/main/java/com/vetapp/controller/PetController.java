@@ -7,14 +7,7 @@ import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +42,7 @@ public class PetController {
         return ResponseEntity.ok(petService.getPetById(id));
     }
 
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<Pet> updatePet(
             @PathVariable UUID id,
             @RequestBody Pet updatedPet
@@ -57,9 +50,17 @@ public class PetController {
         return ResponseEntity.ok(petService.updatePet(id, updatedPet));
     }
 
+    @PatchMapping("/deleteOwner/{petID}")
+    public ResponseEntity<Void> deleteOwner(@PathVariable UUID petID){
+        petService.deleteOwner(petID);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deletePet(@PathVariable UUID id) {
         petService.deletePet(id);
         return ResponseEntity.ok().build();
     }
+
+
 }

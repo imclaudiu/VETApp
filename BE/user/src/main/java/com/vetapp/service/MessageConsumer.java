@@ -7,6 +7,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.UUID;
+
 @Service
 public class MessageConsumer {
 
@@ -27,12 +29,21 @@ public class MessageConsumer {
                     event.getEmail(),
                     event.getPhone(),
                     event.getAddress(),
-                    RolUser.PROPRIETAR // sau ce rol implicit vrei la înregistrare din frontend
+                    RolUser.PROPRIETAR
             );
             userService.addUser(user);
         } catch (ResponseStatusException e) {
             // conflict (nume/email/telefon duplicat) - nu are rost să reîncercăm
             System.err.println("Nu s-a putut crea userul pentru " + event.getId() + ": " + e.getReason());
+        }
+    }
+
+    @KafkaListener(topics = "delete-topic", groupId = "vetapp-group")
+    public void deleteAccount(UUID id){
+        System.out.println("Received UUID: " + id);
+        try{userService.deleteUser(id);}
+        catch (ResponseStatusException e){
+            System.err.println("Nu s-a putut sterge userul: " + e.getReason());
         }
     }
 }

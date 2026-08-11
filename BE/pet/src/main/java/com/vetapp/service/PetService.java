@@ -2,6 +2,7 @@ package com.vetapp.service;
 
 import com.vetapp.DTO.PetPublic;
 import com.vetapp.DTO.builder.PetBuilder;
+import com.vetapp.client.UserClient;
 import com.vetapp.entity.Pet;
 import com.vetapp.repository.PetRepository;
 import org.springframework.http.HttpStatus;
@@ -14,12 +15,16 @@ import java.util.UUID;
 @Service
 public class PetService {
     private final PetRepository petRepository;
+    private final UserClient userClient;
 
-    public PetService(PetRepository petRepository) {
+    public PetService(PetRepository petRepository, UserClient userClient) {
         this.petRepository = petRepository;
+        this.userClient = userClient;
     }
 
     public UUID addPet(Pet pet) {
+        userClient.checkUserExists(pet.getOwnerID());
+
         if(pet.getId() != null && petRepository.existsById(pet.getId())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Animalul cu ID" + pet.getId() + "exista deja");
         }
@@ -38,6 +43,7 @@ public class PetService {
 
     public Pet updatePet(UUID id, Pet updatedPet) {
         Pet existingPet = findPetOrThrow(id);
+        userClient.checkUserExists(existingPet.getOwnerID());
 
         if (updatedPet.getOwnerID() != null) {
             existingPet.setOwnerID(updatedPet.getOwnerID());
@@ -64,6 +70,20 @@ public class PetService {
     public void deletePet(UUID id) {
         Pet existingPet = findPetOrThrow(id);
         petRepository.delete(existingPet);
+    }
+
+    public void deleteAllPetsOwner(UUID ownerId) {
+        List<Pet> pets = petRepository.findAllByOwnerID(ownerId);
+        for(Pet pet:pets){
+            pet.setOwnerID(null);
+        }
+        petRepository.saveAll(pets);
+    }
+
+    public void deleteOwner(UUID petID){
+        Pet pet = petRepository.findById(petID).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        pet.setOwnerID(null);
+        petRepository.save(pet);
     }
 
     private Pet findPetOrThrow(UUID id) {

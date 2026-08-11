@@ -19,6 +19,9 @@ public class Owner {
         this.id = id;
     }
 
+    public Owner() {
+    }
+
     public UUID getId() {
         return id;
     }
