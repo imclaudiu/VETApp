@@ -21,7 +21,7 @@ public class ClinicController {
         this.clinicService = clinicService;
     }
 
-    @PostMapping("/addClinic")
+    @PostMapping("/add")
     public ResponseEntity<UUID> addClinic(@RequestBody Clinic clinic) {
         UUID id = clinicService.addClinic(clinic);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);

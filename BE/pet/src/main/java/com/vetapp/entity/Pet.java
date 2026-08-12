@@ -5,6 +5,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class Pet {
     private String race;
 
     @Column(name = "dob", nullable = false)
-    private Date dob; //DATE OF BIRTH
+    private LocalDate dob; //DATE OF BIRTH
 
     @Column(name = "sex", nullable = false)
     private String sex;
@@ -38,7 +39,7 @@ public class Pet {
     public Pet() {
     }
 
-    public Pet(UUID id, UUID ownerID, String name, String species, String race, Date dob, String sex) {
+    public Pet(UUID id, UUID ownerID, String name, String species, String race, LocalDate dob, String sex) {
         this.id = id;
         this.ownerID = ownerID;
         this.name = name;
@@ -88,11 +89,11 @@ public class Pet {
         this.race = race;
     }
 
-    public Date getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 

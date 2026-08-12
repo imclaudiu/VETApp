@@ -1,5 +1,6 @@
 package com.vetapp.service;
 
+import com.vetapp.client.UserClient;
 import com.vetapp.entity.Availability;
 import com.vetapp.DTO.AvailabilityId;
 import com.vetapp.repository.AvailabilityRepository;
@@ -16,12 +17,15 @@ import java.util.UUID;
 public class AvailabilityService {
 
     private final AvailabilityRepository availabilityRepository;
+    private final VeterinarianService veterinarianService;
 
-    public AvailabilityService(AvailabilityRepository availabilityRepository) {
+    public AvailabilityService(AvailabilityRepository availabilityRepository, VeterinarianService veterinarianService) {
         this.availabilityRepository = availabilityRepository;
+        this.veterinarianService = veterinarianService;
     }
 
     public Availability addAvailability(Availability availability) {
+        veterinarianService.getVeterinarianById(availability.getId().getVeterinarianId());
         return availabilityRepository.save(availability);
     }
 
@@ -53,8 +57,22 @@ public class AvailabilityService {
                         "Nu există disponibilitate pentru medicul respectiv în această zi."
                 ));
 
-        existingAvailability.setStartHour(updatedAvailability.getStartHour());
-        existingAvailability.setEndHour(updatedAvailability.getEndHour());
+        if (updatedAvailability.getStartHour() != null) {
+            existingAvailability.setStartHour(updatedAvailability.getStartHour());
+        }
+
+        if (updatedAvailability.getEndHour() != null) {
+            existingAvailability.setEndHour(updatedAvailability.getEndHour());
+        }
+
+        if (!existingAvailability.getEndHour()
+                .isAfter(existingAvailability.getStartHour())) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Ora de final trebuie să fie după ora de început."
+            );
+        }
 
         return availabilityRepository.save(existingAvailability);
     }

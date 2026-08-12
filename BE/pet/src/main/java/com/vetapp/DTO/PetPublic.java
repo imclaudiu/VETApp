@@ -1,5 +1,6 @@
 package com.vetapp.DTO;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,21 +10,13 @@ public class PetPublic {
     private String name;
     private String species;
     private String race;
-    private Date dob;
+    private LocalDate dob;
     private String sex;
 
     public PetPublic() {
     }
 
-    public PetPublic(
-            UUID id,
-            UUID ownerID,
-            String name,
-            String species,
-            String race,
-            Date dob,
-            String sex
-    ) {
+    public PetPublic(UUID id, UUID ownerID, String name, String species, String race, LocalDate dob, String sex) {
         this.id = id;
         this.ownerID = ownerID;
         this.name = name;
@@ -73,11 +66,11 @@ public class PetPublic {
         this.race = race;
     }
 
-    public Date getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 

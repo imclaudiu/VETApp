@@ -1,5 +1,6 @@
 package com.vetapp.service;
 
+import com.vetapp.entity.Clinic;
 import com.vetapp.entity.VetService;
 import com.vetapp.repository.VetServiceRepository;
 import org.springframework.http.HttpStatus;
@@ -13,12 +14,15 @@ import java.util.UUID;
 public class VetServiceService {
 
     private final VetServiceRepository vetServiceRepository;
+    private final ClinicService clinicService;
 
-    public VetServiceService(VetServiceRepository vetServiceRepository) {
+    public VetServiceService(VetServiceRepository vetServiceRepository, ClinicService clinicService) {
         this.vetServiceRepository = vetServiceRepository;
+        this.clinicService = clinicService;
     }
 
     public Long addService(VetService vetService) {
+        clinicService.getClinicById(vetService.getClinicId());
         vetServiceRepository.save(vetService);
         return vetService.getId();
     }
@@ -49,11 +53,25 @@ public class VetServiceService {
                         "Serviciul cu ID-ul " + id + " nu a fost găsit."
                 ));
 
-        existingVetService.setClinicId(updatedVetService.getClinicId());
-        existingVetService.setServiceName(updatedVetService.getServiceName());
-        existingVetService.setDuration(updatedVetService.getDuration());
-        existingVetService.setPrice(updatedVetService.getPrice());
-        existingVetService.setDescription(updatedVetService.getDescription());
+        if (updatedVetService.getClinicId() != null) {
+            existingVetService.setClinicId(updatedVetService.getClinicId());
+        }
+
+        if (updatedVetService.getServiceName() != null) {
+            existingVetService.setServiceName(updatedVetService.getServiceName());
+        }
+
+        if (updatedVetService.getDuration() != null) {
+            existingVetService.setDuration(updatedVetService.getDuration());
+        }
+
+        if (updatedVetService.getPrice() != null) {
+            existingVetService.setPrice(updatedVetService.getPrice());
+        }
+
+        if (updatedVetService.getDescription() != null) {
+            existingVetService.setDescription(updatedVetService.getDescription());
+        }
 
         return vetServiceRepository.save(existingVetService);
     }

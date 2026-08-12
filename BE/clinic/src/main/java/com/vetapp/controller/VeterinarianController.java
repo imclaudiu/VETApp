@@ -1,5 +1,6 @@
 package com.vetapp.controller;
 
+import com.vetapp.DTO.VeterinarianPublic;
 import com.vetapp.entity.Veterinarian;
 import com.vetapp.service.VeterinarianService;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @Validated
-@RequestMapping("/veterinarian")
+@RequestMapping("/vet")
 public class VeterinarianController {
 
     private final VeterinarianService veterinarianService;
@@ -21,7 +22,7 @@ public class VeterinarianController {
         this.veterinarianService = veterinarianService;
     }
 
-    @PostMapping("/addVeterinarian")
+    @PostMapping("/add")
     public ResponseEntity<UUID> addVeterinarian(@RequestBody Veterinarian veterinarian) {
         UUID id = veterinarianService.addVeterinarian(veterinarian);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
@@ -33,7 +34,7 @@ public class VeterinarianController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Veterinarian> getVeterinarianById(@PathVariable UUID id) {
+    public ResponseEntity<VeterinarianPublic> getVeterinarianById(@PathVariable UUID id) {
         return ResponseEntity.ok(veterinarianService.getVeterinarianById(id));
     }
 
@@ -46,7 +47,7 @@ public class VeterinarianController {
         );
     }
 
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<Veterinarian> updateVeterinarian(
             @PathVariable UUID id,
             @RequestBody Veterinarian updatedVeterinarian) {

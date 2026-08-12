@@ -44,7 +44,7 @@ public class VetServiceController {
         );
     }
 
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<VetService> updateService(
             @PathVariable Long id,
             @RequestBody VetService updatedVetService) {

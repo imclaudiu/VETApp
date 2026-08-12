@@ -29,7 +29,7 @@ public class MessageConsumer {
                     event.getEmail(),
                     event.getPhone(),
                     event.getAddress(),
-                    RolUser.PROPRIETAR
+                    RolUser.OWNER
             );
             userService.addUser(user);
         } catch (ResponseStatusException e) {

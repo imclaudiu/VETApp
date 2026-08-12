@@ -48,11 +48,10 @@ public class AvailabilityController {
         );
     }
 
-    @PutMapping("/update/{veterinarianId}/{day}")
+    @PatchMapping("/update/{veterinarianId}/{day}")
     public ResponseEntity<Availability> updateAvailability(
             @PathVariable UUID veterinarianId,
-            @PathVariable
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
+            @PathVariable LocalDate day,
             @RequestBody Availability updatedAvailability) {
 
         return ResponseEntity.ok(
