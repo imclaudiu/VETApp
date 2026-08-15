@@ -1,6 +1,6 @@
 package com.vetapp.entity;
 
-public enum Status {
+public enum Status{
     PENDING,
     CONFIRMED,
     FINISHED,
