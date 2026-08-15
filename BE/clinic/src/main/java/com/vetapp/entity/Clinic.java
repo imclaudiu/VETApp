@@ -24,7 +24,7 @@ public class Clinic {
     private String address;
     @Column(name = "city", unique = false, nullable = false)
     private String city;
-    @Column(name = "phone", unique = true, nullable = false)
+    @Column(name = "phone", unique = false, nullable = false)
     private String phone;
     @Column(name = "rating", unique = false, nullable = false)
     private Double rating;

@@ -1,6 +1,7 @@
 package com.vetapp.controller;
 
 import com.vetapp.entity.VetService;
+import com.vetapp.service.ClinicService;
 import com.vetapp.service.VetServiceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class VetServiceController {
         this.vetServiceService = vetServiceService;
     }
 
-    @PostMapping("/addService")
+    @PostMapping("/add")
     public ResponseEntity<Long> addService(@RequestBody VetService vetService) {
         Long id = vetServiceService.addService(vetService);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);

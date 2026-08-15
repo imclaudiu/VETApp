@@ -18,7 +18,7 @@ public class VetService {
     @Column(name = "clinicId", unique = false, nullable = false)
     private UUID clinicId;
 
-    @Column(name = "serviceName", unique = true, nullable = false)
+    @Column(name = "serviceName", unique = false, nullable = false)
     private String serviceName;
 
     @Column(name = "duration", nullable = false)

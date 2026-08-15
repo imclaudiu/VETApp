@@ -1,6 +1,7 @@
 package com.vetapp.service;
 
 import com.vetapp.DTO.PetPublic;
+import com.vetapp.DTO.UserPublic;
 import com.vetapp.DTO.builder.PetBuilder;
 import com.vetapp.client.UserClient;
 import com.vetapp.entity.Pet;
@@ -23,7 +24,7 @@ public class PetService {
     }
 
     public UUID addPet(Pet pet) {
-        userClient.checkUserExists(pet.getOwnerID());
+        userClient.checkUserExists(pet.getOwnerID()); ////////////TESTING, TAKE OUT AFTER BEING DONE
 
         if(pet.getId() != null && petRepository.existsById(pet.getId())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Animalul cu ID" + pet.getId() + "exista deja");
@@ -43,9 +44,9 @@ public class PetService {
 
     public Pet updatePet(UUID id, Pet updatedPet) {
         Pet existingPet = findPetOrThrow(id);
-        userClient.checkUserExists(existingPet.getOwnerID());
 
         if (updatedPet.getOwnerID() != null) {
+            userClient.checkUserExists(updatedPet.getOwnerID());
             existingPet.setOwnerID(updatedPet.getOwnerID());
         }
         if (updatedPet.getName() != null) {
@@ -84,6 +85,10 @@ public class PetService {
         Pet pet = petRepository.findById(petID).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
         pet.setOwnerID(null);
         petRepository.save(pet);
+    }
+
+    public void deleteAll(){
+        petRepository.deleteAll();
     }
 
     private Pet findPetOrThrow(UUID id) {

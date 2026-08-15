@@ -3,6 +3,7 @@ package com.vetapp.service;
 
 import com.vetapp.DTO.UserPublic;
 import com.vetapp.DTO.builder.UserBuilder;
+import com.vetapp.entity.RolUser;
 import com.vetapp.repository.UserRepository;
 import com.vetapp.entity.Users;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class UserService {
 
     public UUID addUser(Users user){
 
-   //     validateUniqueFields(user, null);
+//        validateUniqueFields(user, null);
 
         userRepository.save(user);
         return user.getId();
@@ -50,8 +51,8 @@ public class UserService {
 
         existingUser.setName(updatedUser.getName());
         existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setTelefon(updatedUser.getTelefon());
-        existingUser.setAdresa(updatedUser.getAdresa());
+        existingUser.setPhone(updatedUser.getPhone());
+        existingUser.setAddress(updatedUser.getAddress());
         existingUser.setRol(updatedUser.getRol());
 
         return userRepository.save(existingUser);
@@ -85,7 +86,7 @@ public class UserService {
                     );
                 });
 
-        userRepository.findByTelefon(user.getTelefon())
+        userRepository.findByPhone(user.getPhone())
                 .filter(foundUser -> !foundUser.getId().equals(currentUserId))
                 .ifPresent(foundUser -> {
                     throw new ResponseStatusException(
@@ -95,5 +96,22 @@ public class UserService {
                 });
     }
 
+    public void updateRole(UUID id, RolUser role) {
+
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Utilizatorul cu ID-ul " + id + " nu a fost găsit."
+                ));
+
+        user.setRol(role);
+
+        userRepository.save(user);
+    }
+
+
+    public void deleteAll(){
+        userRepository.deleteAll();
+    }
 
 }

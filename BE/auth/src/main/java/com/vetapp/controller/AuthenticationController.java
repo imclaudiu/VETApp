@@ -42,7 +42,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.getAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<AuthenticationPublic> getAuthById(@PathVariable UUID id) {
         return ResponseEntity.ok(authenticationService.getAuthById(id));
     }
@@ -52,16 +52,23 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.getAuthByUsername(username));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/uipdate/{id}")
     public ResponseEntity<AuthenticationPublic> updateAuth(@PathVariable UUID id, @RequestBody Authentication updatedAuth) {
         return ResponseEntity.ok(authenticationService.updateAuth(id, updatedAuth));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteAuth(@PathVariable UUID id) {
         authenticationService.deleteAuth(id);
         return ResponseEntity.noContent().build();
     }
 
     public record LoginRequest(String username, String password) {}
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Void> deleteAll(){
+        authenticationService.deleteAll();
+        return ResponseEntity.ok().build();
+    }
+
 }

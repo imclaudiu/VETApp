@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface VetServiceRepository extends JpaRepository<VetService, Long> {
 
     List<VetService> findByClinicId(UUID clinicId);
+    boolean existsByClinicIdAndServiceNameIgnoreCase(UUID clinicId, String serviceName);
 }

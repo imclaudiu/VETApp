@@ -23,6 +23,18 @@ public class VetServiceService {
 
     public Long addService(VetService vetService) {
         clinicService.getClinicById(vetService.getClinicId());
+
+        boolean exists = vetServiceRepository.existsByClinicIdAndServiceNameIgnoreCase(vetService.getClinicId(),
+                vetService.getServiceName());
+
+        if(exists){
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Serviciul cu numele " + vetService.getServiceName()
+                            + " există deja în această clinică."
+            );
+        }
+
         vetServiceRepository.save(vetService);
         return vetService.getId();
     }
@@ -43,9 +55,7 @@ public class VetServiceService {
         return vetServiceRepository.findByClinicId(clinicId);
     }
 
-    public VetService updateService(
-            Long id,
-            VetService updatedVetService) {
+    public VetService updateService(Long id, VetService updatedVetService) {
 
         VetService existingVetService = vetServiceRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(

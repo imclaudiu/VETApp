@@ -1,6 +1,11 @@
 package com.vetapp.service;
 
+import com.vetapp.DTO.builder.AppointmentPublic;
+import com.vetapp.DTO.builder.PetPublic;
+import com.vetapp.client.VeterinarianClient;
+import com.vetapp.client.PetClient;
 import com.vetapp.entity.Appointment;
+import com.vetapp.entity.Status;
 import com.vetapp.repository.AppointmentRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,12 +18,21 @@ import java.util.UUID;
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
+    private final PetClient petClient;
+    private final VeterinarianClient veterinarianClient;
 
-    public AppointmentService(AppointmentRepository appointmentRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, PetClient petClient, VeterinarianClient veterinarianClient) {
         this.appointmentRepository = appointmentRepository;
+        this.petClient = petClient;
+        this.veterinarianClient = veterinarianClient;
     }
 
-    public UUID addAppointment(Appointment appointment) {
+    public UUID addAppointment(AppointmentPublic appointment) {
+        PetPublic pet = petClient.checkPetNUserExists(appointment.getPetId());
+        System.out.println(appointment.getVeterinarianId() + "lalaband" + pet.getOwnerID());
+        veterinarianClient.checkVeterinarianExists(appointment.getVeterinarianId());
+
+
 
         if (!appointment.getEndOfAppointment()
                 .isAfter(appointment.getStartOfAppointment())) {
@@ -44,9 +58,17 @@ public class AppointmentService {
             );
         }
 
-        appointmentRepository.save(appointment);
+        Appointment appointmentSave = new Appointment();
+        appointmentSave.setOwnerId(pet.getOwnerID());
+        appointmentSave.setVeterinarianId(appointment.getVeterinarianId());
+        appointmentSave.setPetId(appointment.getPetId());
+        appointmentSave.setStartOfAppointment(appointment.getStartOfAppointment());
+        appointmentSave.setEndOfAppointment(appointment.getEndOfAppointment());
+        appointmentSave.setStatus(Status.PENDING);
 
-        return appointment.getId();
+        appointmentRepository.save(appointmentSave);
+
+        return appointmentSave.getId();
     }
 
     public List<Appointment> getAllAppointments() {
@@ -74,6 +96,8 @@ public class AppointmentService {
         return appointmentRepository.findByVeterinarianId(veterinarianId);
     }
 
+/*Pt simplificare - la modificarea programarii se va sterge si se va crea una noua pentru a nu verifica 100 de cazuri de conflicte
+* de ex ora setata corect din nou, e corecta clinica? dar userul exista? coincid cei doi useri samd. E deja verificata in add*/
     public Appointment updateAppointment(
             UUID id,
             Appointment updatedAppointment) {
@@ -98,12 +122,6 @@ public class AppointmentService {
             );
         }
 
-        if (updatedAppointment.getVetServiceId() != null) {
-            existingAppointment.setVetServiceId(
-                    updatedAppointment.getVetServiceId()
-            );
-        }
-
         if (updatedAppointment.getStartOfAppointment() != null) {
             existingAppointment.setStartOfAppointment(
                     updatedAppointment.getStartOfAppointment()
@@ -113,12 +131,6 @@ public class AppointmentService {
         if (updatedAppointment.getEndOfAppointment() != null) {
             existingAppointment.setEndOfAppointment(
                     updatedAppointment.getEndOfAppointment()
-            );
-        }
-
-        if (updatedAppointment.getServiceName() != null) {
-            existingAppointment.setServiceName(
-                    updatedAppointment.getServiceName()
             );
         }
 

@@ -1,7 +1,6 @@
-package com.vetapp.DTO;
+package com.vetapp.DTO.builder;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
 public class PetPublic {
@@ -23,7 +22,6 @@ public class PetPublic {
         this.dob = dob;
         this.sex = sex;
     }
-
 
     public UUID getOwnerID() {
         return ownerID;

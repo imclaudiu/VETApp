@@ -2,6 +2,7 @@ package com.vetapp.controller;
 
 
 import com.vetapp.DTO.UserPublic;
+import com.vetapp.entity.RolUser;
 import com.vetapp.service.UserService;
 import com.vetapp.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,21 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Void> deleteAll(){
+        userService.deleteAll();
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/updateRole/{id}")
+    public ResponseEntity<Void> updateRole(
+            @PathVariable UUID id,
+            @RequestBody RolUser role) {
+
+        userService.updateRole(id, role);
         return ResponseEntity.ok().build();
     }
 

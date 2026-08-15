@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface VeterinarianRepository extends JpaRepository<Veterinarian, UUID> {
 
     List<Veterinarian> findByClinicId(UUID clinicId);
+    boolean existsByUserId(UUID userId);
 }

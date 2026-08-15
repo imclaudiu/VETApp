@@ -1,5 +1,6 @@
 package com.vetapp.controller;
 
+import com.vetapp.DTO.builder.AppointmentPublic;
 import com.vetapp.entity.Appointment;
 import com.vetapp.service.AppointmentService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class AppointmentController {
 
     @PostMapping("/add")
     public ResponseEntity<UUID> addAppointment(
-            @RequestBody Appointment appointment) {
+            @RequestBody AppointmentPublic appointment) {
 
         UUID id = appointmentService.addAppointment(appointment);
 

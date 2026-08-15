@@ -1,9 +1,6 @@
 package com.vetapp.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.UuidGenerator;
-import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -21,11 +18,11 @@ public class Users {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "telefon", unique = true, nullable = false) /*ADAUGA NULLABLE FALSE CAND INREGISTREZI DIN FRONTEND*/
-    private String telefon;
+    @Column(name = "phone", unique = true, nullable = false) /*ADAUGA NULLABLE FALSE CAND INREGISTREZI DIN FRONTEND*/
+    private String phone;
 
-    @Column(name = "adresa", nullable = false) /*ADAUGA NULLABLE FALSE CAND INREGISTREZI DIN FRONTEND*/
-    private String adresa;
+    @Column(name = "address", nullable = false) /*ADAUGA NULLABLE FALSE CAND INREGISTREZI DIN FRONTEND*/
+    private String address;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
@@ -34,12 +31,12 @@ public class Users {
     public Users() {
     }
 
-    public Users(UUID id, String name, String email, String telefon, String adresa, RolUser rol) {
+    public Users(UUID id, String name, String email, String phone, String address, RolUser rol) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.telefon = telefon;
-        this.adresa = adresa;
+        this.phone = phone;
+        this.address = address;
         this.rol = rol;
     }
 
@@ -67,20 +64,20 @@ public class Users {
         this.email = email;
     }
 
-    public String getTelefon() {
-        return telefon;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTelefon(String telefon) {
-        this.telefon = telefon;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getAdresa() {
-        return adresa;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdresa(String adresa) {
-        this.adresa = adresa;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public RolUser getRol() {

@@ -27,7 +27,8 @@ public class AvailabilityService {
     public Availability addAvailability(Availability availability) {
         veterinarianService.getVeterinarianById(availability.getId().getVeterinarianId());
         return availabilityRepository.save(availability);
-    }
+    } // BUG MIGHT BE FEATURE? CAND ADAUG ALTA ORA PE ACEEASI DATA SI ACELASI MEDIC NU CREEAZA CONFLICT,
+    // CI MODIFICA DOAR. UN 2IN1 CREATE+UPDATE?
 
     public List<Availability> getAllAvailabilities() {
         return availabilityRepository.findAll();

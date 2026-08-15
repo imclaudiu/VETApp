@@ -9,7 +9,6 @@ public final class PetBuilder {
 
     public static PetPublic toPublicPet(Pet pet) {
         return new PetPublic(
-                pet.getId(),
                 pet.getOwnerID(),
                 pet.getName(),
                 pet.getSpecies(),

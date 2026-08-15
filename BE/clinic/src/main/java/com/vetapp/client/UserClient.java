@@ -1,6 +1,7 @@
 package com.vetapp.client;
 
 import com.vetapp.DTO.UserPublic;
+import com.vetapp.entity.RolUser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -15,6 +16,14 @@ public class UserClient {
         this.restClient = RestClient.create(
                 "http://localhost:8081"
         );
+    }
+
+    public void updateUserRole(UUID userId, RolUser role) {
+        restClient.patch()
+                .uri("/user/updateRole/{id}", userId)
+                .body(role)
+                .retrieve()
+                .toBodilessEntity();
     }
 
     public void checkUserExists(UUID userId) {

@@ -1,27 +1,26 @@
 package com.vetapp.client;
 
-import com.vetapp.DTO.UserPublic;
+import com.vetapp.DTO.builder.PetPublic;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.UUID;
 
 @Component
-public class UserClient {
+public class PetClient {
 
     private final RestClient restClient;
 
-    public UserClient() {
+    public PetClient() {
         this.restClient = RestClient.create(
-                "http://localhost:8081"
+                "http://localhost:8082"
         );
     }
 
-    public UserPublic checkUserExists(UUID userId) {
-
+    public PetPublic checkPetNUserExists(UUID petId) {
         return restClient.get()
-                .uri("/user/get/" + userId)
+                .uri("/pet/get/" + petId)
                 .retrieve()
-                .body(UserPublic.class);
+                .body(PetPublic.class);
     }
 }

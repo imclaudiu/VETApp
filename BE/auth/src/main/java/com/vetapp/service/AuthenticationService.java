@@ -37,6 +37,8 @@ public class AuthenticationService {
         Authentication authentication = new Authentication();
         authentication.setUsername(request.getUsername());
         authentication.setPassword(encoder.encode(request.getPassword()));
+        authentication.setEmail(request.getEmail());
+        authentication.setTelefon(request.getPhone());
 
         Authentication saved = authenticationRepository.save(authentication);
 
@@ -109,5 +111,10 @@ public class AuthenticationService {
 
         return AuthenticationBuilder.toPublicAuthentication(authentication);
     }
+
+    public void deleteAll(){
+        authenticationRepository.deleteAll();
+    }
+
 
 }
