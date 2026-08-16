@@ -77,6 +77,17 @@ public class VeterinarianService {
         return veterinarianRepository.findByClinicId(clinicId);
     }
 
+    public UUID getVeterinarianClinicId(UUID veterinarianId) {
+
+        Veterinarian veterinarian = veterinarianRepository.findById(veterinarianId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Veterinarul nu a fost găsit."
+                ));
+
+        return veterinarian.getClinicId();
+    }
+
     public Veterinarian updateVeterinarian(UUID id, Veterinarian updatedVeterinarian) {
 
         Veterinarian veterinarian = veterinarianRepository.findById(id)

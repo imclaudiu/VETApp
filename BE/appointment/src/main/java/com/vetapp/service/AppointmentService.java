@@ -29,10 +29,7 @@ public class AppointmentService {
 
     public UUID addAppointment(AppointmentPublic appointment) {
         PetPublic pet = petClient.checkPetNUserExists(appointment.getPetId());
-        System.out.println(appointment.getVeterinarianId() + "lalaband" + pet.getOwnerID());
         veterinarianClient.checkVeterinarianExists(appointment.getVeterinarianId());
-
-
 
         if (!appointment.getEndOfAppointment()
                 .isAfter(appointment.getStartOfAppointment())) {

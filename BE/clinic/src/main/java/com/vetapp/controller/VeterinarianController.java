@@ -38,6 +38,11 @@ public class VeterinarianController {
         return ResponseEntity.ok(veterinarianService.getVeterinarianById(id));
     }
 
+    @GetMapping("/getClinicId/{id}")
+    public ResponseEntity<UUID> getClinicById(@PathVariable UUID id){
+        return ResponseEntity.ok(veterinarianService.getVeterinarianClinicId(id));
+    }
+
     @GetMapping("/findByClinic/{clinicId}")
     public ResponseEntity<List<Veterinarian>> getVeterinariansByClinicId(
             @PathVariable UUID clinicId) {

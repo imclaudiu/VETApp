@@ -60,4 +60,17 @@ public class VetServiceController {
         vetServiceService.deleteService(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/check/{serviceId}/veterinarian/{veterinarianId}")
+    public ResponseEntity<UUID> checkServiceForVeterinarian(
+            @PathVariable Long serviceId,
+            @PathVariable UUID veterinarianId) {
+
+        UUID clinicId = vetServiceService.checkServiceForVeterinarian(
+                veterinarianId,
+                serviceId
+        );
+
+        return ResponseEntity.ok(clinicId);
+    }
 }

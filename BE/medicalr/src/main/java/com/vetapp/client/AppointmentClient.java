@@ -13,7 +13,7 @@ public class AppointmentClient {
 
     public AppointmentClient() {
         this.restClient = RestClient.create(
-                "http://localhost:8083"
+                "http://localhost:8084"
         );
     }
 

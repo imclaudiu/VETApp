@@ -2,7 +2,9 @@ package com.vetapp.service;
 
 import com.vetapp.entity.Clinic;
 import com.vetapp.entity.VetService;
+import com.vetapp.entity.Veterinarian;
 import com.vetapp.repository.VetServiceRepository;
+import com.vetapp.repository.VeterinarianRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,10 +17,12 @@ public class VetServiceService {
 
     private final VetServiceRepository vetServiceRepository;
     private final ClinicService clinicService;
+    private final VeterinarianRepository veterinarianRepository;
 
-    public VetServiceService(VetServiceRepository vetServiceRepository, ClinicService clinicService) {
+    public VetServiceService(VetServiceRepository vetServiceRepository, ClinicService clinicService, VeterinarianRepository veterinarianRepository) {
         this.vetServiceRepository = vetServiceRepository;
         this.clinicService = clinicService;
+        this.veterinarianRepository = veterinarianRepository;
     }
 
     public Long addService(VetService vetService) {
@@ -95,5 +99,33 @@ public class VetServiceService {
                 ));
 
         vetServiceRepository.delete(existingVetService);
+    }
+
+    public UUID checkServiceForVeterinarian(
+            UUID veterinarianId,
+            Long serviceId) {
+
+        Veterinarian veterinarian = veterinarianRepository.findById(veterinarianId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Veterinarul nu exista!"
+                ));
+
+        VetService vetService = vetServiceRepository.findById(serviceId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Serviciul veterinar nu exista!"
+                ));
+
+        UUID clinicId = veterinarian.getClinicId();
+
+        if (!clinicId.equals(vetService.getClinicId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Serviciul veterinar nu apartine clinicii veterinarului!"
+            );
+        }
+
+        return clinicId;
     }
 }

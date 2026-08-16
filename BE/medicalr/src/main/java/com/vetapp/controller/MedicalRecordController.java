@@ -1,5 +1,6 @@
 package com.vetapp.controller;
 
+import com.vetapp.DTO.RegisterMedicalRecord;
 import com.vetapp.entity.MedicalRecord;
 import com.vetapp.service.MedicalRecordService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class MedicalRecordController {
 
     @PostMapping("/add")
     public ResponseEntity<UUID> addMedicalRecord(
-            @RequestBody MedicalRecord medicalRecord) {
+            @RequestBody RegisterMedicalRecord medicalRecord) {
 
         UUID id = medicalRecordService.addMedicalRecord(medicalRecord);
 

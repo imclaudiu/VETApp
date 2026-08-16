@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public class RegisterMedicalRecord {
     private UUID appointmentId;
+    private Long vetServiceId;
     private String symptoms;
     private String diagnosis;
     private String observations;
@@ -17,8 +18,9 @@ public class RegisterMedicalRecord {
     public RegisterMedicalRecord() {
     }
 
-    public RegisterMedicalRecord(UUID appointmentId, String symptoms, String diagnosis, String observations, Double weight, Double temperature, Status status) {
+    public RegisterMedicalRecord(UUID appointmentId, Long vetServiceId, String symptoms, String diagnosis, String observations, Double weight, Double temperature, Status status) {
         this.appointmentId = appointmentId;
+        this.vetServiceId = vetServiceId;
         this.symptoms = symptoms;
         this.diagnosis = diagnosis;
         this.observations = observations;
@@ -33,6 +35,14 @@ public class RegisterMedicalRecord {
 
     public void setAppointmentId(UUID appointmentId) {
         this.appointmentId = appointmentId;
+    }
+
+    public Long getVetServiceId() {
+        return vetServiceId;
+    }
+
+    public void setVetServiceId(Long vetServiceId) {
+        this.vetServiceId = vetServiceId;
     }
 
     public String getSymptoms() {

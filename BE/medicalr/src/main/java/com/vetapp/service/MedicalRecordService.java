@@ -3,6 +3,7 @@ package com.vetapp.service;
 import com.vetapp.DTO.AppointmentMedical;
 import com.vetapp.DTO.RegisterMedicalRecord;
 import com.vetapp.client.AppointmentClient;
+import com.vetapp.client.ClinicClient;
 import com.vetapp.entity.MedicalRecord;
 import com.vetapp.repository.MedicalRecordRepository;
 import org.springframework.http.HttpStatus;
@@ -18,10 +19,12 @@ public class MedicalRecordService {
 
     private final MedicalRecordRepository medicalRecordRepository;
     private final AppointmentClient appointmentClient;
+    private final ClinicClient clinicClient;
 
-    public MedicalRecordService(MedicalRecordRepository medicalRecordRepository, AppointmentClient appointmentClient) {
+    public MedicalRecordService(MedicalRecordRepository medicalRecordRepository, AppointmentClient appointmentClient, ClinicClient clinicClient) {
         this.medicalRecordRepository = medicalRecordRepository;
         this.appointmentClient = appointmentClient;
+        this.clinicClient = clinicClient;
     }
 
     public UUID addMedicalRecord(RegisterMedicalRecord registerMedicalRecord) {
@@ -42,11 +45,20 @@ public class MedicalRecordService {
             );
         }
 
+
+
         MedicalRecord medicalRecord = new MedicalRecord();
 
         medicalRecord.setPetId(appointmentMedical.getPetId());
         medicalRecord.setAppointmentId(registerMedicalRecord.getAppointmentId());
         medicalRecord.setVeterinarianId(appointmentMedical.getVeterinarianId());
+//        medicalRecord.setClinicId(clinicClient.getClinicId(appointmentMedical.getVeterinarianId()));
+        UUID clinicId = clinicClient.checkServiceForVeterinarian(
+                appointmentMedical.getVeterinarianId(),
+                registerMedicalRecord.getVetServiceId()
+        );
+        medicalRecord.setClinicId(clinicId);
+        medicalRecord.setVetServiceId(registerMedicalRecord.getVetServiceId());
         medicalRecord.setConsultationDate(LocalDateTime.now());
         medicalRecord.setSymptoms(registerMedicalRecord.getSymptoms());
         medicalRecord.setDiagnosis(registerMedicalRecord.getDiagnosis());
