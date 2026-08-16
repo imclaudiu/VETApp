@@ -13,7 +13,9 @@ public class PetClient {
 
     public PetClient() {
         this.restClient = RestClient.create(
-                "http://localhost:8082"
+//                "http://localhost:8082"
+                "http://pet:8080"
+
         );
     }
 

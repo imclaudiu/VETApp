@@ -13,8 +13,11 @@ public class ClinicClient {
 
     public ClinicClient() {
         this.restClient = RestClient.create(
-                "http://localhost:8083"
+//                "http://localhost:8083"
+                "http://clinic:8080"
+
         );
+
     }
 
 //    public UUID getClinicId(UUID veterinarianId) {

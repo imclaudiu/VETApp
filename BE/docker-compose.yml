@@ -129,14 +129,155 @@ services:
     networks:
       - demo-net
 
- 
+ # ---------------- PET ----------------
+  pet_db:
+    image: postgres:18
+    container_name: pet_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: pet_db
+    volumes:
+      - pet_db:/var/lib/postgresql
+    networks:
+      - demo-net
 
+  pet:
+    build:
+      context: ./pet
+      dockerfile: Dockerfile
+    image: pet:latest
+    container_name: pet
+    depends_on:
+      - pet_db
+    environment:
+      - DB_IP=pet_db
+      - DB_PORT=5432
+      - DB_DBNAME=pet_db
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pet.rule=Host(`pet.localhost`)"
+      - "traefik.http.services.pet.loadbalancer.server.port=8080"
+    networks:
+      - demo-net
+ 
+ # ---------------- CLINIC ----------------
+  clinic_db:
+    image: postgres:18
+    container_name: clinic_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: clinic_db
+    volumes:
+      - clinic_db:/var/lib/postgresql
+    networks:
+      - demo-net
+
+  clinic:
+    build:
+      context: ./clinic
+      dockerfile: Dockerfile
+    image: clinic:latest
+    container_name: clinic
+    depends_on:
+      - clinic_db
+    environment:
+      - DB_IP=clinic_db
+      - DB_PORT=5432
+      - DB_DBNAME=clinic_db
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.clinic.rule=Host(`clinic.localhost`)"
+      - "traefik.http.services.clinic.loadbalancer.server.port=8080"
+    networks:
+      - demo-net
+
+  # ---------------- APPOINTMENT ----------------
+  appointment_db:
+    image: postgres:18
+    container_name: appointment_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: appointment_db
+    volumes:
+      - appointment_db:/var/lib/postgresql
+    networks:
+      - demo-net
+
+  appointment:
+    build:
+      context: ./appointment
+      dockerfile: Dockerfile
+    image: appointment:latest
+    container_name: appointment
+    depends_on:
+      - appointment_db
+    environment:
+      - DB_IP=appointment_db
+      - DB_PORT=5432
+      - DB_DBNAME=appointment_db
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.appointment.rule=Host(`appointment.localhost`)"
+      - "traefik.http.services.appointment.loadbalancer.server.port=8080"
+    networks:
+      - demo-net
+
+       # ---------------- MEDICAL RECORD ----------------
+  medicalr_db:
+    image: postgres:18
+    container_name: medicalr_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: medicalr_db
+    volumes:
+      - medicalr_db:/var/lib/postgresql
+    networks:
+      - demo-net
+
+  medicalr:
+    build:
+      context: ./medicalr
+      dockerfile: Dockerfile
+    image: medicalr:latest
+    container_name: medicalr
+    depends_on:
+      - medicalr_db
+    environment:
+      - DB_IP=medicalr_db
+      - DB_PORT=5432
+      - DB_DBNAME=medicalr_db
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.medicalr.rule=Host(`medicalr.localhost`)"
+      - "traefik.http.services.medicalr.loadbalancer.server.port=8080"
+    networks:
+      - demo-net
 
 
 
 volumes:
   users_db:
   auth_db:
+  pet_db:
+  clinic_db:
+  appointment_db:
+  medicalr_db:
   kafka_data:
 
 networks:

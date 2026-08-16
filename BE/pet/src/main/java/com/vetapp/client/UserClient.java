@@ -3,6 +3,7 @@ package com.vetapp.client;
 import com.vetapp.DTO.UserPublic;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -13,15 +14,25 @@ public class UserClient {
 
     public UserClient() {
         this.restClient = RestClient.create(
-                "http://localhost:8081"
+                "http://user:8080"
+//                "http://localhost:8081"
         );
     }
 
     public UserPublic checkUserExists(UUID userId) {
 
         return restClient.get()
-                .uri("/user/get/" + userId)
+                .uri("/user/get/{id}", userId)
                 .retrieve()
+                .onStatus(
+                        status -> status.is4xxClientError() || status.is5xxServerError(),
+                        (request, response) -> {
+                            throw new ResponseStatusException(
+                                    response.getStatusCode(),
+                                    "Eroare primita de la User Service"
+                            );
+                        }
+                )
                 .body(UserPublic.class);
     }
 }

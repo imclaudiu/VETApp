@@ -18,11 +18,76 @@ http:
       middlewares:
         - strip-api-prefix
 
+    # ---- PET ROUTER ----
+    pet-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/pet`)"
+      service: pet
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+
+    # ---- CLINIC ROUTER ----
+    clinic-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/clinic`)"
+      service: clinic
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+
+    # ---- VETERINARIAN ROUTER ----
+    vet-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/vet`)"
+      service: clinic
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+
+    # ---- AVAILABILITY ROUTER ----
+    availability-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/availability`)"
+      service: clinic
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+
+    # ---- VET SERVICE ROUTER ----
+    vet-service-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/vetService`)"
+      service: clinic
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+
+    # ---- APPOINTMENT ROUTER ----
+    appointment-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/appointment`)"
+      service: appointment
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+
+    # ---- MEDICAL RECORD ROUTER ----
+    medicalr-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/medicalr`)"
+      service: medicalr
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+
+
   middlewares:
     strip-api-prefix:
       stripPrefix:
         prefixes:
           - "/api"
+
 
   services:
     user:
@@ -34,3 +99,23 @@ http:
       loadBalancer:
         servers:
           - url: "http://auth:8080"
+
+    pet:
+      loadBalancer:
+        servers:
+          - url: "http://pet:8080"
+
+    clinic:
+      loadBalancer:
+        servers:
+          - url: "http://clinic:8080"
+
+    appointment:
+      loadBalancer:
+        servers:
+          - url: "http://appointment:8080"
+
+    medicalr:
+      loadBalancer:
+        servers:
+          - url: "http://medicalr:8080"
