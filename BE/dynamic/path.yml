@@ -2,92 +2,73 @@ http:
   routers:
     # ---- USER ROUTER ----
     user-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/user`)"
+      rule: "Host(`localhost`) && PathPrefix(`/user`)"
       service: user
       entryPoints:
         - web
-      middlewares:
-        - strip-api-prefix
 
     # ---- AUTH ROUTER ----
     auth-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/auth`)"
+      rule: "Host(`localhost`) && PathPrefix(`/auth`)"
       service: auth
       entryPoints:
         - web
-      middlewares:
-        - strip-api-prefix
 
     # ---- PET ROUTER ----
     pet-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/pet`)"
+      rule: "Host(`localhost`) && PathPrefix(`/pet`)"
       service: pet
       entryPoints:
         - web
-      middlewares:
-        - strip-api-prefix
 
     # ---- CLINIC ROUTER ----
     clinic-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/clinic`)"
+      rule: "Host(`localhost`) && PathPrefix(`/clinic`)"
       service: clinic
       entryPoints:
         - web
-      middlewares:
-        - strip-api-prefix
 
     # ---- VETERINARIAN ROUTER ----
     vet-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/vet`)"
+      rule: "Host(`localhost`) && PathPrefix(`/vet`)"
       service: clinic
       entryPoints:
         - web
-      middlewares:
-        - strip-api-prefix
 
     # ---- AVAILABILITY ROUTER ----
     availability-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/availability`)"
+      rule: "Host(`localhost`) && PathPrefix(`/availability`)"
       service: clinic
       entryPoints:
         - web
-      middlewares:
-        - strip-api-prefix
 
     # ---- VET SERVICE ROUTER ----
     vet-service-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/vetService`)"
+      rule: "Host(`localhost`) && PathPrefix(`/vetService`)"
       service: clinic
       entryPoints:
         - web
-      middlewares:
-        - strip-api-prefix
 
     # ---- APPOINTMENT ROUTER ----
     appointment-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/appointment`)"
+      rule: "Host(`localhost`) && PathPrefix(`/appointment`)"
       service: appointment
       entryPoints:
         - web
-      middlewares:
-        - strip-api-prefix
 
     # ---- MEDICAL RECORD ROUTER ----
     medicalr-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/medicalr`)"
+      rule: "Host(`localhost`) && PathPrefix(`/medicalr`)"
       service: medicalr
       entryPoints:
         - web
-      middlewares:
-        - strip-api-prefix
 
 
-  middlewares:
-    strip-api-prefix:
-      stripPrefix:
-        prefixes:
-          - "/api"
-
+    jwks-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/.well-known/jwks.json`)"
+      service: auth
+      entryPoints:
+        - web
 
   services:
     user:

@@ -28,8 +28,7 @@ public class MessageConsumer {
                     event.getName(),
                     event.getEmail(),
                     event.getPhone(),
-                    event.getAddress(),
-                    RolUser.OWNER
+                    event.getAddress()
             );
             userService.addUser(user);
         } catch (ResponseStatusException e) {
@@ -41,7 +40,7 @@ public class MessageConsumer {
     @KafkaListener(topics = "delete-topic", groupId = "vetapp-group")
     public void deleteAccount(UUID id){
         System.out.println("Received UUID: " + id);
-        try{userService.deleteUser(id);}
+        try{userService.deleteUserInternal(id);}
         catch (ResponseStatusException e){
             System.err.println("Nu s-a putut sterge userul: " + e.getReason());
         }

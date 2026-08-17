@@ -12,11 +12,11 @@ public class UserClient {
 
     private final RestClient restClient;
 
-    public UserClient() {
-        this.restClient = RestClient.create(
+    public UserClient(RestClient.Builder restClientBuilder) {
+        this.restClient = restClientBuilder.baseUrl(
                 "http://user:8080"
 //                "http://localhost:8081"
-        );
+        ).build();
     }
 
     public UserPublic checkUserExists(UUID userId) {

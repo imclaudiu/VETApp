@@ -24,6 +24,9 @@ public class Authentication {
     @Column(name = "email",unique = true, nullable = false)
     private String email;
 
+    @Column(name = "rolUser", nullable = false)
+    private Role role;
+
     @Column(name = "telefon", unique = true, nullable = false)
     private String telefon;
 
@@ -31,12 +34,21 @@ public class Authentication {
     public Authentication() {
     }
 
-    public Authentication(UUID id, String username, String password, String email, String telefon) {
+    public Authentication(UUID id, String username, String password, String email, Role role, String telefon) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
         this.telefon = telefon;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public UUID getId() {

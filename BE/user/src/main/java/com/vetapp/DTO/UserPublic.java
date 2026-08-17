@@ -7,15 +7,13 @@ import java.util.UUID;
 public class UserPublic {
     private UUID id;
     private String name;
-    private RolUser rol;
 
     public UserPublic() {
     }
 
-    public UserPublic(UUID id, String name, RolUser rol) {
+    public UserPublic(UUID id, String name) {
         this.id = id;
         this.name = name;
-        this.rol = rol;
     }
 
     public UUID getId() {
@@ -32,13 +30,5 @@ public class UserPublic {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public RolUser getRol() {
-        return rol;
-    }
-
-    public void setRol(RolUser rol) {
-        this.rol = rol;
     }
 }

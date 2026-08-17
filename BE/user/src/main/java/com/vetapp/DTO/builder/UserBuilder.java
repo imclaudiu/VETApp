@@ -5,6 +5,6 @@ import com.vetapp.entity.Users;
 
 public class UserBuilder {
     public static UserPublic toPublicUser(Users users){
-        return new UserPublic(users.getId(), users.getName(), users.getRol());
+        return new UserPublic(users.getId(), users.getName());
     }
 }

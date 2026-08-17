@@ -24,20 +24,15 @@ public class Users {
     @Column(name = "address", nullable = false) /*ADAUGA NULLABLE FALSE CAND INREGISTREZI DIN FRONTEND*/
     private String address;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
-    private RolUser rol;
-
     public Users() {
     }
 
-    public Users(UUID id, String name, String email, String phone, String address, RolUser rol) {
+    public Users(UUID id, String name, String email, String phone, String address) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.rol = rol;
     }
 
     public UUID getId() {
@@ -78,14 +73,6 @@ public class Users {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public RolUser getRol() {
-        return rol;
-    }
-
-    public void setRol(RolUser rol) {
-        this.rol = rol;
     }
 
 

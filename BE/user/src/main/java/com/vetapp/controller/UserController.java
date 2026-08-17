@@ -8,6 +8,8 @@ import com.vetapp.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,39 +33,19 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Users>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<Users>> getAll(@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(userService.getAllUsers(jwt));
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<UserPublic> getUserById(@PathVariable UUID id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    public ResponseEntity<UserPublic> getUserById(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(userService.getUserById(id, jwt));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Users> updateUser(@PathVariable UUID id, @RequestBody Users updatedUser) {
-        return ResponseEntity.ok(userService.updateUser(id, updatedUser));
+    public ResponseEntity<Users> updateUser(@PathVariable UUID id, @RequestBody Users updatedUser, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(userService.updateUser(id, updatedUser, jwt));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
-        userService.deleteUser(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/deleteAll")
-    public ResponseEntity<Void> deleteAll(){
-        userService.deleteAll();
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/updateRole/{id}")
-    public ResponseEntity<Void> updateRole(
-            @PathVariable UUID id,
-            @RequestBody RolUser role) {
-
-        userService.updateRole(id, role);
-        return ResponseEntity.ok().build();
-    }
 
 }

@@ -1,6 +1,6 @@
 package com.vetapp.entity;
 
-public enum RolUser {
+public enum Role {
     OWNER,
     VETERINARIAN,
     ADMIN

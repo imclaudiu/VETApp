@@ -1,12 +1,13 @@
 package com.vetapp.service;
 
 import com.vetapp.DTO.PetPublic;
-import com.vetapp.DTO.UserPublic;
 import com.vetapp.DTO.builder.PetBuilder;
 import com.vetapp.client.UserClient;
 import com.vetapp.entity.Pet;
 import com.vetapp.repository.PetRepository;
+import com.vetapp.security.AccessGuard;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,35 +18,48 @@ import java.util.UUID;
 public class PetService {
     private final PetRepository petRepository;
     private final UserClient userClient;
+    private final AccessGuard accessGuard; // NOU
 
-    public PetService(PetRepository petRepository, UserClient userClient) {
+    public PetService(PetRepository petRepository, UserClient userClient, AccessGuard accessGuard) {
         this.petRepository = petRepository;
         this.userClient = userClient;
+        this.accessGuard = accessGuard;
     }
 
-    public UUID addPet(Pet pet) {
-        userClient.checkUserExists(pet.getOwnerID()); ////////////TESTING, TAKE OUT AFTER BEING DONE
+    // NOU: userul poate adauga pet doar pe numele lui (sau admin, pe numele oricui)
+    public UUID addPet(Pet pet, Jwt jwt) {
+        accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
 
-        if(pet.getId() != null && petRepository.existsById(pet.getId())){
+        userClient.checkUserExists(pet.getOwnerID());
+
+        if (pet.getId() != null && petRepository.existsById(pet.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Animalul cu ID" + pet.getId() + "exista deja");
         }
         Pet savedPet = petRepository.save(pet);
         return savedPet.getId();
     }
 
-    public List<Pet> getAllPets() {
+    // NOU: doar admin vede toate animalele din sistem
+    public List<Pet> getAllPets(Jwt jwt) {
+        accessGuard.requireAdmin(jwt);
         return petRepository.findAll();
     }
 
-    public PetPublic getPetById(UUID id) {
+    // NOU: doar owner sau admin
+    public PetPublic getPetById(UUID id, Jwt jwt) {
         Pet pet = findPetOrThrow(id);
+        accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
         return PetBuilder.toPublicPet(pet);
     }
 
-    public Pet updatePet(UUID id, Pet updatedPet) {
+    // NOU: doar owner-ul curent (existent) sau admin poate edita
+    public Pet updatePet(UUID id, Pet updatedPet, Jwt jwt) {
         Pet existingPet = findPetOrThrow(id);
+        accessGuard.requireOwnerOrAdmin(existingPet.getOwnerID(), jwt);
 
         if (updatedPet.getOwnerID() != null) {
+            // schimbarea ownerului e o operatie sensibila - doar admin
+            accessGuard.requireAdmin(jwt);
             userClient.checkUserExists(updatedPet.getOwnerID());
             existingPet.setOwnerID(updatedPet.getOwnerID());
         }
@@ -68,31 +82,37 @@ public class PetService {
         return petRepository.save(existingPet);
     }
 
-    public void deletePet(UUID id) {
+    // NOU: doar owner sau admin
+    public void deletePet(UUID id, Jwt jwt) {
         Pet existingPet = findPetOrThrow(id);
+        accessGuard.requireOwnerOrAdmin(existingPet.getOwnerID(), jwt);
         petRepository.delete(existingPet);
     }
 
+    // Ramane INTERNA - apelata din Kafka listener cand un user e sters din auth, nu are Jwt
     public void deleteAllPetsOwner(UUID ownerId) {
         List<Pet> pets = petRepository.findAllByOwnerID(ownerId);
-        for(Pet pet:pets){
+        for (Pet pet : pets) {
             pet.setOwnerID(null);
         }
         petRepository.saveAll(pets);
     }
 
-    public void deleteOwner(UUID petID){
-        Pet pet = petRepository.findById(petID).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+    // NOU: doar owner sau admin (desprindere manuala a unui pet de owner, prin HTTP)
+    public void deleteOwner(UUID petID, Jwt jwt) {
+        Pet pet = petRepository.findById(petID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
         pet.setOwnerID(null);
         petRepository.save(pet);
     }
 
-    public void deleteAll(){
+    // NOU: doar admin
+    public void deleteAll(Jwt jwt) {
+        accessGuard.requireAdmin(jwt);
         petRepository.deleteAll();
     }
 
     private Pet findPetOrThrow(UUID id) {
         return petRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Animalul cu ID-ul " + id + " nu a fost găsit."));
     }
-
 }
