@@ -5,14 +5,14 @@ import com.vetapp.entity.Veterinarian;
 import com.vetapp.service.VeterinarianService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@Validated
 @RequestMapping("/vet")
 public class VeterinarianController {
 
@@ -23,48 +23,47 @@ public class VeterinarianController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<UUID> addVeterinarian(@RequestBody Veterinarian veterinarian) {
-        UUID id = veterinarianService.addVeterinarian(veterinarian);
+    public ResponseEntity<UUID> addVeterinarian(@RequestBody Veterinarian veterinarian, @AuthenticationPrincipal Jwt jwt) {
+        UUID id = veterinarianService.addVeterinarian(veterinarian, jwt);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Veterinarian>> getAllVeterinarians() {
+    public ResponseEntity<List<Veterinarian>> getAll() {
         return ResponseEntity.ok(veterinarianService.getAllVeterinarians());
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<VeterinarianPublic> getVeterinarianById(@PathVariable UUID id) {
+    public ResponseEntity<VeterinarianPublic> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(veterinarianService.getVeterinarianById(id));
     }
 
-    @GetMapping("/getClinicId/{id}")
-    public ResponseEntity<UUID> getClinicById(@PathVariable UUID id){
+    @GetMapping("/clinic/{clinicId}")
+    public ResponseEntity<List<Veterinarian>> getByClinicId(@PathVariable UUID clinicId) {
+        return ResponseEntity.ok(veterinarianService.getVeterinariansByClinicId(clinicId));
+    }
+
+    @GetMapping("/{id}/clinicId")
+    public ResponseEntity<UUID> getClinicId(@PathVariable UUID id) {
         return ResponseEntity.ok(veterinarianService.getVeterinarianClinicId(id));
     }
 
-    @GetMapping("/findByClinic/{clinicId}")
-    public ResponseEntity<List<Veterinarian>> getVeterinariansByClinicId(
-            @PathVariable UUID clinicId) {
-
-        return ResponseEntity.ok(
-                veterinarianService.getVeterinariansByClinicId(clinicId)
-        );
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Veterinarian> updateVeterinarian(@PathVariable UUID id,
+                                                           @RequestBody Veterinarian updatedVeterinarian,
+                                                           @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(veterinarianService.updateVeterinarian(id, updatedVeterinarian, jwt));
     }
 
-    @PatchMapping("/update/{id}")
-    public ResponseEntity<Veterinarian> updateVeterinarian(
-            @PathVariable UUID id,
-            @RequestBody Veterinarian updatedVeterinarian) {
-
-        return ResponseEntity.ok(
-                veterinarianService.updateVeterinarian(id, updatedVeterinarian)
-        );
+    // VeterinarianController.java (in clinic)
+    @GetMapping("/{id}/userId")
+    public ResponseEntity<UUID> getUserId(@PathVariable UUID id) {
+        return ResponseEntity.ok(veterinarianService.getVeterinarianUserId(id));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteVeterinarian(@PathVariable UUID id) {
-        veterinarianService.deleteVeterinarian(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> deleteVeterinarian(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        veterinarianService.deleteVeterinarian(id, jwt);
+        return ResponseEntity.noContent().build();
     }
 }

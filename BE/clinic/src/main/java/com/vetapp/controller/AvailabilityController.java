@@ -2,9 +2,10 @@ package com.vetapp.controller;
 
 import com.vetapp.entity.Availability;
 import com.vetapp.service.AvailabilityService;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -22,55 +23,35 @@ public class AvailabilityController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Availability> addAvailability(
-            @RequestBody Availability availability) {
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(availabilityService.addAvailability(availability));
+    public ResponseEntity<Availability> addAvailability(@RequestBody Availability availability, @AuthenticationPrincipal Jwt jwt) {
+        Availability saved = availabilityService.addAvailability(availability, jwt);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Availability>> getAllAvailabilities() {
-        return ResponseEntity.ok(
-                availabilityService.getAllAvailabilities()
-        );
+    public ResponseEntity<List<Availability>> getAll() {
+        return ResponseEntity.ok(availabilityService.getAllAvailabilities());
     }
 
-    @GetMapping("/get/{veterinarianId}/{day}")
-    public ResponseEntity<Availability> getAvailability(
-            @PathVariable UUID veterinarianId,
-            @PathVariable
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
-
-        return ResponseEntity.ok(
-                availabilityService.getAvailability(veterinarianId, day)
-        );
+    @GetMapping("/get")
+    public ResponseEntity<Availability> getAvailability(@RequestParam UUID veterinarianId,
+                                                        @RequestParam LocalDate day) {
+        return ResponseEntity.ok(availabilityService.getAvailability(veterinarianId, day));
     }
 
-    @PatchMapping("/update/{veterinarianId}/{day}")
-    public ResponseEntity<Availability> updateAvailability(
-            @PathVariable UUID veterinarianId,
-            @PathVariable LocalDate day,
-            @RequestBody Availability updatedAvailability) {
-
-        return ResponseEntity.ok(
-                availabilityService.updateAvailability(
-                        veterinarianId,
-                        day,
-                        updatedAvailability
-                )
-        );
+    @PutMapping("/update")
+    public ResponseEntity<Availability> updateAvailability(@RequestParam UUID veterinarianId,
+                                                           @RequestParam LocalDate day,
+                                                           @RequestBody Availability updatedAvailability,
+                                                           @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(availabilityService.updateAvailability(veterinarianId, day, updatedAvailability, jwt));
     }
 
-    @DeleteMapping("/delete/{veterinarianId}/{day}")
-    public ResponseEntity<Void> deleteAvailability(
-            @PathVariable UUID veterinarianId,
-            @PathVariable
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
-
-        availabilityService.deleteAvailability(veterinarianId, day);
-
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteAvailability(@RequestParam UUID veterinarianId,
+                                                   @RequestParam LocalDate day,
+                                                   @AuthenticationPrincipal Jwt jwt) {
+        availabilityService.deleteAvailability(veterinarianId, day, jwt);
+        return ResponseEntity.noContent().build();
     }
 }

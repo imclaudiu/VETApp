@@ -49,7 +49,7 @@ public class AuthenticationService {
         authentication.setPassword(encoder.encode(request.getPassword()));
         authentication.setEmail(request.getEmail());
         authentication.setTelefon(request.getPhone());
-        authentication.setRole(Role.ADMIN); // FIX: era Role.ADMIN, gaura de securitate
+        authentication.setRole(Role.OWNER); // FIX: era Role.ADMIN, gaura de securitate
 
         Authentication saved = authenticationRepository.save(authentication);
 

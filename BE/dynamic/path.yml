@@ -6,6 +6,8 @@ http:
       service: user
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
 
     # ---- AUTH ROUTER ----
     auth-router:
@@ -13,6 +15,8 @@ http:
       service: auth
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
 
     # ---- PET ROUTER ----
     pet-router:
@@ -20,6 +24,8 @@ http:
       service: pet
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
 
     # ---- CLINIC ROUTER ----
     clinic-router:
@@ -27,6 +33,8 @@ http:
       service: clinic
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
 
     # ---- VETERINARIAN ROUTER ----
     vet-router:
@@ -34,6 +42,8 @@ http:
       service: clinic
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
 
     # ---- AVAILABILITY ROUTER ----
     availability-router:
@@ -41,6 +51,8 @@ http:
       service: clinic
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
 
     # ---- VET SERVICE ROUTER ----
     vet-service-router:
@@ -48,6 +60,8 @@ http:
       service: clinic
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
 
     # ---- APPOINTMENT ROUTER ----
     appointment-router:
@@ -55,6 +69,8 @@ http:
       service: appointment
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
 
     # ---- MEDICAL RECORD ROUTER ----
     medicalr-router:
@@ -62,13 +78,36 @@ http:
       service: medicalr
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
 
-
+    # ---- JWKS ROUTER ----
     jwks-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/.well-known/jwks.json`)"
+      rule: "Host(`localhost`) && PathPrefix(`/.well-known/jwks.json`)"
       service: auth
       entryPoints:
         - web
+      middlewares:
+        - cors-headers
+
+  middlewares:
+    cors-headers:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+          - OPTIONS
+        accessControlAllowHeaders:
+          - Content-Type
+          - Authorization
+        accessControlAllowOriginList:
+          - "http://localhost:5173"
+        accessControlAllowCredentials: true
+        accessControlMaxAge: 86400
+        addVaryHeader: true
 
   services:
     user:

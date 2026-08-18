@@ -1,11 +1,12 @@
 package com.vetapp.service;
 
-import com.vetapp.entity.Clinic;
 import com.vetapp.entity.VetService;
 import com.vetapp.entity.Veterinarian;
 import com.vetapp.repository.VetServiceRepository;
 import com.vetapp.repository.VeterinarianRepository;
+import com.vetapp.security.AccessGuard;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,20 +19,24 @@ public class VetServiceService {
     private final VetServiceRepository vetServiceRepository;
     private final ClinicService clinicService;
     private final VeterinarianRepository veterinarianRepository;
+    private final AccessGuard accessGuard;
 
-    public VetServiceService(VetServiceRepository vetServiceRepository, ClinicService clinicService, VeterinarianRepository veterinarianRepository) {
+    public VetServiceService(VetServiceRepository vetServiceRepository, ClinicService clinicService, VeterinarianRepository veterinarianRepository, AccessGuard accessGuard) {
         this.vetServiceRepository = vetServiceRepository;
         this.clinicService = clinicService;
         this.veterinarianRepository = veterinarianRepository;
+        this.accessGuard = accessGuard;
     }
 
-    public Long addService(VetService vetService) {
+    public Long addService(VetService vetService, Jwt jwt) {
+        accessGuard.requireAdmin(jwt);
+
         clinicService.getClinicById(vetService.getClinicId());
 
         boolean exists = vetServiceRepository.existsByClinicIdAndServiceNameIgnoreCase(vetService.getClinicId(),
                 vetService.getServiceName());
 
-        if(exists){
+        if (exists) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Serviciul cu numele " + vetService.getServiceName()
@@ -43,10 +48,7 @@ public class VetServiceService {
         return vetService.getId();
     }
 
-    public List<VetService> getAllServices() {
-        return vetServiceRepository.findAll();
-    }
-
+    // ramane public - browse
     public VetService getServiceById(Long id) {
         return vetServiceRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -55,11 +57,14 @@ public class VetServiceService {
                 ));
     }
 
+    // ramane public - browse
     public List<VetService> getServicesByClinicId(UUID clinicId) {
         return vetServiceRepository.findByClinicId(clinicId);
     }
 
-    public VetService updateService(Long id, VetService updatedVetService) {
+    // NOU: doar admin
+    public VetService updateService(Long id, VetService updatedVetService, Jwt jwt) {
+        accessGuard.requireAdmin(jwt);
 
         VetService existingVetService = vetServiceRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -68,6 +73,7 @@ public class VetServiceService {
                 ));
 
         if (updatedVetService.getClinicId() != null) {
+            clinicService.getClinicById(updatedVetService.getClinicId()); // valideaza ca noua clinica exista
             existingVetService.setClinicId(updatedVetService.getClinicId());
         }
 
@@ -90,7 +96,9 @@ public class VetServiceService {
         return vetServiceRepository.save(existingVetService);
     }
 
-    public void deleteService(Long id) {
+    // NOU: doar admin
+    public void deleteService(Long id, Jwt jwt) {
+        accessGuard.requireAdmin(jwt);
 
         VetService existingVetService = vetServiceRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -101,9 +109,8 @@ public class VetServiceService {
         vetServiceRepository.delete(existingVetService);
     }
 
-    public UUID checkServiceForVeterinarian(
-            UUID veterinarianId,
-            Long serviceId) {
+    // ramane public - folosit probabil la validarea unei programari
+    public UUID checkServiceForVeterinarian(UUID veterinarianId, Long serviceId) {
 
         Veterinarian veterinarian = veterinarianRepository.findById(veterinarianId)
                 .orElseThrow(() -> new ResponseStatusException(

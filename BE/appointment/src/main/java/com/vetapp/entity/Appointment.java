@@ -22,14 +22,6 @@ public class Appointment {
     private UUID petId;
     @Column(name = "veterinarianId", unique = false, nullable = false)
     private UUID veterinarianId;
-//    @Column(name = "vetServiceId", unique = false, nullable = false)
-//    private Longdasdfsa vetServiceId;
-
-
-    //de scos si pus in medical record
-
-
-
     @Column(name = "startOfAppointment", unique = false, nullable = false)
     private LocalDateTime startOfAppointment;
     @Column(name = "endOfAppointment", unique = false, nullable = false)

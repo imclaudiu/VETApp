@@ -1,8 +1,8 @@
 package com.vetapp.client;
 
-import com.vetapp.DTO.AppointmentMedical;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -11,33 +11,20 @@ public class ClinicClient {
 
     private final RestClient restClient;
 
-    public ClinicClient() {
-        this.restClient = RestClient.create(
-//                "http://localhost:8083"
-                "http://clinic:8080"
-
-        );
-
+    public ClinicClient(RestClient.Builder restClientBuilder) {
+        this.restClient = restClientBuilder.baseUrl("http://clinic:8080").build();
     }
 
-//    public UUID getClinicId(UUID veterinarianId) {
-//        return restClient.get()
-//                .uri("/vet/getClinicId/{id}", veterinarianId)
-//                .retrieve()
-//                .body(UUID.class);
-//    }
-
-    public UUID checkServiceForVeterinarian(
-            UUID veterinarianId,
-            Long serviceId) {
-
-      return  restClient.get()
-                .uri(
-                        "/vetService/check/{serviceId}/veterinarian/{veterinarianId}",
-                        serviceId,
-                        veterinarianId
-                )
+    public UUID checkServiceForVeterinarian(UUID veterinarianId, Long serviceId) {
+        return restClient.get()
+                .uri("/vetService/check/{serviceId}/veterinarian/{veterinarianId}", serviceId, veterinarianId)
                 .retrieve()
+                .onStatus(
+                        status -> status.is4xxClientError() || status.is5xxServerError(),
+                        (request, response) -> {
+                            throw new ResponseStatusException(response.getStatusCode(), "Clinic Service Error.");
+                        }
+                )
                 .body(UUID.class);
     }
 }

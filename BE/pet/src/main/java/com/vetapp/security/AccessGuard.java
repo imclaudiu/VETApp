@@ -30,6 +30,8 @@ public class AccessGuard {
         }
     }
 
+
+
     public void requireOwnerOrAdmin(UUID resourceOwnerId, Jwt jwt) {
         boolean isOwner = resourceOwnerId.equals(extractUserId(jwt));
         if (!isOwner && !isAdmin(jwt)) {

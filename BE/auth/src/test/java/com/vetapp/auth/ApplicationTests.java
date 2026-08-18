@@ -1,4 +1,4 @@
-package com.vetapp.user;
+package com.vetapp.auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

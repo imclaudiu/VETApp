@@ -1,10 +1,11 @@
 package com.vetapp.controller;
 
 import com.vetapp.entity.VetService;
-import com.vetapp.service.ClinicService;
 import com.vetapp.service.VetServiceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,56 +22,37 @@ public class VetServiceController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Long> addService(@RequestBody VetService vetService) {
-        Long id = vetServiceService.addService(vetService);
+    public ResponseEntity<Long> addService(@RequestBody VetService vetService, @AuthenticationPrincipal Jwt jwt) {
+        Long id = vetServiceService.addService(vetService, jwt);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<VetService>> getAllServices() {
-        return ResponseEntity.ok(vetServiceService.getAllServices());
-    }
-
     @GetMapping("/get/{id}")
-    public ResponseEntity<VetService> getServiceById(@PathVariable Long id) {
+    public ResponseEntity<VetService> getById(@PathVariable Long id) {
         return ResponseEntity.ok(vetServiceService.getServiceById(id));
     }
 
-    @GetMapping("/findByClinic/{clinicId}")
-    public ResponseEntity<List<VetService>> getServicesByClinicId(
-            @PathVariable UUID clinicId) {
-
-        return ResponseEntity.ok(
-                vetServiceService.getServicesByClinicId(clinicId)
-        );
+    @GetMapping("/clinic/{clinicId}")
+    public ResponseEntity<List<VetService>> getByClinicId(@PathVariable UUID clinicId) {
+        return ResponseEntity.ok(vetServiceService.getServicesByClinicId(clinicId));
     }
 
-    @PatchMapping("/update/{id}")
-    public ResponseEntity<VetService> updateService(
-            @PathVariable Long id,
-            @RequestBody VetService updatedVetService) {
-
-        return ResponseEntity.ok(
-                vetServiceService.updateService(id, updatedVetService)
-        );
+    @PutMapping("/update/{id}")
+    public ResponseEntity<VetService> updateService(@PathVariable Long id,
+                                                    @RequestBody VetService updatedVetService,
+                                                    @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(vetServiceService.updateService(id, updatedVetService, jwt));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteService(@PathVariable Long id) {
-        vetServiceService.deleteService(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> deleteService(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        vetServiceService.deleteService(id, jwt);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/check/{serviceId}/veterinarian/{veterinarianId}")
-    public ResponseEntity<UUID> checkServiceForVeterinarian(
-            @PathVariable Long serviceId,
-            @PathVariable UUID veterinarianId) {
-
-        UUID clinicId = vetServiceService.checkServiceForVeterinarian(
-                veterinarianId,
-                serviceId
-        );
-
-        return ResponseEntity.ok(clinicId);
-    }
+//    @GetMapping("/check")
+//    public ResponseEntity<UUID> checkServiceForVeterinarian(@RequestParam UUID veterinarianId,
+//                                                            @RequestParam Long serviceId) {
+//        return ResponseEntity.ok(vetServiceService.checkServiceForVeterinarian(veterinarianId, serviceId));
+//    } VEZI DACA ARE UTILIZARE
 }

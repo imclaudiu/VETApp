@@ -5,6 +5,8 @@ import com.vetapp.entity.Appointment;
 import com.vetapp.service.AppointmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,76 +23,46 @@ public class AppointmentController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<UUID> addAppointment(
-            @RequestBody AppointmentPublic appointment) {
-
-        UUID id = appointmentService.addAppointment(appointment);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(id);
+    public ResponseEntity<UUID> addAppointment(@RequestBody AppointmentPublic appointment, @AuthenticationPrincipal Jwt jwt) {
+        UUID id = appointmentService.addAppointment(appointment, jwt);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Appointment>> getAllAppointments() {
-
-        return ResponseEntity.ok(
-                appointmentService.getAllAppointments()
-        );
+    public ResponseEntity<List<Appointment>> getAll(@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.getAllAppointments(jwt));
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Appointment> getAppointmentById(
-            @PathVariable UUID id) {
-
-        return ResponseEntity.ok(
-                appointmentService.getAppointmentById(id)
-        );
+    public ResponseEntity<Appointment> getById(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.getAppointmentById(id, jwt));
     }
 
-    @GetMapping("/findByOwner/{ownerId}")
-    public ResponseEntity<List<Appointment>> getAppointmentsByOwnerId(
-            @PathVariable UUID ownerId) {
-
-        return ResponseEntity.ok(
-                appointmentService.getAppointmentsByOwnerId(ownerId)
-        );
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<Appointment>> getByOwnerId(@PathVariable UUID ownerId, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByOwnerId(ownerId, jwt));
     }
 
-    @GetMapping("/findByPet/{petId}")
-    public ResponseEntity<List<Appointment>> getAppointmentsByPetId(
-            @PathVariable UUID petId) {
-
-        return ResponseEntity.ok(
-                appointmentService.getAppointmentsByPetId(petId)
-        );
+    @GetMapping("/pet/{petId}")
+    public ResponseEntity<List<Appointment>> getByPetId(@PathVariable UUID petId, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByPetId(petId, jwt));
     }
 
-    @GetMapping("/findByVeterinarian/{veterinarianId}")
-    public ResponseEntity<List<Appointment>> getAppointmentsByVeterinarianId(
-            @PathVariable UUID veterinarianId) {
-
-        return ResponseEntity.ok(
-                appointmentService.getAppointmentsByVeterinarianId(veterinarianId)
-        );
+    @GetMapping("/veterinarian/{veterinarianId}")
+    public ResponseEntity<List<Appointment>> getByVeterinarianId(@PathVariable UUID veterinarianId, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByVeterinarianId(veterinarianId, jwt));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Appointment> updateAppointment(
-            @PathVariable UUID id,
-            @RequestBody Appointment updatedAppointment) {
-
-        return ResponseEntity.ok(
-                appointmentService.updateAppointment(id, updatedAppointment)
-        );
+    public ResponseEntity<Appointment> updateAppointment(@PathVariable UUID id,
+                                                         @RequestBody Appointment updatedAppointment,
+                                                         @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.updateAppointment(id, updatedAppointment, jwt));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteAppointment(
-            @PathVariable UUID id) {
-
-        appointmentService.deleteAppointment(id);
-
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> deleteAppointment(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        appointmentService.deleteAppointment(id, jwt);
+        return ResponseEntity.noContent().build();
     }
 }
