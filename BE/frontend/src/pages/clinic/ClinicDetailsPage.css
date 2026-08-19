@@ -1,0 +1,566 @@
+.clinic-details-page {
+    min-height: calc(100vh - 72px);
+
+    background: #f8fafc;
+}
+
+.clinic-details-container {
+    width: 100%;
+    max-width: 1250px;
+
+    margin: 0 auto;
+
+    padding: 38px 40px 70px;
+}
+
+
+/* BACK */
+
+.clinic-details-back {
+    margin-bottom: 25px;
+}
+
+.clinic-details-back a {
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.clinic-details-back a:hover {
+    color: #0f766e;
+}
+
+
+/* HERO */
+
+.clinic-details-hero {
+    position: relative;
+
+    min-height: 275px;
+
+    padding: 45px;
+
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    background:
+        radial-gradient(circle at 80% 20%,
+            rgba(255, 255, 255, 0.15),
+            transparent 30%),
+        linear-gradient(135deg,
+            #0f766e,
+            #0d9488);
+}
+
+.clinic-details-hero-content {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+}
+
+.clinic-details-eyebrow {
+    margin: 0 0 11px;
+
+    color: #ccfbf1;
+
+    font-size: 11px;
+    font-weight: 750;
+
+    letter-spacing: 1.5px;
+}
+
+.clinic-details-hero h1 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 38px;
+
+    letter-spacing: -1.3px;
+}
+
+.clinic-details-location {
+    margin: 10px 0 0;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    font-size: 14px;
+}
+
+.clinic-details-meta {
+    margin-top: 35px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 45px;
+}
+
+.clinic-details-meta div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.clinic-details-meta span {
+    color: rgba(255, 255, 255, 0.5);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+.clinic-details-meta strong {
+    color: white;
+
+    font-size: 13px;
+}
+
+.clinic-details-cross {
+    position: absolute;
+
+    right: 90px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: rgba(255, 255, 255, 0.1);
+
+    font-size: 200px;
+
+    font-weight: 200;
+}
+
+
+/* SECTIONS */
+
+.clinic-detail-section {
+    margin-top: 50px;
+}
+
+.clinic-section-header {
+    margin-bottom: 20px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.clinic-section-header p {
+    margin: 0 0 7px;
+
+    color: #0d9488;
+
+    font-size: 10px;
+    font-weight: 750;
+
+    letter-spacing: 1.4px;
+}
+
+.clinic-section-header h2 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 23px;
+
+    letter-spacing: -0.6px;
+}
+
+.clinic-section-count {
+    width: 33px;
+    height: 33px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background: #ecfdf5;
+
+    color: #0f766e;
+
+    font-size: 11px;
+    font-weight: 750;
+}
+
+
+/* VETS */
+
+.veterinarians-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+.veterinarian-card {
+    padding: 22px;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 17px;
+
+    background: white;
+}
+
+.veterinarian-avatar {
+    width: 54px;
+    height: 54px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 15px;
+
+    background: #ecfdf5;
+
+    color: #0f766e;
+
+    font-size: 20px;
+    font-weight: 750;
+}
+
+.veterinarian-card-content {
+    margin-top: 18px;
+
+    display: flex;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.veterinarian-card-content h3 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 15px;
+}
+
+.veterinarian-card-content p {
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.surgeon-badge {
+    height: fit-content;
+
+    padding: 5px 7px;
+
+    border-radius: 999px;
+
+    background: #f0fdfa;
+
+    color: #0f766e;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.vet-book-button {
+    width: 100%;
+    min-height: 41px;
+
+    margin-top: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 13px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.vet-book-button span {
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+/* SERVICES */
+
+.clinic-services-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.clinic-service-card {
+    padding: 18px 20px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 17px;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 14px;
+
+    background: white;
+}
+
+.service-number {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    background: #ecfdf5;
+
+    color: #0f766e;
+
+    font-size: 10px;
+    font-weight: 750;
+}
+
+.service-content {
+    min-width: 0;
+
+    flex: 1;
+}
+
+.service-content h3 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 14px;
+}
+
+.service-content p {
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.service-details {
+    display: flex;
+
+    gap: 35px;
+}
+
+.service-details div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    text-align: right;
+}
+
+.service-details span {
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+}
+
+.service-details strong {
+    color: #334155;
+
+    font-size: 11px;
+}
+
+
+/* EMPTY */
+
+.clinic-section-empty {
+    padding: 30px;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 14px;
+
+    background: white;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+
+/* LOADING */
+
+.clinic-details-loading {
+    min-height: calc(100vh - 72px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 15px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.clinic-details-spinner {
+    width: 32px;
+    height: 32px;
+
+    border: 3px solid #ccfbf1;
+    border-top-color: #0f766e;
+
+    border-radius: 50%;
+
+    animation: clinic-spin 0.7s linear infinite;
+}
+
+@keyframes clinic-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ERROR */
+
+.clinic-details-error {
+    max-width: 500px;
+
+    margin: 70px auto;
+
+    padding: 35px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 18px;
+
+    background: white;
+
+    text-align: center;
+}
+
+.clinic-details-error h2 {
+    color: #0f172a;
+}
+
+.clinic-details-error p {
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+.clinic-details-error a {
+    display: inline-flex;
+
+    margin-top: 10px;
+
+    padding: 9px 13px;
+
+    border-radius: 8px;
+
+    background: #0f766e;
+
+    color: white;
+
+    font-size: 11px;
+    font-weight: 650;
+
+    text-decoration: none;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+    .veterinarians-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+
+    .clinic-details-container {
+        padding: 30px 22px 55px;
+    }
+
+    .clinic-details-hero {
+        padding: 32px 25px;
+    }
+
+    .clinic-details-hero h1 {
+        font-size: 30px;
+    }
+
+    .clinic-details-meta {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 17px;
+    }
+
+    .clinic-details-cross {
+        display: none;
+    }
+
+    .veterinarians-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .clinic-service-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .service-details {
+        width: 100%;
+
+        padding-left: 59px;
+
+        justify-content: flex-start;
+    }
+
+    .service-details div {
+        text-align: left;
+    }
+}

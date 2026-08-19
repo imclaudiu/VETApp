@@ -115,4 +115,9 @@ public class PetService {
     private Pet findPetOrThrow(UUID id) {
         return petRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Animalul cu ID-ul " + id + " nu a fost găsit."));
     }
+
+    public List<Pet> getMyPets(Jwt jwt) {
+        UUID userId = accessGuard.extractUserId(jwt);
+        return petRepository.findAllByOwnerID(userId);
+    }
 }

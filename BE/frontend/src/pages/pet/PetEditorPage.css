@@ -1,0 +1,396 @@
+.pet-editor-page {
+    min-height: calc(100vh - 72px);
+
+    background: #f8fafc;
+}
+
+.pet-editor-container {
+    width: 100%;
+    max-width: 1180px;
+
+    margin: 0 auto;
+
+    padding: 38px 40px 70px;
+}
+
+
+/* BACK */
+
+.pet-editor-back {
+    margin-bottom: 26px;
+}
+
+.pet-editor-back a {
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+.pet-editor-back a:hover {
+    color: #0f766e;
+}
+
+
+/* HEADER */
+
+.pet-editor-header {
+    margin-bottom: 32px;
+}
+
+.pet-editor-eyebrow {
+    margin: 0 0 9px;
+
+    color: #0d9488;
+
+    font-size: 11px;
+    font-weight: 750;
+
+    letter-spacing: 1.5px;
+}
+
+.pet-editor-header h1 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 36px;
+    font-weight: 750;
+
+    letter-spacing: -1.3px;
+}
+
+.pet-editor-header>div>p:last-child {
+    margin: 10px 0 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+/* LAYOUT */
+
+.pet-editor-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr) 300px;
+
+    gap: 24px;
+
+    align-items: start;
+}
+
+.pet-editor-main {
+    min-width: 0;
+}
+
+
+/* SIDEBAR */
+
+.pet-editor-sidebar {
+    position: sticky;
+
+    top: 95px;
+}
+
+.pet-editor-info-card,
+.pet-editor-profile-card {
+    padding: 25px;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 18px;
+
+    background: white;
+}
+
+
+/* ADD INFO CARD */
+
+.pet-editor-info-number {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    margin-bottom: 20px;
+
+    border-radius: 12px;
+
+    background: #ecfdf5;
+
+    color: #0f766e;
+
+    font-size: 10px;
+    font-weight: 750;
+}
+
+.pet-editor-info-card h2 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 17px;
+}
+
+.pet-editor-info-card>p {
+    margin: 9px 0 0;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+.pet-editor-info-list {
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+
+    border-top: 1px solid #f1f5f9;
+}
+
+.pet-editor-info-list>div {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 11px;
+}
+
+.pet-editor-info-list span {
+    width: 27px;
+    height: 27px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    background: #f0fdfa;
+
+    color: #0f766e;
+
+    font-size: 9px;
+    font-weight: 750;
+}
+
+.pet-editor-info-list p {
+    margin: 5px 0 0;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+/* PROFILE CARD */
+
+.pet-editor-profile-card {
+    text-align: center;
+}
+
+.pet-editor-avatar {
+    width: 70px;
+    height: 70px;
+
+    display: grid;
+    place-items: center;
+
+    margin: 0 auto 16px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(135deg,
+            #ccfbf1,
+            #ecfdf5);
+
+    color: #0f766e;
+
+    font-size: 28px;
+    font-weight: 750;
+}
+
+.pet-editor-profile-card h2 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 19px;
+}
+
+.pet-editor-profile-card>p {
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+.pet-editor-profile-details {
+    margin-top: 23px;
+
+    padding-top: 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 13px;
+
+    border-top: 1px solid #f1f5f9;
+
+    text-align: left;
+}
+
+.pet-editor-profile-details div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.pet-editor-profile-details span {
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.pet-editor-profile-details strong {
+    color: #334155;
+
+    font-size: 11px;
+}
+
+
+/* LOADING */
+
+.pet-editor-loading {
+    min-height: calc(100vh - 72px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 15px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.pet-editor-spinner {
+    width: 32px;
+    height: 32px;
+
+    border: 3px solid #ccfbf1;
+
+    border-top-color: #0f766e;
+
+    border-radius: 50%;
+
+    animation: pet-editor-spin 0.7s linear infinite;
+}
+
+@keyframes pet-editor-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* LOAD ERROR */
+
+.pet-editor-load-error {
+    max-width: 550px;
+
+    margin: 60px auto;
+
+    padding: 35px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 18px;
+
+    background: white;
+
+    text-align: center;
+}
+
+.pet-editor-load-error h2 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 20px;
+}
+
+.pet-editor-load-error p {
+    margin: 10px 0 20px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.pet-editor-load-error a {
+    display: inline-flex;
+
+    padding: 10px 14px;
+
+    border-radius: 9px;
+
+    background: #0f766e;
+
+    color: white;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    text-decoration: none;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+
+    .pet-editor-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .pet-editor-sidebar {
+        position: static;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .pet-editor-container {
+        padding:
+            30px 22px 55px;
+    }
+
+    .pet-editor-header h1 {
+        font-size: 30px;
+    }
+}

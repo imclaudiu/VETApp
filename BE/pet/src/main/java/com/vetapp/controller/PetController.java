@@ -62,4 +62,9 @@ public class PetController {
         petService.deleteAll(jwt);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/mine")
+    public ResponseEntity<List<Pet>> getMyPets(@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(petService.getMyPets(jwt));
+    }
 }
