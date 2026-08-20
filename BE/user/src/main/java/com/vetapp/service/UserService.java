@@ -93,6 +93,19 @@ public class UserService {
                 });
     }
 
+    public UserPublic getPublicUserById(UUID id) {
+
+        Users user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Utilizatorul cu ID-ul " + id + " nu a fost găsit."
+                        )
+                );
+
+        return UserBuilder.toPublicUser(user);
+    }
+
     // NOU: doar admin
     public void deleteAll(Jwt jwt){
         accessGuard.requireAdmin(jwt);

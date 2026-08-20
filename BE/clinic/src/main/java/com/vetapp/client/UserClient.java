@@ -31,7 +31,7 @@ public class UserClient {
 
     public UserPublic getUserById(UUID userId) {
         return restClient.get()
-                .uri("/user/get/{id}", userId)
+                .uri("/user/public/{id}", userId)
                 .retrieve()
                 .onStatus(
                         status -> status.is4xxClientError() || status.is5xxServerError(),

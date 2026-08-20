@@ -9,6 +9,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,5 +66,10 @@ public class AppointmentController {
     public ResponseEntity<Void> deleteAppointment(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
         appointmentService.deleteAppointment(id, jwt);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/available-slots")
+    public ResponseEntity<List<LocalDateTime>> getAvailableSlots(@RequestParam UUID veterinarianId, @RequestParam Long vetServiceId, @RequestParam LocalDate day) {
+        return ResponseEntity.ok(appointmentService.getAvailableSlots(veterinarianId, vetServiceId, day));
     }
 }

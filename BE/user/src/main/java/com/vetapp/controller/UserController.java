@@ -47,5 +47,15 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(id, updatedUser, jwt));
     }
 
+    @GetMapping("/public/{id}")
+    public ResponseEntity<UserPublic> getPublicUserById(
+            @PathVariable UUID id
+    ) {
+
+        return ResponseEntity.ok(
+                userService.getPublicUserById(id)
+        );
+    }
+
 
 }

@@ -26,6 +26,16 @@ public class Appointment {
     private LocalDateTime startOfAppointment;
     @Column(name = "endOfAppointment", unique = false, nullable = false)
     private LocalDateTime endOfAppointment;
+    @Column(name = "vetServiceId")
+    private Long vetServiceId;
+
+    public Long getVetServiceId() {
+        return vetServiceId;
+    }
+
+    public void setVetServiceId(Long vetServiceId) {
+        this.vetServiceId = vetServiceId;
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", unique = false, nullable = false)
@@ -34,13 +44,14 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(UUID id, UUID ownerId, UUID petId, UUID veterinarianId, LocalDateTime startOfAppointment, LocalDateTime endOfAppointment, Status status) {
+    public Appointment(UUID id, UUID ownerId, UUID petId, UUID veterinarianId, LocalDateTime startOfAppointment, LocalDateTime endOfAppointment, Long vetServiceId, Status status) {
         this.id = id;
         this.ownerId = ownerId;
         this.petId = petId;
         this.veterinarianId = veterinarianId;
         this.startOfAppointment = startOfAppointment;
         this.endOfAppointment = endOfAppointment;
+        this.vetServiceId = vetServiceId;
         this.status = status;
     }
 

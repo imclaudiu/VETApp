@@ -295,17 +295,19 @@ export default function ClinicDetailsPage() {
                                         </div>
 
 
-                                        <button
-                                            type="button"
+                                        <Link
+                                            to={
+                                                `/appointments/new?clinicId=${clinic.id}` +
+                                                `&veterinarianId=${vet.id}`
+                                            }
                                             className="vet-book-button"
-                                            disabled
                                         >
                                             Book appointment
 
                                             <span>
-                                                Next step
+                                                →
                                             </span>
-                                        </button>
+                                        </Link>
 
                                     </article>
 

@@ -39,7 +39,7 @@ public class VeterinarianController {
     }
 
     @GetMapping("/clinic/{clinicId}")
-    public ResponseEntity<List<Veterinarian>> getByClinicId(@PathVariable UUID clinicId) {
+    public ResponseEntity<List<VeterinarianPublic>> getByClinicId(@PathVariable UUID clinicId) {
         return ResponseEntity.ok(veterinarianService.getVeterinariansByClinicId(clinicId));
     }
 

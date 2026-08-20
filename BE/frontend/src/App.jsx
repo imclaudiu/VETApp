@@ -14,8 +14,9 @@ import AddPetPage from './pages/pet/AddPetPage';
 import EditPetPage from './pages/pet/EditPetPage';
 import ClinicsPage from './pages/clinic/ClinicsPage';
 import ClinicDetailsPage from './pages/clinic/ClinicDetailsPage';
-import AddClinicPage from './pages/clinic/AddClinicPage';
-
+import AdminClinicsPage from './pages/AdminClinicsPage';
+import AdminClinicDetailsPage from './pages/AdminClinicDetailsPage';
+import BookAppointmentPage from './pages/appointment/BookAppointmentPage';
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -94,10 +95,19 @@ function AppRoutes() {
       />
 
       <Route
-        path="/admin/clinics/new"
+        path="/admin/clinics"
         element={
           <ProtectedRoute allowedRoles={['ADMIN']}>
-            <AddClinicPage />
+            <AdminClinicsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/clinics/:id"
+        element={
+          <ProtectedRoute allowedRoles={['ADMIN']}>
+            <AdminClinicDetailsPage />
           </ProtectedRoute>
         }
       />
@@ -106,6 +116,17 @@ function AppRoutes() {
         path="*"
         element={<Navigate to="/" replace />}
       />
+
+      {/* APPOINTMENT ROUTES */}
+      <Route
+        path="/appointments/new"
+        element={
+          <ProtectedRoute allowedRoles={['OWNER']}>
+            <BookAppointmentPage />
+          </ProtectedRoute>
+        }
+      />
+
       {/* CLINIC ROUTES */}
 
       <Route

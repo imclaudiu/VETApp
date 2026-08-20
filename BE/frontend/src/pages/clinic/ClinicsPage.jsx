@@ -12,12 +12,17 @@ import './ClinicsPage.css';
 
 export default function ClinicsPage() {
 
-    const [clinics, setClinics] = useState([]);
+    const [clinics, setClinics] =
+        useState([]);
 
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [search, setSearch] =
+        useState('');
 
-    const [search, setSearch] = useState('');
+    const [loading, setLoading] =
+        useState(true);
+
+    const [error, setError] =
+        useState(null);
 
 
     const loadClinics = async () => {
@@ -27,14 +32,23 @@ export default function ClinicsPage() {
 
         try {
 
-            const data = await getAllClinics();
+            const data =
+                await getAllClinics();
 
-            setClinics(data);
+            setClinics(
+                Array.isArray(data)
+                    ? data
+                    : []
+            );
 
         } catch (err) {
 
+            console.error(
+                'Error loading clinics:',
+                err
+            );
+
             setError(
-                err.response?.data?.message ||
                 err.message ||
                 'Could not load clinics.'
             );
@@ -52,44 +66,70 @@ export default function ClinicsPage() {
     }, []);
 
 
-    const filteredClinics = useMemo(() => {
+    /*
+     * Căutarea se face local momentan.
+     *
+     * Userul poate căuta după:
+     * - nume
+     * - oraș
+     * - adresă
+     */
+    const filteredClinics =
+        useMemo(() => {
 
-        const term = search
-            .trim()
-            .toLowerCase();
+            const term =
+                search
+                    .trim()
+                    .toLowerCase();
 
-        if (!term) {
-            return clinics;
-        }
 
-        return clinics.filter((clinic) => {
+            if (!term) {
+                return clinics;
+            }
 
-            return (
-                clinic.name
-                    ?.toLowerCase()
-                    .includes(term) ||
 
-                clinic.city
-                    ?.toLowerCase()
-                    .includes(term) ||
+            return clinics.filter(
+                (clinic) => {
 
-                clinic.address
-                    ?.toLowerCase()
-                    .includes(term)
+                    const name =
+                        clinic.name
+                            ?.toLowerCase()
+                        || '';
+
+                    const city =
+                        clinic.city
+                            ?.toLowerCase()
+                        || '';
+
+                    const address =
+                        clinic.address
+                            ?.toLowerCase()
+                        || '';
+
+
+                    return (
+                        name.includes(term)
+                        ||
+                        city.includes(term)
+                        ||
+                        address.includes(term)
+                    );
+                }
             );
 
-        });
-
-    }, [clinics, search]);
+        }, [clinics, search]);
 
 
-    const formatRating = (rating) => {
+    const displayRating = (rating) => {
 
         if (
-            rating === null ||
+            rating === null
+            ||
             rating === undefined
+            ||
+            Number(rating) === 0
         ) {
-            return 'No rating';
+            return 'No reviews yet';
         }
 
         return Number(rating).toFixed(1);
@@ -102,12 +142,12 @@ export default function ClinicsPage() {
 
             <main className="clinics-page">
 
-                <div className="clinics-container">
+                <div className="clinics-page-container">
 
 
                     {/* HEADER */}
 
-                    <section className="clinics-header">
+                    <section className="clinics-page-header">
 
                         <div>
 
@@ -120,8 +160,9 @@ export default function ClinicsPage() {
                             </h1>
 
                             <p>
-                                Browse veterinary clinics and find
-                                the right care for your pet.
+                                Find veterinary clinics
+                                and choose the right care
+                                for your pet.
                             </p>
 
                         </div>
@@ -131,30 +172,37 @@ export default function ClinicsPage() {
 
                     {/* SEARCH */}
 
-                    <section className="clinics-search-section">
+                    <section className="clinics-search-wrapper">
 
-                        <div className="clinics-search">
+                        <div className="clinics-search-box">
 
-                            <span className="clinics-search-icon">
+                            <div className="clinics-search-symbol">
                                 ⌕
-                            </span>
+                            </div>
 
                             <input
                                 type="text"
-                                placeholder="Search by clinic, city or address..."
                                 value={search}
                                 onChange={(e) =>
-                                    setSearch(e.target.value)
+                                    setSearch(
+                                        e.target.value
+                                    )
                                 }
+                                placeholder="Search by clinic name, city or address..."
                             />
 
+
                             {search && (
+
                                 <button
                                     type="button"
-                                    onClick={() => setSearch('')}
+                                    onClick={() =>
+                                        setSearch('')
+                                    }
                                 >
                                     Clear
                                 </button>
+
                             )}
 
                         </div>
@@ -165,9 +213,11 @@ export default function ClinicsPage() {
                     {/* ERROR */}
 
                     {error && (
-                        <div className="clinics-error">
+
+                        <div className="clinics-error-box">
 
                             <div>
+
                                 <strong>
                                     Could not load clinics
                                 </strong>
@@ -175,7 +225,9 @@ export default function ClinicsPage() {
                                 <p>
                                     {error}
                                 </p>
+
                             </div>
+
 
                             <button
                                 type="button"
@@ -185,12 +237,14 @@ export default function ClinicsPage() {
                             </button>
 
                         </div>
+
                     )}
 
 
                     {/* LOADING */}
 
                     {loading && (
+
                         <div className="clinics-loading">
 
                             <div className="clinics-spinner" />
@@ -200,20 +254,21 @@ export default function ClinicsPage() {
                             </p>
 
                         </div>
+
                     )}
 
 
-                    {/* CONTENT */}
+                    {/* RESULT */}
 
                     {!loading && !error && (
 
-                        <section className="clinics-content">
+                        <section>
 
                             <div className="clinics-results-header">
 
                                 <div>
 
-                                    <p className="clinics-results-label">
+                                    <p>
                                         AVAILABLE CLINICS
                                     </p>
 
@@ -221,8 +276,8 @@ export default function ClinicsPage() {
                                         {filteredClinics.length}
                                         {' '}
                                         {filteredClinics.length === 1
-                                            ? 'clinic'
-                                            : 'clinics'}
+                                            ? 'clinic found'
+                                            : 'clinics found'}
                                     </h2>
 
                                 </div>
@@ -238,21 +293,28 @@ export default function ClinicsPage() {
                                         +
                                     </div>
 
-                                    <h3>
+                                    <h2>
                                         No clinics found
-                                    </h3>
+                                    </h2>
 
                                     <p>
-                                        Try searching for another
-                                        clinic name or city.
+                                        Try searching for
+                                        another clinic or city.
                                     </p>
 
-                                    <button
-                                        type="button"
-                                        onClick={() => setSearch('')}
-                                    >
-                                        Clear search
-                                    </button>
+
+                                    {search && (
+
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setSearch('')
+                                            }
+                                        >
+                                            Clear search
+                                        </button>
+
+                                    )}
 
                                 </div>
 
@@ -264,23 +326,25 @@ export default function ClinicsPage() {
                                         (clinic) => (
 
                                             <article
-                                                className="clinic-card"
                                                 key={clinic.id}
+                                                className="clinic-user-card"
                                             >
 
-                                                <div className="clinic-card-top">
 
-                                                    <div className="clinic-icon">
+                                                <div className="clinic-user-card-top">
+
+                                                    <div className="clinic-user-icon">
                                                         +
                                                     </div>
 
-                                                    <div className="clinic-rating">
+
+                                                    <div className="clinic-user-rating">
 
                                                         <span>
                                                             ★
                                                         </span>
 
-                                                        {formatRating(
+                                                        {displayRating(
                                                             clinic.rating
                                                         )}
 
@@ -289,38 +353,43 @@ export default function ClinicsPage() {
                                                 </div>
 
 
-                                                <div className="clinic-card-content">
+                                                <div className="clinic-user-card-content">
 
                                                     <h2>
                                                         {clinic.name}
                                                     </h2>
 
-                                                    <p className="clinic-city">
+
+                                                    <p className="clinic-user-city">
                                                         {clinic.city}
                                                     </p>
 
 
-                                                    <div className="clinic-information">
+                                                    <div className="clinic-user-info">
 
                                                         <div>
+
                                                             <span>
-                                                                Address
+                                                                ADDRESS
                                                             </span>
 
                                                             <strong>
                                                                 {clinic.address}
                                                             </strong>
+
                                                         </div>
 
 
                                                         <div>
+
                                                             <span>
-                                                                Phone
+                                                                PHONE
                                                             </span>
 
                                                             <strong>
                                                                 {clinic.phone}
                                                             </strong>
+
                                                         </div>
 
                                                     </div>
@@ -330,7 +399,7 @@ export default function ClinicsPage() {
 
                                                 <Link
                                                     to={`/clinics/${clinic.id}`}
-                                                    className="clinic-view-button"
+                                                    className="clinic-user-button"
                                                 >
                                                     View clinic
 
@@ -339,15 +408,18 @@ export default function ClinicsPage() {
                                                     </span>
                                                 </Link>
 
+
                                             </article>
 
                                         )
                                     )}
 
                                 </div>
+
                             )}
 
                         </section>
+
                     )}
 
                 </div>

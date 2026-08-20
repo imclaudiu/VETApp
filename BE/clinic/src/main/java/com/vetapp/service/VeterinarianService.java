@@ -48,7 +48,11 @@ public class VeterinarianService {
 
         clinicService.getClinicById(veterinarian.getClinicId());
 
-        authClient.updateAuthRole(veterinarian.getUserId(), "VETERINARIAN");
+        authClient.updateAuthRole(
+                veterinarian.getUserId(),
+                "VETERINARIAN",
+                jwt.getTokenValue()
+        );
 
         veterinarianRepository.save(veterinarian);
         return veterinarian.getId();
@@ -61,8 +65,9 @@ public class VeterinarianService {
 
     // ramane public - browse
     public VeterinarianPublic getVeterinarianById(UUID id) {
-        Veterinarian veterinarian = veterinarianRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Veterinarul nu a fost găsit."));
+
+        Veterinarian veterinarian = veterinarianRepository.findById(id).orElseThrow(() ->
+                                new ResponseStatusException(HttpStatus.NOT_FOUND, "Veterinarul nu a fost găsit."));
 
         UserPublic user = userClient.getUserById(veterinarian.getUserId());
 
@@ -76,8 +81,22 @@ public class VeterinarianService {
     }
 
     // ramane public - browse
-    public List<Veterinarian> getVeterinariansByClinicId(UUID clinicId) {
-        return veterinarianRepository.findByClinicId(clinicId);
+    public List<VeterinarianPublic> getVeterinariansByClinicId(UUID clinicId) {
+
+        List<Veterinarian> veterinarians = veterinarianRepository.findByClinicId(clinicId);
+
+
+        return veterinarians.stream().map(veterinarian -> {
+                    UserPublic user = userClient.getUserById(veterinarian.getUserId());
+                    return new VeterinarianPublic(
+                            veterinarian.getId(),
+                            veterinarian.getUserId(),
+                            veterinarian.getClinicId(),
+                            user.getName(),
+                            veterinarian.getSurgeon()
+                    );
+                })
+                .toList();
     }
 
     // ramane public
@@ -128,7 +147,11 @@ public class VeterinarianService {
         Veterinarian veterinarian = veterinarianRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Veterinarul nu a fost găsit."));
 
-        authClient.updateAuthRole(veterinarian.getUserId(), "CLIENT");
+        authClient.updateAuthRole(
+                veterinarian.getUserId(),
+                "OWNER",
+                jwt.getTokenValue()
+        );
 
         veterinarianRepository.delete(veterinarian);
     }

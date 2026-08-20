@@ -1,6 +1,7 @@
 package com.vetapp.repository;
 
 import com.vetapp.entity.Appointment;
+import com.vetapp.entity.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -19,5 +20,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             UUID veterinarianId,
             LocalDateTime endOfAppointment,
             LocalDateTime startOfAppointment
+    );
+
+    boolean existsByPetIdAndStatusInAndEndOfAppointmentAfter(UUID petId, List<Status> statuses, LocalDateTime dateTime
     );
 }
