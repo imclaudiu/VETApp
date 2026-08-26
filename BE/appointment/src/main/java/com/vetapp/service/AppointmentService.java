@@ -106,23 +106,10 @@ public class AppointmentService {
         if (conflict) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Medicul veterinar are deja o programare în acest interval.");
         }
-
-
-        Appointment appointmentSave =
-                new Appointment();
-
-
-        appointmentSave.setOwnerId(
-                pet.getOwnerID()
-        );
-
-        appointmentSave.setPetId(
-                appointment.getPetId()
-        );
-
-        appointmentSave.setVeterinarianId(
-                appointment.getVeterinarianId()
-        );
+        Appointment appointmentSave = new Appointment();
+        appointmentSave.setOwnerId(pet.getOwnerID());
+        appointmentSave.setPetId(appointment.getPetId());
+        appointmentSave.setVeterinarianId(appointment.getVeterinarianId());
 
         appointmentSave.setVetServiceId(appointment.getVetServiceId());
 
@@ -201,10 +188,6 @@ public class AppointmentService {
             existingAppointment.setEndOfAppointment(updatedAppointment.getEndOfAppointment());
         }
 
-        if (updatedAppointment.getStatus() != null) {
-            existingAppointment.setStatus(updatedAppointment.getStatus());
-        }
-
         if (!existingAppointment.getEndOfAppointment().isAfter(existingAppointment.getStartOfAppointment())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ora de final trebuie să fie după ora de început.");
         }
@@ -263,15 +246,6 @@ public class AppointmentService {
         List<LocalDateTime> slots = new ArrayList<>();
         int duration = service.getDuration();
 
-
-        /*
-         * Sloturile pornesc din 30 în 30 minute.
-         *
-         * 08:00
-         * 08:30
-         * 09:00
-         * ...
-         */
         LocalDateTime current = workStart;
         while (!current.plusMinutes(duration).isAfter(workEnd)
         ) {
@@ -286,4 +260,43 @@ public class AppointmentService {
 
         return slots;
     }
+    public Appointment cancelAppointment(UUID id, Jwt jwt) {
+        Appointment appointment = findAppointmentOrThrow(id);
+
+        accessGuard.requireOwnerOrAdmin(appointment.getOwnerId(), jwt);
+
+        if (appointment.getStatus() == Status.CANCELED) {
+
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Programarea este deja anulată.");
+        }
+
+        if (appointment.getStatus() == Status.FINISHED) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "O programare finalizată nu poate fi anulată.");
+        }
+
+
+        if (appointment.getStatus() == Status.NO_SHOW) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Această programare nu mai poate fi anulată."
+            );
+        }
+
+
+        /*
+         * Nu permitem anularea după începerea programării.
+         */
+        if (!appointment.getStartOfAppointment().isAfter(LocalDateTime.now())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Programarea nu mai poate fi anulată deoarece a început deja.");
+        }
+
+
+        appointment.setStatus(
+                Status.CANCELED
+        );
+
+
+        return appointmentRepository.save(
+                appointment
+        );
+    }
+
 }

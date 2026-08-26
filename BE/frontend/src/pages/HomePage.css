@@ -1217,4 +1217,52 @@
     .hero-secondary-button {
         width: 100%;
     }
+
+
+}
+
+.appointment-card-actions {
+    margin-top: 12px;
+
+    padding-top: 10px;
+
+    display: flex;
+    justify-content: flex-end;
+
+    border-top: 1px solid #f1f5f9;
+}
+
+
+.appointment-cancel-button {
+    padding: 7px 10px;
+
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #dc2626;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.appointment-cancel-button:hover:not(:disabled) {
+    border-color: #fca5a5;
+
+    background: #fef2f2;
+}
+
+
+.appointment-cancel-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
 }

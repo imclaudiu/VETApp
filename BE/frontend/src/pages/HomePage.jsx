@@ -5,7 +5,7 @@ import Navbar from '../shared/components/Navbar';
 import { useAuth } from '../features/auth/contexts/AuthContext';
 import { getMyPets } from '../features/pet/services/petService';
 
-import { getAppointmentsByOwner } from '../features/appointment/services/appointmentService';
+import { getAppointmentsByOwner, cancelAppointment } from '../features/appointment/services/appointmentService';
 
 import { getVeterinarianById, getServiceById } from '../features/clinic/services/clinicService';
 
@@ -19,7 +19,7 @@ export default function HomePage() {
     const [pets, setPets] = useState([]);
     const [petsLoading, setPetsLoading] = useState(false);
     const [petsError, setPetsError] = useState(null);
-
+    const [cancelingAppointmentId, setCancelingAppointmentId] = useState(null);
     const [appointments, setAppointments] = useState([]);
     const [appointmentsLoading, setAppointmentsLoading] = useState(false);
     const [appointmentsError, setAppointmentsError] = useState(null);
@@ -518,6 +518,59 @@ export default function HomePage() {
         }
     };
 
+    const handleCancelAppointment = async (appointment) => {
+        const confirmed = window.confirm('Are you sure you want to cancel this appointment?');
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        setCancelingAppointmentId(appointment.id);
+
+        setAppointmentsError(null);
+
+
+        try {
+
+            await cancelAppointment(
+                appointment.id
+            );
+
+            setAppointments((currentAppointments) =>
+                currentAppointments.filter(
+                    (item) =>
+                        item.id !== appointment.id
+                )
+            );
+
+        } catch (err) {
+
+            if (err.response?.status === 409) {
+
+                setAppointmentsError(
+                    err.response?.data?.message
+                    ||
+                    'This appointment can no longer be canceled.'
+                );
+
+            } else {
+
+                setAppointmentsError(
+                    err.message
+                    ||
+                    'Could not cancel appointment.'
+                );
+
+            }
+
+        } finally {
+
+            setCancelingAppointmentId(null);
+
+        }
+    };
+
     return (
         <>
             <Navbar />
@@ -973,6 +1026,36 @@ export default function HomePage() {
                                                                 'Veterinary appointment'
                                                             }
                                                         </span>
+
+                                                    </div>
+
+                                                    <div className="appointment-card-actions">
+
+                                                        <button
+                                                            type="button"
+                                                            className="appointment-cancel-button"
+                                                            disabled={
+                                                                cancelingAppointmentId
+                                                                ===
+                                                                appointment.id
+                                                            }
+                                                            onClick={() =>
+                                                                handleCancelAppointment(
+                                                                    appointment
+                                                                )
+                                                            }
+                                                        >
+
+                                                            {cancelingAppointmentId
+                                                                ===
+                                                                appointment.id
+
+                                                                ? 'Canceling...'
+
+                                                                : 'Cancel appointment'
+                                                            }
+
+                                                        </button>
 
                                                     </div>
 

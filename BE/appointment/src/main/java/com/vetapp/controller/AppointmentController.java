@@ -72,4 +72,9 @@ public class AppointmentController {
     public ResponseEntity<List<LocalDateTime>> getAvailableSlots(@RequestParam UUID veterinarianId, @RequestParam Long vetServiceId, @RequestParam LocalDate day) {
         return ResponseEntity.ok(appointmentService.getAvailableSlots(veterinarianId, vetServiceId, day));
     }
+
+    @PatchMapping("/cancel/{id}")
+    public ResponseEntity<Appointment> cancelAppointment(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.cancelAppointment(id, jwt));
+    }
 }

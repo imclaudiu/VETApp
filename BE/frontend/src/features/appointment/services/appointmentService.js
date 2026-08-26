@@ -44,3 +44,14 @@ export const getAppointmentsByOwner =
 
         return response.data;
     };
+
+export const cancelAppointment = async (
+    appointmentId
+) => {
+
+    const response = await api.patch(
+        `/appointment/cancel/${appointmentId}`
+    );
+
+    return response.data;
+};
