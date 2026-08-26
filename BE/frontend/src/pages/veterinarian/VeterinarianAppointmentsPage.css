@@ -410,3 +410,36 @@
     background: #fff7ed;
     color: #c2410c;
 }
+
+.vet-history-button,
+.vet-complete-button {
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 9px;
+    font-weight: 650;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vet-history-button {
+    border: 1px solid #cbd5e1;
+    background: white;
+    color: #475569;
+}
+
+.vet-history-button:hover {
+    background: #f8fafc;
+    color: #0f766e;
+}
+
+.vet-complete-button {
+    border: 1px solid #99f6e4;
+    background: #f0fdfa;
+    color: #0f766e;
+}
+
+.vet-complete-button:hover {
+    background: #ccfbf1;
+}

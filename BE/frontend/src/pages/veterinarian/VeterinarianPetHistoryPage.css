@@ -1,0 +1,169 @@
+.vet-history-page {
+    min-height: calc(100vh - 70px);
+    background: #f8fafc;
+}
+
+.vet-history-container {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 42px 32px 70px;
+}
+
+.vet-history-back {
+    display: inline-block;
+    margin-bottom: 26px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.vet-history-back:hover {
+    color: #0f766e;
+}
+
+.vet-history-header {
+    margin-bottom: 30px;
+}
+
+.vet-history-header>p {
+    margin: 0 0 7px;
+    color: #0d9488;
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: 1.4px;
+}
+
+.vet-history-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 32px;
+}
+
+.vet-history-header>span {
+    display: block;
+    margin-top: 7px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.vet-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.vet-history-card {
+    padding: 23px;
+    border: 1px solid #e2e8f0;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.vet-history-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.vet-history-card-top span {
+    display: block;
+    margin-bottom: 6px;
+    color: #0d9488;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.vet-history-card-top h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 18px;
+}
+
+.vet-history-card-top>strong {
+    color: #0f766e;
+    font-size: 11px;
+}
+
+.vet-history-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.vet-history-meta div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.vet-history-meta span,
+.vet-history-section>span {
+    color: #94a3b8;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+}
+
+.vet-history-meta strong {
+    color: #334155;
+    font-size: 11px;
+}
+
+.vet-history-section {
+    padding-top: 16px;
+}
+
+.vet-history-section p {
+    margin: 6px 0 0;
+    color: #475569;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.vet-history-empty {
+    padding: 55px 20px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 15px;
+    background: white;
+    color: #64748b;
+    text-align: center;
+    font-size: 12px;
+}
+
+.vet-history-error {
+    padding: 12px;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 11px;
+}
+
+.vet-history-loading {
+    padding: 60px;
+    color: #64748b;
+    text-align: center;
+}
+
+@media (max-width: 750px) {
+    .vet-history-container {
+        padding: 30px 20px 55px;
+    }
+
+    .vet-history-card-top {
+        flex-direction: column;
+    }
+
+    .vet-history-meta {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

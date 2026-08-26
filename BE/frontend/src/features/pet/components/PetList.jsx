@@ -210,21 +210,23 @@ export default function PetList({ pets, onDelete }) {
                             <div className="pet-card-actions">
 
                                 <Link
+                                    to={`/pets/${pet.id}/medical-history`}
+                                    className="pet-history-button"
+                                >
+                                    Medical history
+                                </Link>
+
+                                <Link
                                     to={`/pets/${pet.id}/edit`}
                                     className="pet-edit-button"
                                 >
-                                    Edit pet
+                                    Edit
                                 </Link>
 
                                 <button
                                     type="button"
                                     className="pet-delete-button"
-                                    onClick={() =>
-                                        onDelete(
-                                            pet.id,
-                                            pet.name
-                                        )
-                                    }
+                                    onClick={() => onDelete(pet.id, pet.name)}
                                 >
                                     Delete
                                 </button>

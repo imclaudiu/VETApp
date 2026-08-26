@@ -50,9 +50,10 @@ public class VetServiceController {
         return ResponseEntity.noContent().build();
     }
 
-//    @GetMapping("/check")
-//    public ResponseEntity<UUID> checkServiceForVeterinarian(@RequestParam UUID veterinarianId,
-//                                                            @RequestParam Long serviceId) {
-//        return ResponseEntity.ok(vetServiceService.checkServiceForVeterinarian(veterinarianId, serviceId));
-//    } VEZI DACA ARE UTILIZARE
+    @GetMapping("/check/{serviceId}/veterinarian/{veterinarianId}")
+    public ResponseEntity<UUID> checkServiceForVeterinarian(@PathVariable Long serviceId, @PathVariable UUID veterinarianId) {
+
+        return ResponseEntity.ok(vetServiceService.checkServiceForVeterinarian(veterinarianId, serviceId)
+        );
+    }
 }

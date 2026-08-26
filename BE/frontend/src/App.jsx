@@ -20,6 +20,9 @@ import BookAppointmentPage from './pages/appointment/BookAppointmentPage';
 import VeterinarianSchedulePage from './pages/veterinarian/VeterinarianSchedulePage';
 import VeterinarianAppointmentsPage from './pages/veterinarian/VeterinarianAppointmentsPage';
 import SettingsPage from './pages/settings/SettingsPage';
+import PetMedicalHistoryPage from './pages/pet/PetMedicalHistoryPage';
+import VeterinarianMedicalRecordPage from './pages/veterinarian/VeterinarianMedicalRecordPage';
+import VeterinarianPetHistoryPage from './pages/veterinarian/VeterinarianPetHistoryPage';
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -189,7 +192,38 @@ function AppRoutes() {
         }
       /> */}
 
+
+      {/* MEDICALR ROUTES */}
+
+      <Route
+        path="/pets/:id/medical-history"
+        element={
+          <ProtectedRoute allowedRoles={['OWNER']}>
+            <PetMedicalHistoryPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/veterinarian/appointments/:appointmentId/medical-record"
+        element={
+          <ProtectedRoute allowedRoles={['VETERINARIAN']}>
+            <VeterinarianMedicalRecordPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/veterinarian/pets/:petId/medical-history/:appointmentId"
+        element={
+          <ProtectedRoute allowedRoles={['VETERINARIAN']}>
+            <VeterinarianPetHistoryPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
+
+
   );
 }
 

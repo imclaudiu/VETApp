@@ -9,6 +9,8 @@ import {
     markAppointmentNoShow
 } from '../../features/appointment/services/appointmentService';
 
+import { Link } from 'react-router-dom';
+
 import './VeterinarianAppointmentsPage.css';
 
 
@@ -461,6 +463,15 @@ export default function VeterinarianAppointmentsPage() {
                                                     {(appointment.status === 'PENDING' || appointment.status === 'CONFIRMED') && (
                                                         <div className="vet-appointment-action-buttons">
 
+                                                            {!['CANCELED', 'NO_SHOW'].includes(appointment.status) && (
+                                                                <Link
+                                                                    to={`/veterinarian/pets/${appointment.petId}/medical-history/${appointment.id}`}
+                                                                    className="vet-history-button"
+                                                                >
+                                                                    Medical history
+                                                                </Link>
+                                                            )}
+
                                                             {appointment.status === 'PENDING' && (
                                                                 <button
                                                                     type="button"
@@ -468,37 +479,45 @@ export default function VeterinarianAppointmentsPage() {
                                                                     disabled={updatingId === appointment.id}
                                                                     onClick={() => handleConfirmAppointment(appointment.id)}
                                                                 >
-                                                                    {updatingId === appointment.id && updatingAction === 'confirm'
+                                                                    {updatingId === appointment.id &&
+                                                                        updatingAction === 'confirm'
                                                                         ? 'Confirming...'
                                                                         : 'Confirm'}
                                                                 </button>
                                                             )}
 
-                                                            {new Date(appointment.startOfAppointment) > new Date() && (
-                                                                <button
-                                                                    type="button"
-                                                                    className="vet-cancel-button"
-                                                                    disabled={updatingId === appointment.id}
-                                                                    onClick={() => handleCancelAppointment(appointment.id)}
-                                                                >
-                                                                    {updatingId === appointment.id && updatingAction === 'cancel'
-                                                                        ? 'Canceling...'
-                                                                        : 'Cancel'}
-                                                                </button>
-                                                            )}
+                                                            {new Date(appointment.startOfAppointment) > new Date() &&
+                                                                ['PENDING', 'CONFIRMED'].includes(appointment.status) && (
+                                                                    <button
+                                                                        type="button"
+                                                                        className="vet-cancel-button"
+                                                                        disabled={updatingId === appointment.id}
+                                                                        onClick={() => handleCancelAppointment(appointment.id)}
+                                                                    >
+                                                                        Cancel
+                                                                    </button>
+                                                                )}
 
-                                                            {new Date(appointment.startOfAppointment) <= new Date() && (
-                                                                <button
-                                                                    type="button"
-                                                                    className="vet-no-show-button"
-                                                                    disabled={updatingId === appointment.id}
-                                                                    onClick={() => handleNoShow(appointment.id)}
-                                                                >
-                                                                    {updatingId === appointment.id && updatingAction === 'no-show'
-                                                                        ? 'Saving...'
-                                                                        : 'No show'}
-                                                                </button>
-                                                            )}
+                                                            {appointment.status === 'CONFIRMED' &&
+                                                                new Date(appointment.startOfAppointment) <= new Date() && (
+                                                                    <>
+                                                                        <Link
+                                                                            to={`/veterinarian/appointments/${appointment.id}/medical-record`}
+                                                                            className="vet-complete-button"
+                                                                        >
+                                                                            Complete visit
+                                                                        </Link>
+
+                                                                        <button
+                                                                            type="button"
+                                                                            className="vet-no-show-button"
+                                                                            disabled={updatingId === appointment.id}
+                                                                            onClick={() => handleNoShow(appointment.id)}
+                                                                        >
+                                                                            No show
+                                                                        </button>
+                                                                    </>
+                                                                )}
 
                                                         </div>
                                                     )}

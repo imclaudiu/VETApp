@@ -61,4 +61,10 @@ public class MedicalRecordController {
         medicalRecordService.deleteMedicalRecord(id, jwt);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/pet/{petId}/appointment/{appointmentId}")
+    public ResponseEntity<List<MedicalRecord>> getPetHistoryForVeterinarian (@PathVariable UUID petId, @PathVariable UUID appointmentId, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(medicalRecordService.getMedicalRecordsForVeterinarian(petId, appointmentId, jwt)
+        );
+    }
 }

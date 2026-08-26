@@ -3,26 +3,18 @@ package com.vetapp.DTO;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class AppointmentMedical {    private UUID id;
+public class AppointmentMedical {
+
+    private UUID id;
     private UUID petId;
     private UUID ownerId;
     private UUID veterinarianId;
+    private Long vetServiceId;
     private LocalDateTime startOfAppointment;
     private LocalDateTime endOfAppointment;
     private String status;
 
-    public AppointmentMedical() {
-    }
-
-    public AppointmentMedical(UUID id, UUID petId, UUID ownerId, UUID veterinarianId, LocalDateTime startOfAppointment, LocalDateTime endOfAppointment, String status) {
-        this.id = id;
-        this.petId = petId;
-        this.ownerId = ownerId;
-        this.veterinarianId = veterinarianId;
-        this.startOfAppointment = startOfAppointment;
-        this.endOfAppointment = endOfAppointment;
-        this.status = status;
-    }
+    public AppointmentMedical() {}
 
     public UUID getId() {
         return id;
@@ -54,6 +46,14 @@ public class AppointmentMedical {    private UUID id;
 
     public void setVeterinarianId(UUID veterinarianId) {
         this.veterinarianId = veterinarianId;
+    }
+
+    public Long getVetServiceId() {
+        return vetServiceId;
+    }
+
+    public void setVetServiceId(Long vetServiceId) {
+        this.vetServiceId = vetServiceId;
     }
 
     public LocalDateTime getStartOfAppointment() {

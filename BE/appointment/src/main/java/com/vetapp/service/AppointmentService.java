@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -28,6 +29,8 @@ public class AppointmentService {
     private final VeterinarianClient veterinarianClient;
     private final AccessGuard accessGuard;
     private final ClinicClient clinicClient;
+    private static final ZoneId APP_ZONE = ZoneId.of("Europe/Bucharest");
+
 
     public AppointmentService(AppointmentRepository appointmentRepository, PetClient petClient, VeterinarianClient veterinarianClient, AccessGuard accessGuard, ClinicClient clinicClient) {
         this.appointmentRepository = appointmentRepository;
@@ -35,6 +38,10 @@ public class AppointmentService {
         this.veterinarianClient = veterinarianClient;
         this.accessGuard = accessGuard;
         this.clinicClient = clinicClient;
+    }
+
+    private LocalDateTime now(){
+        return LocalDateTime.now(APP_ZONE);
     }
 
     public UUID addAppointment(AppointmentPublic appointment, Jwt jwt) {
@@ -53,7 +60,7 @@ public class AppointmentService {
                                 List.of(
                                         Status.PENDING,
                                         Status.CONFIRMED
-                                ), LocalDateTime.now()
+                                ), now()
                         );
 
 
@@ -70,7 +77,7 @@ public class AppointmentService {
 
         LocalDateTime start = appointment.getStartOfAppointment();
 
-        if (!start.isAfter(LocalDateTime.now())) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Programarea trebuie să fie în viitor.");}
+        if (!start.isAfter(now())) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Programarea trebuie să fie în viitor.");}
 
 
         LocalDateTime end = start.plusMinutes(service.getDuration()
@@ -253,7 +260,7 @@ public class AppointmentService {
         ) {
             LocalDateTime slotStart = current;
             LocalDateTime slotEnd = current.plusMinutes(duration);
-            boolean inPast = !slotStart.isAfter(LocalDateTime.now());
+            boolean inPast = !slotStart.isAfter(now());
             boolean conflict = appointments.stream().filter(appointment -> appointment.getStatus() != Status.CANCELED)
                             .anyMatch(appointment ->
                                     appointment.getStartOfAppointment().isBefore(slotEnd) && appointment.getEndOfAppointment().isAfter(slotStart));
@@ -271,7 +278,7 @@ public class AppointmentService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Doar programările PENDING sau CONFIRMED pot fi anulate.");
         }
 
-        if (!appointment.getStartOfAppointment().isAfter(LocalDateTime.now())) {
+        if (!appointment.getStartOfAppointment().isAfter(now())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Programarea nu mai poate fi anulată deoarece a început deja.");
         }
 
@@ -317,7 +324,7 @@ public class AppointmentService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Doar programările PENDING pot fi confirmate.");
         }
 
-        if (!appointment.getStartOfAppointment().isAfter(LocalDateTime.now())) {
+        if (!appointment.getStartOfAppointment().isAfter(now())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Programarea nu mai poate fi confirmată deoarece a început deja.");
         }
 
@@ -336,12 +343,37 @@ public class AppointmentService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Această programare nu poate fi marcată NO_SHOW.");
         }
 
-        if (appointment.getStartOfAppointment().isAfter(LocalDateTime.now())) {
+        if (appointment.getStartOfAppointment().isAfter(now())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Programarea nu poate fi marcată NO_SHOW înainte de ora programată.");
         }
 
         appointment.setStatus(Status.NO_SHOW);
         return appointmentRepository.save(appointment);
+    }
+
+    public Appointment getAppointmentInternal(UUID id) {
+        return findAppointmentOrThrow(id);
+    }
+
+    public void finishAppointmentInternal(UUID id) {
+        Appointment appointment = findAppointmentOrThrow(id);
+
+        if (appointment.getStatus() != Status.CONFIRMED) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Doar o programare CONFIRMED poate fi finalizată."
+            );
+        }
+
+        if (appointment.getStartOfAppointment().isAfter(now())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Programarea nu poate fi finalizată înainte să înceapă."
+            );
+        }
+
+        appointment.setStatus(Status.FINISHED);
+        appointmentRepository.save(appointment);
     }
 
 }

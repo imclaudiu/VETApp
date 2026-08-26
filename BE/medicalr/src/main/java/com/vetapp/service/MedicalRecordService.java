@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,45 +44,78 @@ public class MedicalRecordService {
         this.accessGuard = accessGuard;
     }
 
-    public UUID addMedicalRecord(RegisterMedicalRecord registerMedicalRecord, Jwt jwt) {
+    public UUID addMedicalRecord(RegisterMedicalRecord request, Jwt jwt) {
         accessGuard.requireRole(jwt, "VETERINARIAN", "ADMIN");
 
-        AppointmentMedical appointmentMedical = appointmentClient.checkAppointmentExists(registerMedicalRecord.getAppointmentId());
+        AppointmentMedical appointment = appointmentClient.checkAppointmentExists(
+                request.getAppointmentId()
+        );
 
-        // FIX: verificam ca veterinarul e chiar cel asignat programarii (daca nu e admin)
         if (!accessGuard.isAdmin(jwt)) {
-            UUID vetUserId = veterinarianClient.getVeterinarianUserId(appointmentMedical.getVeterinarianId());
+            UUID vetUserId = veterinarianClient.getVeterinarianUserId(
+                    appointment.getVeterinarianId()
+            );
             accessGuard.requireOwnerOrAdmin(vetUserId, jwt);
         }
 
-        if ("CANCELED".equals(appointmentMedical.getStatus())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Nu se poate crea o fisa medicala pentru o programare anulata!");
+        if (!"CONFIRMED".equals(appointment.getStatus())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Fișa medicală poate fi creată doar pentru o programare CONFIRMED."
+            );
         }
 
-        if (medicalRecordRepository.existsByAppointmentId(registerMedicalRecord.getAppointmentId())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Exista deja o fisa medicala pentru aceasta programare!");
+        if (appointment.getStartOfAppointment().isAfter(LocalDateTime.now(ZoneId.of("Europe/Bucharest")))) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Consultația nu a început încă."
+            );
         }
 
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setPetId(appointmentMedical.getPetId());
-        medicalRecord.setAppointmentId(registerMedicalRecord.getAppointmentId());
-        medicalRecord.setVeterinarianId(appointmentMedical.getVeterinarianId());
+        if (medicalRecordRepository.existsByAppointmentId(request.getAppointmentId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Există deja o fișă medicală pentru această programare."
+            );
+        }
+
+        if (appointment.getVetServiceId() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Programarea nu are un serviciu veterinar asociat."
+            );
+        }
 
         UUID clinicId = clinicClient.checkServiceForVeterinarian(
-                appointmentMedical.getVeterinarianId(),
-                registerMedicalRecord.getVetServiceId()
+                appointment.getVeterinarianId(),
+                appointment.getVetServiceId()
         );
-        medicalRecord.setClinicId(clinicId);
-        medicalRecord.setVetServiceId(registerMedicalRecord.getVetServiceId());
-        medicalRecord.setConsultationDate(LocalDateTime.now());
-        medicalRecord.setSymptoms(registerMedicalRecord.getSymptoms());
-        medicalRecord.setDiagnosis(registerMedicalRecord.getDiagnosis());
-        medicalRecord.setObservations(registerMedicalRecord.getObservations());
-        medicalRecord.setWeight(registerMedicalRecord.getWeight());
-        medicalRecord.setTemperature(registerMedicalRecord.getTemperature());
 
-        MedicalRecord savedMedicalRecord = medicalRecordRepository.save(medicalRecord);
-        return savedMedicalRecord.getId();
+        MedicalRecord record = new MedicalRecord();
+
+        record.setPetId(appointment.getPetId());
+        record.setAppointmentId(appointment.getId());
+        record.setVeterinarianId(appointment.getVeterinarianId());
+        record.setVetServiceId(appointment.getVetServiceId());
+        record.setClinicId(clinicId);
+
+        record.setConsultationDate(LocalDateTime.now());
+        record.setSymptoms(request.getSymptoms());
+        record.setDiagnosis(request.getDiagnosis());
+        record.setObservations(request.getObservations());
+        record.setWeight(request.getWeight());
+        record.setTemperature(request.getTemperature());
+
+        MedicalRecord saved = medicalRecordRepository.save(record);
+
+        try {
+            appointmentClient.finishAppointment(appointment.getId());
+        } catch (RuntimeException e) {
+            medicalRecordRepository.delete(saved);
+            throw e;
+        }
+
+        return saved.getId();
     }
 
     public List<MedicalRecord> getAllMedicalRecords(Jwt jwt) {
@@ -97,11 +131,10 @@ public class MedicalRecordService {
 
     public List<MedicalRecord> getMedicalRecordsByPetId(UUID petId, Jwt jwt) {
         PetPublic pet = petClient.getPetById(petId);
-        // owner-ul pet-ului SAU orice veterinar SAU admin - istoricul medical il vede vetul care trateaza animalul
-        if (!accessGuard.isAdmin(jwt) && !"VETERINARIAN".equals(accessGuard.extractRole(jwt))) {
-            accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
-        }
-        return medicalRecordRepository.findByPetId(petId);
+
+        accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
+
+        return medicalRecordRepository.findByPetIdOrderByConsultationDateDesc(petId);
     }
 
     public MedicalRecord getMedicalRecordByAppointmentId(UUID appointmentId, Jwt jwt) {
@@ -165,5 +198,39 @@ public class MedicalRecordService {
         PetPublic pet = petClient.getPetById(record.getPetId());
         UUID vetUserId = veterinarianClient.getVeterinarianUserId(record.getVeterinarianId());
         accessGuard.requireOneOfOrAdmin(jwt, pet.getOwnerID(), vetUserId);
+    }
+
+    public List<MedicalRecord> getMedicalRecordsForVeterinarian(
+            UUID petId,
+            UUID appointmentId,
+            Jwt jwt
+    ) {
+        accessGuard.requireRole(jwt, "VETERINARIAN", "ADMIN");
+
+        AppointmentMedical appointment =
+                appointmentClient.checkAppointmentExists(appointmentId);
+
+        if (!appointment.getPetId().equals(petId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Programarea nu aparține acestui animal."
+            );
+        }
+
+        if (!accessGuard.isAdmin(jwt)) {
+            UUID vetUserId = veterinarianClient.getVeterinarianUserId(appointment.getVeterinarianId());
+
+            accessGuard.requireOwnerOrAdmin(vetUserId, jwt);
+        }
+
+        if ("CANCELED".equals(appointment.getStatus()) ||
+                "NO_SHOW".equals(appointment.getStatus())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Nu poți accesa istoricul medical prin această programare."
+            );
+        }
+
+        return medicalRecordRepository.findByPetIdOrderByConsultationDateDesc(petId);
     }
 }
