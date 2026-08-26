@@ -156,5 +156,15 @@ public class VeterinarianService {
         veterinarianRepository.delete(veterinarian);
     }
 
+    public VeterinarianPublic getMyVeterinarian(Jwt jwt) {
+        UUID userId = accessGuard.extractUserId(jwt);
+
+        Veterinarian veterinarian = veterinarianRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nu există profil de veterinar pentru acest utilizator."));
+
+        UserPublic user = userClient.getUserById(veterinarian.getUserId());
+
+        return new VeterinarianPublic(veterinarian.getId(), veterinarian.getUserId(), veterinarian.getClinicId(), user.getName(), veterinarian.getSurgeon());
+    }
 
 }

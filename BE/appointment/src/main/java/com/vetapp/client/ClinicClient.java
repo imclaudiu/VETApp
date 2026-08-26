@@ -1,7 +1,7 @@
 package com.vetapp.client;
 
-import com.vetapp.DTO.builder.AvailabilityPublic;
-import com.vetapp.DTO.builder.VetServicePublic;
+import com.vetapp.DTO.AvailabilityPublic;
+import com.vetapp.DTO.VetServicePublic;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.server.ResponseStatusException;

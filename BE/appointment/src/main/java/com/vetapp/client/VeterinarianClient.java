@@ -1,6 +1,6 @@
 package com.vetapp.client;
 
-import com.vetapp.DTO.builder.VeterinarianPublic;
+import com.vetapp.DTO.VeterinarianPublic;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.server.ResponseStatusException;

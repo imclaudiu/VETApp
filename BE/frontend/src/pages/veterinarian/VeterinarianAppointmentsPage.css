@@ -1,0 +1,412 @@
+.vet-appointments-page {
+    min-height: calc(100vh - 70px);
+    background: #f8fafc;
+}
+
+.vet-appointments-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 42px 32px 70px;
+}
+
+.vet-appointments-header {
+    margin-bottom: 30px;
+}
+
+.vet-appointments-eyebrow {
+    margin: 0 0 7px;
+    color: #0d9488;
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: 1.5px;
+}
+
+.vet-appointments-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 34px;
+}
+
+.vet-appointments-header>div>p:last-child {
+    margin: 9px 0 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+
+/* SUMMARY */
+
+.vet-appointments-summary {
+    margin-bottom: 25px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 13px;
+}
+
+.vet-appointments-summary>div {
+    padding: 20px;
+    border: 1px solid #e5eaf0;
+    border-radius: 14px;
+    background: white;
+}
+
+.vet-appointments-summary span {
+    display: block;
+    margin-bottom: 8px;
+    color: #0d9488;
+    font-size: 8px;
+    font-weight: 750;
+    letter-spacing: 1.2px;
+}
+
+.vet-appointments-summary strong {
+    color: #0f172a;
+    font-size: 28px;
+}
+
+.vet-appointments-summary p {
+    margin: 4px 0 0;
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+
+/* TABS */
+
+.vet-appointments-tabs {
+    margin-bottom: 18px;
+    padding: 5px;
+    display: inline-flex;
+    gap: 4px;
+    border: 1px solid #e5eaf0;
+    border-radius: 10px;
+    background: white;
+}
+
+.vet-appointments-tabs button {
+    min-height: 37px;
+    padding: 0 13px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.vet-appointments-tabs button.active {
+    background: #ecfdf5;
+    color: #0f766e;
+}
+
+.vet-appointments-tabs button span {
+    min-width: 19px;
+    height: 19px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: #f1f5f9;
+    font-size: 8px;
+}
+
+.vet-appointments-tabs button.active span {
+    background: #ccfbf1;
+}
+
+
+/* LIST */
+
+.vet-appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.vet-appointment-card {
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    border: 1px solid #e5eaf0;
+    border-radius: 14px;
+    background: white;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.vet-appointment-card:hover {
+    border-color: #99f6e4;
+    transform: translateY(-1px);
+}
+
+.vet-appointment-date {
+    width: 58px;
+    height: 62px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #ecfdf5;
+    color: #0f766e;
+}
+
+.vet-appointment-date strong {
+    font-size: 21px;
+    line-height: 1;
+}
+
+.vet-appointment-date span {
+    margin-top: 5px;
+    font-size: 8px;
+    font-weight: 750;
+    letter-spacing: 0.8px;
+}
+
+.vet-appointment-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.vet-appointment-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.vet-appointment-heading h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 14px;
+}
+
+.vet-appointment-heading p {
+    margin: 5px 0 0;
+    color: #94a3b8;
+    font-size: 9px;
+}
+
+
+/* DETAILS */
+
+.vet-appointment-details {
+    margin-top: 15px;
+    padding-top: 13px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.vet-appointment-details div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.vet-appointment-details span {
+    color: #94a3b8;
+    font-size: 7px;
+    font-weight: 750;
+    letter-spacing: 0.8px;
+}
+
+.vet-appointment-details strong {
+    color: #475569;
+    font-size: 10px;
+}
+
+
+/* STATUS */
+
+.vet-appointment-status {
+    height: fit-content;
+    padding: 5px 8px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 7px;
+    font-weight: 750;
+    letter-spacing: 0.4px;
+}
+
+.vet-appointment-status.pending {
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.vet-appointment-status.confirmed {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.vet-appointment-status.completed,
+.vet-appointment-status.finished {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.vet-appointment-status.canceled {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* EMPTY + ERROR */
+
+.vet-appointments-empty {
+    min-height: 260px;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #cbd5e1;
+    border-radius: 15px;
+    background: white;
+    text-align: center;
+}
+
+.vet-appointments-empty>div {
+    width: 43px;
+    height: 43px;
+    margin-bottom: 12px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: #ecfdf5;
+    color: #0f766e;
+    font-size: 22px;
+}
+
+.vet-appointments-empty h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 15px;
+}
+
+.vet-appointments-empty p {
+    margin: 7px 0 0;
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+.vet-appointments-error {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    border: 1px solid #fecaca;
+    border-radius: 9px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 11px;
+}
+
+.vet-appointments-loading {
+    min-height: 400px;
+    display: grid;
+    place-items: center;
+    background: #f8fafc;
+    color: #64748b;
+}
+
+@media (max-width: 650px) {
+    .vet-appointments-container {
+        padding: 30px 20px 55px;
+    }
+
+    .vet-appointments-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .vet-appointment-card {
+        align-items: flex-start;
+    }
+
+    .vet-appointment-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+.vet-appointment-heading-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vet-confirm-button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 7px;
+    background: #0f766e;
+    color: white;
+    font-size: 9px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.vet-confirm-button:hover:not(:disabled) {
+    background: #115e59;
+}
+
+.vet-confirm-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.vet-appointment-heading-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vet-appointment-action-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.vet-confirm-button,
+.vet-cancel-button,
+.vet-no-show-button {
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 9px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.vet-confirm-button {
+    border: none;
+    background: #0f766e;
+    color: white;
+}
+
+.vet-cancel-button {
+    border: 1px solid #fecaca;
+    background: white;
+    color: #dc2626;
+}
+
+.vet-no-show-button {
+    border: 1px solid #fed7aa;
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.vet-confirm-button:disabled,
+.vet-cancel-button:disabled,
+.vet-no-show-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.vet-appointment-status.no_show {
+    background: #fff7ed;
+    color: #c2410c;
+}

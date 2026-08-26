@@ -54,4 +54,9 @@ public class AvailabilityController {
         availabilityService.deleteAvailability(veterinarianId, day, jwt);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/veterinarian/{veterinarianId}")
+    public ResponseEntity<List<Availability>> getByVeterinarian(@PathVariable UUID veterinarianId) {
+        return ResponseEntity.ok(availabilityService.getByVeterinarianId(veterinarianId));
+    }
 }

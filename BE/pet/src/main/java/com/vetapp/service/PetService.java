@@ -120,4 +120,9 @@ public class PetService {
         UUID userId = accessGuard.extractUserId(jwt);
         return petRepository.findAllByOwnerID(userId);
     }
+
+    public PetPublic getPetInternal(UUID id) {
+        Pet pet = findPetOrThrow(id);
+        return PetBuilder.toPublicPet(pet);
+    }
 }

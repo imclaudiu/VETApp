@@ -17,6 +17,9 @@ import ClinicDetailsPage from './pages/clinic/ClinicDetailsPage';
 import AdminClinicsPage from './pages/AdminClinicsPage';
 import AdminClinicDetailsPage from './pages/AdminClinicDetailsPage';
 import BookAppointmentPage from './pages/appointment/BookAppointmentPage';
+import VeterinarianSchedulePage from './pages/veterinarian/VeterinarianSchedulePage';
+import VeterinarianAppointmentsPage from './pages/veterinarian/VeterinarianAppointmentsPage';
+import SettingsPage from './pages/settings/SettingsPage';
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -146,6 +149,45 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/veterinarian/schedule"
+        element={
+          <ProtectedRoute allowedRoles={['VETERINARIAN']}>
+            <VeterinarianSchedulePage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/veterinarian/appointments"
+        element={
+          <ProtectedRoute allowedRoles={['VETERINARIAN']}>
+            <VeterinarianAppointmentsPage />
+          </ProtectedRoute>
+        }
+      />
+
+
+      {/* SETTINGS ROUTES */}
+
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <NotificationsPage />
+          </ProtectedRoute>
+        }
+      /> */}
 
     </Routes>
   );

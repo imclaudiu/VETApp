@@ -66,4 +66,9 @@ public class VeterinarianController {
         veterinarianService.deleteVeterinarian(id, jwt);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<VeterinarianPublic> getMyVeterinarian(@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(veterinarianService.getMyVeterinarian(jwt));
+    }
 }

@@ -426,23 +426,40 @@ export default function HomePage() {
                         </section>
 
 
-                        <section className="dashboard-placeholder">
-
-                            <span className="dashboard-placeholder-number">
-                                NEXT
-                            </span>
-
-                            <div>
-                                <h3>
-                                    Veterinarian workspace
-                                </h3>
-
-                                <p>
-                                    We will connect this section when we build
-                                    appointments and availability.
-                                </p>
+                        <section className="quick-actions-section">
+                            <div className="section-header">
+                                <div>
+                                    <p className="section-label">VETERINARIAN TOOLS</p>
+                                    <h2>Manage your work</h2>
+                                </div>
                             </div>
 
+                            <div className="quick-actions-grid">
+                                <Link to="/veterinarian/schedule" className="quick-action-card">
+                                    <div className="quick-action-number">01</div>
+
+                                    <div>
+                                        <h3>My work schedule</h3>
+                                        <p>Add, edit and remove your availability for appointments.</p>
+                                    </div>
+
+                                    <span className="quick-action-arrow">→</span>
+                                </Link>
+
+                                <Link
+                                    to="/veterinarian/appointments"
+                                    className="quick-action-card"
+                                >
+                                    <div className="quick-action-number">02</div>
+
+                                    <div>
+                                        <h3>My appointments</h3>
+                                        <p>View your upcoming veterinary appointments and appointment history.</p>
+                                    </div>
+
+                                    <span className="quick-action-arrow">→</span>
+                                </Link>
+                            </div>
                         </section>
 
                     </div>

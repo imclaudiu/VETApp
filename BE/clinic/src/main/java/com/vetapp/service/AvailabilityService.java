@@ -26,20 +26,26 @@ public class AvailabilityService {
         this.accessGuard = accessGuard;
     }
 
-    // NOU: doar veterinarul insusi (isi seteaza propriul program) sau admin
     public Availability addAvailability(Availability availability, Jwt jwt) {
+        if (availability.getId() == null || availability.getId().getVeterinarianId() == null || availability.getId().getDay() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Datele programului sunt incomplete.");
+        }
+
+        if (availability.getStartHour() == null || availability.getEndHour() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ora de început și ora de final sunt obligatorii.");
+        }
+
+        if (!availability.getEndHour().isAfter(availability.getStartHour())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ora de final trebuie să fie după ora de început.");
+        }
+
         UUID veterinarianId = availability.getId().getVeterinarianId();
         UUID vetUserId = veterinarianService.getVeterinarianUserId(veterinarianId);
+
         accessGuard.requireOwnerOrAdmin(vetUserId, jwt);
 
-        veterinarianService.getVeterinarianById(veterinarianId); // valideaza ca veterinarul exista
-
-        // FIX: previne upsert accidental - addAvailability nu ar trebui sa suprascrie silentios
         if (availabilityRepository.existsById(availability.getId())) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Există deja disponibilitate setată pentru acest medic în această zi. Folosește update."
-            );
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Există deja un program pentru această dată.");
         }
 
         return availabilityRepository.save(availability);
@@ -106,5 +112,10 @@ public class AvailabilityService {
                 ));
 
         availabilityRepository.delete(existingAvailability);
+    }
+
+    public List<Availability> getByVeterinarianId(UUID veterinarianId) {
+        veterinarianService.getVeterinarianById(veterinarianId);
+        return availabilityRepository.findByIdVeterinarianId(veterinarianId);
     }
 }

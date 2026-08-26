@@ -1,6 +1,7 @@
 package com.vetapp.controller;
 
-import com.vetapp.DTO.builder.AppointmentPublic;
+import com.vetapp.DTO.AppointmentPublic;
+import com.vetapp.DTO.VeterinarianAppointmentPublic;
 import com.vetapp.entity.Appointment;
 import com.vetapp.service.AppointmentService;
 import org.springframework.http.HttpStatus;
@@ -51,7 +52,10 @@ public class AppointmentController {
     }
 
     @GetMapping("/veterinarian/{veterinarianId}")
-    public ResponseEntity<List<Appointment>> getByVeterinarianId(@PathVariable UUID veterinarianId, @AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<List<VeterinarianAppointmentPublic>> getByVeterinarianId(
+            @PathVariable UUID veterinarianId,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByVeterinarianId(veterinarianId, jwt));
     }
 
@@ -76,5 +80,15 @@ public class AppointmentController {
     @PatchMapping("/cancel/{id}")
     public ResponseEntity<Appointment> cancelAppointment(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(appointmentService.cancelAppointment(id, jwt));
+    }
+
+    @PatchMapping("/no-show/{id}")
+    public ResponseEntity<Appointment> markNoShow(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.markNoShow(id, jwt));
+    }
+
+    @PatchMapping("/confirm/{id}")
+    public ResponseEntity<Appointment> confirmAppointment(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.confirmAppointment(id, jwt));
     }
 }

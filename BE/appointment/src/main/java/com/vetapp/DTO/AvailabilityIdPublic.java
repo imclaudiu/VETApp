@@ -1,4 +1,4 @@
-package com.vetapp.DTO.builder;
+package com.vetapp.DTO;
 
 import java.time.LocalDate;
 import java.util.UUID;

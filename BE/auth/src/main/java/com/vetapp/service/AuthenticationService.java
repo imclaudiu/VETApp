@@ -105,10 +105,6 @@ public class AuthenticationService {
             existingAuth.setUsername(updatedAuth.getUsername());
         }
 
-        // Parola - doar daca a fost trimisa
-        if (updatedAuth.getPassword() != null && !updatedAuth.getPassword().isBlank()) {
-            existingAuth.setPassword(encoder.encode(updatedAuth.getPassword()));
-        }
 
         // Email - doar daca a fost trimis
         if (updatedAuth.getEmail() != null && !updatedAuth.getEmail().isBlank()) {
@@ -156,6 +152,16 @@ public class AuthenticationService {
         authenticationRepository.deleteAll();
     }
 
+    public void deleteOwnAccount(Jwt jwt) {
+        UUID userId = accessGuard.extractUserId(jwt);
+
+        Authentication authentication = authenticationRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contul nu a fost găsit."));
+
+        authenticationRepository.delete(authentication);
+        kafkaMessageProducer.publishUserDeleted(userId);
+    }
+
 // AuthenticationService.java
 
     // NOU: doar admin poate schimba rolul unui user
@@ -166,6 +172,28 @@ public class AuthenticationService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilizatorul cu ID-ul " + id + " nu a fost găsit."));
 
         authentication.setRole(newRole);
+        authenticationRepository.save(authentication);
+    }
+
+    public void changePassword(String currentPassword, String newPassword, Jwt jwt) {
+        UUID userId = accessGuard.extractUserId(jwt);
+
+        Authentication authentication = authenticationRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contul nu a fost găsit."));
+
+        if (!encoder.matches(currentPassword, authentication.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Parola actuală este incorectă.");
+        }
+
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Noua parolă trebuie să aibă cel puțin 8 caractere.");
+        }
+
+        if (encoder.matches(newPassword, authentication.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Noua parolă trebuie să fie diferită de parola actuală.");
+        }
+
+        authentication.setPassword(encoder.encode(newPassword));
         authenticationRepository.save(authentication);
     }
 }

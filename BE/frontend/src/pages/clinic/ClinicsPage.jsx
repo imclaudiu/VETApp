@@ -82,14 +82,12 @@ export default function ClinicsPage() {
                     .trim()
                     .toLowerCase();
 
-
             if (!term) {
                 return clinics;
             }
 
-
-            return clinics.filter(
-                (clinic) => {
+            return clinics
+                .filter((clinic) => {
 
                     const name =
                         clinic.name
@@ -106,7 +104,6 @@ export default function ClinicsPage() {
                             ?.toLowerCase()
                         || '';
 
-
                     return (
                         name.includes(term)
                         ||
@@ -114,8 +111,8 @@ export default function ClinicsPage() {
                         ||
                         address.includes(term)
                     );
-                }
-            );
+                })
+                .sort((a, b) => (b.ratingMediu || 0) - (a.ratingMediu || 0));
 
         }, [clinics, search]);
 

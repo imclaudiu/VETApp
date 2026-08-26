@@ -45,13 +45,23 @@ export const getAppointmentsByOwner =
         return response.data;
     };
 
-export const cancelAppointment = async (
-    appointmentId
-) => {
+export const cancelAppointment = async (appointmentId) => {
+    const response = await api.patch(`/appointment/cancel/${appointmentId}`);
+    return response.data;
+};
 
-    const response = await api.patch(
-        `/appointment/cancel/${appointmentId}`
-    );
+export const getAppointmentsByVeterinarian = async (veterinarianId) => {
+    const response = await api.get(`/appointment/veterinarian/${veterinarianId}`);
+    return response.data;
+};
 
+
+export const markAppointmentNoShow = async (appointmentId) => {
+    const response = await api.patch(`/appointment/no-show/${appointmentId}`);
+    return response.data;
+};
+
+export const confirmAppointment = async (appointmentId) => {
+    const response = await api.patch(`/appointment/confirm/${appointmentId}`);
     return response.data;
 };
