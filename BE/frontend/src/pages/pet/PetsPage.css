@@ -673,3 +673,11 @@
         padding: 20px;
     }
 }
+
+.pet-card-readonly {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
+    color: #94a3b8;
+    font-size: 11px;
+}

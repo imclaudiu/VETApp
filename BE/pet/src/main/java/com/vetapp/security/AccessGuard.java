@@ -11,6 +11,7 @@ import java.util.UUID;
 public class AccessGuard {
 
     private static final String ADMIN_ROLE = "ADMIN";
+    private static final String VETERINARIAN_ROLE = "VETERINARIAN";
 
     public UUID extractUserId(Jwt jwt) {
         return UUID.fromString(jwt.getClaimAsString("userId"));
@@ -22,6 +23,10 @@ public class AccessGuard {
 
     public boolean isAdmin(Jwt jwt) {
         return ADMIN_ROLE.equals(extractRole(jwt));
+    }
+
+    public boolean isVeterinarian(Jwt jwt) {
+        return VETERINARIAN_ROLE.equals(extractRole(jwt));
     }
 
     public void requireAdmin(Jwt jwt) {
@@ -36,6 +41,26 @@ public class AccessGuard {
         boolean isOwner = resourceOwnerId.equals(extractUserId(jwt));
         if (!isOwner && !isAdmin(jwt)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Nu ai acces la această resursă.");
+        }
+    }
+    public void requireVeterinarianOrAdmin(Jwt jwt) {
+        if (!isVeterinarian(jwt) && !isAdmin(jwt)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Doar medicii veterinari sau administratorii pot modifica animalele."
+            );
+        }
+    }
+
+
+    public void requireOwnerVeterinarianOrAdmin(UUID ownerId, Jwt jwt) {
+        boolean isOwner = ownerId != null && ownerId.equals(extractUserId(jwt));
+
+        if (!isOwner && !isVeterinarian(jwt) && !isAdmin(jwt)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Nu ai acces la acest animal."
+            );
         }
     }
 }

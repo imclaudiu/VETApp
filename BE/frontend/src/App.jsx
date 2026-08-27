@@ -85,7 +85,7 @@ function AppRoutes() {
       <Route
         path="/pets/:id/edit"
         element={
-          <ProtectedRoute allowedRoles={['OWNER']}>
+          <ProtectedRoute allowedRoles={['VETERINARIAN', 'ADMIN']}>
             <EditPetPage />
           </ProtectedRoute>
         }

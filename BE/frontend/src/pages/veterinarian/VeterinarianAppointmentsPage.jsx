@@ -464,12 +464,21 @@ export default function VeterinarianAppointmentsPage() {
                                                         <div className="vet-appointment-action-buttons">
 
                                                             {!['CANCELED', 'NO_SHOW'].includes(appointment.status) && (
-                                                                <Link
-                                                                    to={`/veterinarian/pets/${appointment.petId}/medical-history/${appointment.id}`}
-                                                                    className="vet-history-button"
-                                                                >
-                                                                    Medical history
-                                                                </Link>
+                                                                <>
+                                                                    <Link
+                                                                        to={`/veterinarian/pets/${appointment.petId}/medical-history/${appointment.id}`}
+                                                                        className="vet-history-button"
+                                                                    >
+                                                                        Medical history
+                                                                    </Link>
+
+                                                                    <Link
+                                                                        to={`/pets/${appointment.petId}/edit`}
+                                                                        className="vet-edit-pet-button"
+                                                                    >
+                                                                        Edit pet
+                                                                    </Link>
+                                                                </>
                                                             )}
 
                                                             {appointment.status === 'PENDING' && (
