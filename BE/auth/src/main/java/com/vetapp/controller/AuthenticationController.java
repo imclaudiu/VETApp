@@ -75,6 +75,12 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteOwnAccount(@AuthenticationPrincipal Jwt jwt) {
+        authenticationService.deleteOwnAccount(jwt);
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/{id}/role")
     public ResponseEntity<Void> updateRole(@PathVariable UUID id,
                                            @RequestBody UpdateRoleRequest request,
@@ -83,7 +89,17 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request, @AuthenticationPrincipal Jwt jwt) {
+        authenticationService.changePassword(request.currentPassword(), request.newPassword(), jwt);
+        return ResponseEntity.noContent().build();
+    }
+
+    public record ChangePasswordRequest(String currentPassword, String newPassword) {}
+
     public record UpdateRoleRequest(Role role) {}
 
     public record LoginRequest(String username, String password) {}
+
+
 }

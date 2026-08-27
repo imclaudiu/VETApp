@@ -14,8 +14,15 @@ import AddPetPage from './pages/pet/AddPetPage';
 import EditPetPage from './pages/pet/EditPetPage';
 import ClinicsPage from './pages/clinic/ClinicsPage';
 import ClinicDetailsPage from './pages/clinic/ClinicDetailsPage';
-import AddClinicPage from './pages/clinic/AddClinicPage';
-
+import AdminClinicsPage from './pages/AdminClinicsPage';
+import AdminClinicDetailsPage from './pages/AdminClinicDetailsPage';
+import BookAppointmentPage from './pages/appointment/BookAppointmentPage';
+import VeterinarianSchedulePage from './pages/veterinarian/VeterinarianSchedulePage';
+import VeterinarianAppointmentsPage from './pages/veterinarian/VeterinarianAppointmentsPage';
+import SettingsPage from './pages/settings/SettingsPage';
+import PetMedicalHistoryPage from './pages/pet/PetMedicalHistoryPage';
+import VeterinarianMedicalRecordPage from './pages/veterinarian/VeterinarianMedicalRecordPage';
+import VeterinarianPetHistoryPage from './pages/veterinarian/VeterinarianPetHistoryPage';
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -78,7 +85,7 @@ function AppRoutes() {
       <Route
         path="/pets/:id/edit"
         element={
-          <ProtectedRoute allowedRoles={['OWNER']}>
+          <ProtectedRoute allowedRoles={['VETERINARIAN', 'ADMIN']}>
             <EditPetPage />
           </ProtectedRoute>
         }
@@ -94,10 +101,19 @@ function AppRoutes() {
       />
 
       <Route
-        path="/admin/clinics/new"
+        path="/admin/clinics"
         element={
           <ProtectedRoute allowedRoles={['ADMIN']}>
-            <AddClinicPage />
+            <AdminClinicsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/clinics/:id"
+        element={
+          <ProtectedRoute allowedRoles={['ADMIN']}>
+            <AdminClinicDetailsPage />
           </ProtectedRoute>
         }
       />
@@ -106,6 +122,17 @@ function AppRoutes() {
         path="*"
         element={<Navigate to="/" replace />}
       />
+
+      {/* APPOINTMENT ROUTES */}
+      <Route
+        path="/appointments/new"
+        element={
+          <ProtectedRoute allowedRoles={['OWNER']}>
+            <BookAppointmentPage />
+          </ProtectedRoute>
+        }
+      />
+
       {/* CLINIC ROUTES */}
 
       <Route
@@ -126,7 +153,77 @@ function AppRoutes() {
         }
       />
 
+      <Route
+        path="/veterinarian/schedule"
+        element={
+          <ProtectedRoute allowedRoles={['VETERINARIAN']}>
+            <VeterinarianSchedulePage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/veterinarian/appointments"
+        element={
+          <ProtectedRoute allowedRoles={['VETERINARIAN']}>
+            <VeterinarianAppointmentsPage />
+          </ProtectedRoute>
+        }
+      />
+
+
+      {/* SETTINGS ROUTES */}
+
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <NotificationsPage />
+          </ProtectedRoute>
+        }
+      /> */}
+
+
+      {/* MEDICALR ROUTES */}
+
+      <Route
+        path="/pets/:id/medical-history"
+        element={
+          <ProtectedRoute allowedRoles={['OWNER']}>
+            <PetMedicalHistoryPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/veterinarian/appointments/:appointmentId/medical-record"
+        element={
+          <ProtectedRoute allowedRoles={['VETERINARIAN']}>
+            <VeterinarianMedicalRecordPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/veterinarian/pets/:petId/medical-history/:appointmentId"
+        element={
+          <ProtectedRoute allowedRoles={['VETERINARIAN']}>
+            <VeterinarianPetHistoryPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
+
+
   );
 }
 

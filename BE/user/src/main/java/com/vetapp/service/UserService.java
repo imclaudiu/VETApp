@@ -68,9 +68,10 @@ public class UserService {
 
     public void deleteUserInternal(UUID id) {
         Users existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilizatorul cu ID-ul " + id + " nu a fost găsit."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilizatorul nu a fost găsit."));
 
         userRepository.delete(existingUser);
+        kafkaMessageProducer.publishUserDeleted(id);
     }
 
     private void validateUniqueFields(Users user, UUID currentUserId) {
@@ -91,6 +92,19 @@ public class UserService {
                 .ifPresent(foundUser -> {
                     throw new ResponseStatusException(HttpStatus.CONFLICT, "Numărul de telefon este deja utilizat.");
                 });
+    }
+
+    public UserPublic getPublicUserById(UUID id) {
+
+        Users user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Utilizatorul cu ID-ul " + id + " nu a fost găsit."
+                        )
+                );
+
+        return UserBuilder.toPublicUser(user);
     }
 
     // NOU: doar admin

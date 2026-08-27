@@ -1,7 +1,7 @@
 package com.vetapp.service;
 
-import com.vetapp.DTO.builder.AppointmentPublic;
-import com.vetapp.DTO.builder.PetPublic;
+import com.vetapp.DTO.*;
+import com.vetapp.client.ClinicClient;
 import com.vetapp.client.VeterinarianClient;
 import com.vetapp.client.PetClient;
 import com.vetapp.entity.Appointment;
@@ -13,6 +13,11 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -22,47 +27,107 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final PetClient petClient;
     private final VeterinarianClient veterinarianClient;
-    private final AccessGuard accessGuard; // NOU
+    private final AccessGuard accessGuard;
+    private final ClinicClient clinicClient;
+    private static final ZoneId APP_ZONE = ZoneId.of("Europe/Bucharest");
 
-    public AppointmentService(AppointmentRepository appointmentRepository, PetClient petClient, VeterinarianClient veterinarianClient, AccessGuard accessGuard) {
+
+    public AppointmentService(AppointmentRepository appointmentRepository, PetClient petClient, VeterinarianClient veterinarianClient, AccessGuard accessGuard, ClinicClient clinicClient) {
         this.appointmentRepository = appointmentRepository;
         this.petClient = petClient;
         this.veterinarianClient = veterinarianClient;
         this.accessGuard = accessGuard;
+        this.clinicClient = clinicClient;
     }
 
-    // NOU: doar owner-ul pet-ului (sau admin) poate crea programare
-    public UUID addAppointment(AppointmentPublic appointment, Jwt jwt) {
-        PetPublic pet = petClient.checkPetNUserExists(appointment.getPetId());
+    private LocalDateTime now(){
+        return LocalDateTime.now(APP_ZONE);
+    }
 
+    public UUID addAppointment(AppointmentPublic appointment, Jwt jwt) {
+
+        if (appointment.getPetId() == null || appointment.getVeterinarianId() == null || appointment.getVetServiceId() == null
+                || appointment.getStartOfAppointment() == null) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Datele programării sunt incomplete.");
+        }
+
+
+        PetPublic pet = petClient.checkPetNUserExists(appointment.getPetId());
         accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
 
-        veterinarianClient.checkVeterinarianExists(appointment.getVeterinarianId());
+        boolean petAlreadyHasAppointment = appointmentRepository.existsByPetIdAndStatusInAndEndOfAppointmentAfter(appointment.getPetId(),
+                                List.of(
+                                        Status.PENDING,
+                                        Status.CONFIRMED
+                                ), now()
+                        );
 
-        if (!appointment.getEndOfAppointment().isAfter(appointment.getStartOfAppointment())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ora de final trebuie să fie după ora de început.");
+
+        if (petAlreadyHasAppointment) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Acest animal are deja o programare activă.");
         }
 
-        List<Appointment> overlappingAppointments =
-                appointmentRepository.findByVeterinarianIdAndStartOfAppointmentLessThanAndEndOfAppointmentGreaterThan(
-                        appointment.getVeterinarianId(),
-                        appointment.getEndOfAppointment(),
-                        appointment.getStartOfAppointment()
+        VeterinarianPublic veterinarian = veterinarianClient.checkVeterinarianExists(appointment.getVeterinarianId());
+        VetServicePublic service = clinicClient.getService(appointment.getVetServiceId());
+
+        if (!service.getClinicId().equals(veterinarian.getClinicId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Serviciul nu aparține clinicii medicului selectat.");
+        }
+
+        LocalDateTime start = appointment.getStartOfAppointment();
+
+        if (!start.isAfter(now())) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Programarea trebuie să fie în viitor.");}
+
+
+        LocalDateTime end = start.plusMinutes(service.getDuration()
                 );
 
-        if (!overlappingAppointments.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Medicul veterinar are deja o programare în acest interval.");
+
+        /*
+         * Verificăm programul de lucru.
+         */
+        AvailabilityPublic availability = clinicClient.getAvailability(appointment.getVeterinarianId(), start.toLocalDate());
+
+
+        if (start.toLocalTime().isBefore(availability.getStartHour()) || end.toLocalTime().isAfter(availability.getEndHour())
+        ) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Programarea este în afara programului medicului."
+            );
         }
 
+
+        /*
+         * Verificăm programările existente.
+         */
+        List<Appointment> overlaps = appointmentRepository.findByVeterinarianIdAndStartOfAppointmentLessThanAndEndOfAppointmentGreaterThan(appointment.getVeterinarianId(), end, start);
+
+
+        boolean conflict = overlaps.stream().anyMatch(existing -> existing.getStatus() != Status.CANCELED);
+
+
+        if (conflict) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Medicul veterinar are deja o programare în acest interval.");
+        }
         Appointment appointmentSave = new Appointment();
         appointmentSave.setOwnerId(pet.getOwnerID());
-        appointmentSave.setVeterinarianId(appointment.getVeterinarianId());
         appointmentSave.setPetId(appointment.getPetId());
-        appointmentSave.setStartOfAppointment(appointment.getStartOfAppointment());
-        appointmentSave.setEndOfAppointment(appointment.getEndOfAppointment());
+        appointmentSave.setVeterinarianId(appointment.getVeterinarianId());
+
+        appointmentSave.setVetServiceId(appointment.getVetServiceId());
+
+        appointmentSave.setStartOfAppointment(start);
+
+        appointmentSave.setEndOfAppointment(end);
+
         appointmentSave.setStatus(Status.PENDING);
 
+
         appointmentRepository.save(appointmentSave);
+
 
         return appointmentSave.getId();
     }
@@ -93,11 +158,14 @@ public class AppointmentService {
         return appointmentRepository.findByPetId(petId);
     }
 
-    // NOU: doar veterinarul insusi sau admin (nu e public - contine programari private ale clientilor)
-    public List<Appointment> getAppointmentsByVeterinarianId(UUID veterinarianId, Jwt jwt) {
+    public List<VeterinarianAppointmentPublic> getAppointmentsByVeterinarianId(UUID veterinarianId, Jwt jwt) {
         UUID vetUserId = veterinarianClient.getVeterinarianUserId(veterinarianId);
         accessGuard.requireOwnerOrAdmin(vetUserId, jwt);
-        return appointmentRepository.findByVeterinarianId(veterinarianId);
+
+        return appointmentRepository.findByVeterinarianId(veterinarianId)
+                .stream()
+                .map(this::toVeterinarianAppointmentPublic)
+                .toList();
     }
 
     /*Pt simplificare - la modificarea programarii se va sterge si se va crea una noua pentru a nu verifica 100 de cazuri de conflicte
@@ -127,10 +195,6 @@ public class AppointmentService {
 
         if (updatedAppointment.getEndOfAppointment() != null) {
             existingAppointment.setEndOfAppointment(updatedAppointment.getEndOfAppointment());
-        }
-
-        if (updatedAppointment.getStatus() != null) {
-            existingAppointment.setStatus(updatedAppointment.getStatus());
         }
 
         if (!existingAppointment.getEndOfAppointment().isAfter(existingAppointment.getStartOfAppointment())) {
@@ -170,4 +234,146 @@ public class AppointmentService {
         UUID vetUserId = veterinarianClient.getVeterinarianUserId(appointment.getVeterinarianId());
         accessGuard.requireOneOfOrAdmin(jwt, appointment.getOwnerId(), vetUserId);
     }
+
+    public List<LocalDateTime> getAvailableSlots(UUID veterinarianId, Long vetServiceId, LocalDate day
+    ) {
+        VeterinarianPublic veterinarian = veterinarianClient.checkVeterinarianExists(veterinarianId);
+
+        VetServicePublic service = clinicClient.getService(vetServiceId);
+
+        if (!service.getClinicId().equals(veterinarian.getClinicId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Serviciul nu aparține clinicii medicului."
+            );
+        }
+
+
+        AvailabilityPublic availability = clinicClient.getAvailability(veterinarianId, day);
+        LocalDateTime workStart = LocalDateTime.of(day, availability.getStartHour());
+        LocalDateTime workEnd = LocalDateTime.of(day, availability.getEndHour());
+        List<Appointment> appointments = appointmentRepository.findByVeterinarianIdAndStartOfAppointmentLessThanAndEndOfAppointmentGreaterThan(veterinarianId, workEnd, workStart);
+        List<LocalDateTime> slots = new ArrayList<>();
+        int duration = service.getDuration();
+
+        LocalDateTime current = workStart;
+        while (!current.plusMinutes(duration).isAfter(workEnd)
+        ) {
+            LocalDateTime slotStart = current;
+            LocalDateTime slotEnd = current.plusMinutes(duration);
+            boolean inPast = !slotStart.isAfter(now());
+            boolean conflict = appointments.stream().filter(appointment -> appointment.getStatus() != Status.CANCELED)
+                            .anyMatch(appointment ->
+                                    appointment.getStartOfAppointment().isBefore(slotEnd) && appointment.getEndOfAppointment().isAfter(slotStart));
+            if (!inPast && !conflict) {slots.add(slotStart);}
+            current = current.plusMinutes(30);}
+
+        return slots;
+    }
+    public Appointment cancelAppointment(UUID id, Jwt jwt) {
+        Appointment appointment = findAppointmentOrThrow(id);
+
+        requireInvolvedOrAdmin(appointment, jwt);
+
+        if (appointment.getStatus() != Status.PENDING && appointment.getStatus() != Status.CONFIRMED) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Doar programările PENDING sau CONFIRMED pot fi anulate.");
+        }
+
+        if (!appointment.getStartOfAppointment().isAfter(now())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Programarea nu mai poate fi anulată deoarece a început deja.");
+        }
+
+        appointment.setStatus(Status.CANCELED);
+        return appointmentRepository.save(appointment);
+    }
+
+    private VeterinarianAppointmentPublic toVeterinarianAppointmentPublic(Appointment appointment) {
+        PetPublic pet = petClient.getPetInternal(appointment.getPetId());
+
+        String serviceName = "Veterinary appointment";
+
+        if (appointment.getVetServiceId() != null) {
+            try {
+                VetServicePublic service = clinicClient.getService(appointment.getVetServiceId());
+                serviceName = service.getServiceName();
+            } catch (Exception ignored) {
+            }
+        }
+
+        return new VeterinarianAppointmentPublic(
+                appointment.getId(),
+                appointment.getPetId(),
+                pet.getName(),
+                pet.getSpecies(),
+                pet.getRace(),
+                pet.getSex(),
+                appointment.getVetServiceId(),
+                serviceName,
+                appointment.getStartOfAppointment(),
+                appointment.getEndOfAppointment(),
+                appointment.getStatus()
+        );
+    }
+
+    public Appointment confirmAppointment(UUID id, Jwt jwt) {
+        Appointment appointment = findAppointmentOrThrow(id);
+
+        UUID vetUserId = veterinarianClient.getVeterinarianUserId(appointment.getVeterinarianId());
+        accessGuard.requireOwnerOrAdmin(vetUserId, jwt);
+
+        if (appointment.getStatus() != Status.PENDING) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Doar programările PENDING pot fi confirmate.");
+        }
+
+        if (!appointment.getStartOfAppointment().isAfter(now())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Programarea nu mai poate fi confirmată deoarece a început deja.");
+        }
+
+        appointment.setStatus(Status.CONFIRMED);
+
+        return appointmentRepository.save(appointment);
+    }
+
+    public Appointment markNoShow(UUID id, Jwt jwt) {
+        Appointment appointment = findAppointmentOrThrow(id);
+
+        UUID vetUserId = veterinarianClient.getVeterinarianUserId(appointment.getVeterinarianId());
+        accessGuard.requireOwnerOrAdmin(vetUserId, jwt);
+
+        if (appointment.getStatus() != Status.PENDING && appointment.getStatus() != Status.CONFIRMED) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Această programare nu poate fi marcată NO_SHOW.");
+        }
+
+        if (appointment.getStartOfAppointment().isAfter(now())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Programarea nu poate fi marcată NO_SHOW înainte de ora programată.");
+        }
+
+        appointment.setStatus(Status.NO_SHOW);
+        return appointmentRepository.save(appointment);
+    }
+
+    public Appointment getAppointmentInternal(UUID id) {
+        return findAppointmentOrThrow(id);
+    }
+
+    public void finishAppointmentInternal(UUID id) {
+        Appointment appointment = findAppointmentOrThrow(id);
+
+        if (appointment.getStatus() != Status.CONFIRMED) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Doar o programare CONFIRMED poate fi finalizată."
+            );
+        }
+
+        if (appointment.getStartOfAppointment().isAfter(now())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Programarea nu poate fi finalizată înainte să înceapă."
+            );
+        }
+
+        appointment.setStatus(Status.FINISHED);
+        appointmentRepository.save(appointment);
+    }
+
 }

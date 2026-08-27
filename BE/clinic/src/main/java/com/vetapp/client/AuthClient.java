@@ -12,22 +12,39 @@ public class AuthClient {
     private final RestClient restClient;
 
     public AuthClient(RestClient.Builder restClientBuilder) {
-        this.restClient = restClientBuilder.baseUrl("http://auth:8080").build();
+        this.restClient = restClientBuilder
+                .baseUrl("http://auth:8080")
+                .build();
     }
 
-    public void updateAuthRole(UUID userId, String role) {
+    public void updateAuthRole(
+            UUID userId,
+            String role,
+            String jwtToken
+    ) {
+
         restClient.patch()
                 .uri("/auth/{id}/role", userId)
+                .header(
+                        "Authorization",
+                        "Bearer " + jwtToken
+                )
                 .body(new UpdateRoleRequest(role))
                 .retrieve()
                 .onStatus(
-                        status -> status.is4xxClientError() || status.is5xxServerError(),
+                        status ->
+                                status.is4xxClientError()
+                                        || status.is5xxServerError(),
                         (request, response) -> {
-                            throw new ResponseStatusException(response.getStatusCode(), "UPDATE ROLE Auth Service Error.");
+                            throw new ResponseStatusException(
+                                    response.getStatusCode(),
+                                    "UPDATE ROLE Auth Service Error."
+                            );
                         }
                 )
                 .toBodilessEntity();
     }
 
-    private record UpdateRoleRequest(String role) {}
+    private record UpdateRoleRequest(String role) {
+    }
 }

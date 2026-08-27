@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../../shared/components/Navbar';
 import PetList from '../../features/pet/components/PetList';
 import {
-    getMyPets,
-    deletePet
+    getMyPets
 } from '../../features/pet/services/petService';
 
 import './PetsPage.css';
@@ -37,29 +36,6 @@ export default function PetsPage() {
         loadPets();
     }, []);
 
-    const handleDelete = async (id, name) => {
-        const confirmed = window.confirm(
-            `Are you sure you want to delete ${name}?`
-        );
-
-        if (!confirmed) {
-            return;
-        }
-
-        try {
-            await deletePet(id);
-
-            setPets((currentPets) =>
-                currentPets.filter((pet) => pet.id !== id)
-            );
-        } catch (err) {
-            setError(
-                err.response?.data?.message ||
-                err.message ||
-                'Could not delete this pet.'
-            );
-        }
-    };
 
     return (
         <>
@@ -120,7 +96,6 @@ export default function PetsPage() {
                     ) : (
                         <PetList
                             pets={pets}
-                            onDelete={handleDelete}
                         />
                     )}
 

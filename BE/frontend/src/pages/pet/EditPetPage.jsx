@@ -8,7 +8,7 @@ import {
 import Navbar from '../../shared/components/Navbar';
 
 import PetForm from '../../features/pet/components/PetForm';
-
+import { useAuth } from '../../features/auth/contexts/AuthContext';
 import {
     getPetById,
     updatePet
@@ -21,6 +21,16 @@ export default function EditPetPage() {
     const { id } = useParams();
 
     const navigate = useNavigate();
+
+    const { user } = useAuth();
+
+    const goBack = () => {
+        if (user?.role === 'VETERINARIAN') {
+            navigate('/veterinarian/appointments');
+        } else {
+            navigate('/admin');
+        }
+    };
 
     const [pet, setPet] = useState(null);
 
@@ -70,18 +80,9 @@ export default function EditPetPage() {
         setError(null);
 
         try {
-
-            /*
-             * IMPORTANT:
-             * Do not send ownerID here.
-             *
-             * Backend-ul tău interpretează ownerID la update
-             * ca tentativă de schimbare a proprietarului,
-             * operație permisă doar pentru ADMIN.
-             */
             await updatePet(id, formData);
 
-            navigate('/pets');
+            goBack();
 
         } catch (err) {
 
@@ -142,9 +143,13 @@ export default function EditPetPage() {
                                     'The requested pet does not exist.'}
                             </p>
 
-                            <Link to="/pets">
-                                Back to my pets
-                            </Link>
+                            <button
+                                type="button"
+                                onClick={goBack}
+                                className="pet-editor-back-button"
+                            >
+                                Back
+                            </button>
 
                         </div>
 
@@ -165,13 +170,13 @@ export default function EditPetPage() {
                 <div className="pet-editor-container">
 
                     <div className="pet-editor-back">
-
-                        <Link to="/pets">
-                            ← Back to my pets
-                        </Link>
-
+                        <button
+                            type="button"
+                            onClick={goBack}
+                        >
+                            ← Back
+                        </button>
                     </div>
-
 
                     <section className="pet-editor-header">
 

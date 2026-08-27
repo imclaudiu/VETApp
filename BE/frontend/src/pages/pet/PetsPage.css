@@ -292,11 +292,8 @@
 
 .pet-card-actions {
     margin-top: 20px;
-
     display: grid;
-
-    grid-template-columns: 1fr auto;
-
+    grid-template-columns: 1fr auto auto;
     gap: 9px;
 }
 
@@ -318,6 +315,23 @@
     cursor: pointer;
 }
 
+.pet-history-button {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #0f766e;
+    color: white;
+    font-size: 12px;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.pet-history-button:hover {
+    background: #115e59;
+}
+
 .pet-edit-button {
     border: none;
 
@@ -329,6 +343,8 @@
 
     transition: background 0.2s ease;
 }
+
+
 
 .pet-edit-button:hover {
     background: #115e59;
@@ -656,4 +672,12 @@
     .pet-card {
         padding: 20px;
     }
+}
+
+.pet-card-readonly {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
+    color: #94a3b8;
+    font-size: 11px;
 }

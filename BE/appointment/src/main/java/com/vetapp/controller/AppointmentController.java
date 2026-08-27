@@ -1,6 +1,7 @@
 package com.vetapp.controller;
 
-import com.vetapp.DTO.builder.AppointmentPublic;
+import com.vetapp.DTO.AppointmentPublic;
+import com.vetapp.DTO.VeterinarianAppointmentPublic;
 import com.vetapp.entity.Appointment;
 import com.vetapp.service.AppointmentService;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,7 +52,10 @@ public class AppointmentController {
     }
 
     @GetMapping("/veterinarian/{veterinarianId}")
-    public ResponseEntity<List<Appointment>> getByVeterinarianId(@PathVariable UUID veterinarianId, @AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<List<VeterinarianAppointmentPublic>> getByVeterinarianId(
+            @PathVariable UUID veterinarianId,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByVeterinarianId(veterinarianId, jwt));
     }
 
@@ -64,5 +70,25 @@ public class AppointmentController {
     public ResponseEntity<Void> deleteAppointment(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
         appointmentService.deleteAppointment(id, jwt);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/available-slots")
+    public ResponseEntity<List<LocalDateTime>> getAvailableSlots(@RequestParam UUID veterinarianId, @RequestParam Long vetServiceId, @RequestParam LocalDate day) {
+        return ResponseEntity.ok(appointmentService.getAvailableSlots(veterinarianId, vetServiceId, day));
+    }
+
+    @PatchMapping("/cancel/{id}")
+    public ResponseEntity<Appointment> cancelAppointment(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.cancelAppointment(id, jwt));
+    }
+
+    @PatchMapping("/no-show/{id}")
+    public ResponseEntity<Appointment> markNoShow(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.markNoShow(id, jwt));
+    }
+
+    @PatchMapping("/confirm/{id}")
+    public ResponseEntity<Appointment> confirmAppointment(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(appointmentService.confirmAppointment(id, jwt));
     }
 }

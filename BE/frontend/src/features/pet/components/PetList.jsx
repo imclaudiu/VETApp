@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function PetList({ pets, onDelete }) {
+export default function PetList({ pets }) {
 
     const getPetInitial = (name) => {
         return name?.charAt(0)?.toUpperCase() || 'P';
@@ -207,28 +207,8 @@ export default function PetList({ pets, onDelete }) {
                             </div>
 
 
-                            <div className="pet-card-actions">
-
-                                <Link
-                                    to={`/pets/${pet.id}/edit`}
-                                    className="pet-edit-button"
-                                >
-                                    Edit pet
-                                </Link>
-
-                                <button
-                                    type="button"
-                                    className="pet-delete-button"
-                                    onClick={() =>
-                                        onDelete(
-                                            pet.id,
-                                            pet.name
-                                        )
-                                    }
-                                >
-                                    Delete
-                                </button>
-
+                            <div className="pet-card-readonly">
+                                Pet information can only be changed by a veterinarian.
                             </div>
 
                         </article>

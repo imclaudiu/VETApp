@@ -157,6 +157,7 @@ services:
       - DB_DBNAME=pet_db
       - DB_USER=postgres
       - DB_PASSWORD=admin
+      - INTERNAL_API_KEY=vetapp-internal-key
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pet.rule=Host(`pet.localhost`)"
@@ -227,6 +228,9 @@ services:
       - DB_DBNAME=appointment_db
       - DB_USER=postgres
       - DB_PASSWORD=admin
+      - INTERNAL_API_KEY=vetapp-internal-key
+      - TZ=Europe/Bucharest
+      - JAVA_TOOL_OPTIONS=-Duser.timezone=Europe/Bucharest
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.appointment.rule=Host(`appointment.localhost`)"
@@ -262,6 +266,9 @@ services:
       - DB_DBNAME=medicalr_db
       - DB_USER=postgres
       - DB_PASSWORD=admin
+      - INTERNAL_API_KEY=vetapp-internal-key
+      - TZ=Europe/Bucharest
+      - JAVA_TOOL_OPTIONS=-Duser.timezone=Europe/Bucharest
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.medicalr.rule=Host(`medicalr.localhost`)"

@@ -45,24 +45,24 @@ public class PetService {
         return petRepository.findAll();
     }
 
-    // NOU: doar owner sau admin
     public PetPublic getPetById(UUID id, Jwt jwt) {
         Pet pet = findPetOrThrow(id);
-        accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
+        accessGuard.requireOwnerVeterinarianOrAdmin(pet.getOwnerID(), jwt);
+
         return PetBuilder.toPublicPet(pet);
     }
 
-    // NOU: doar owner-ul curent (existent) sau admin poate edita
     public Pet updatePet(UUID id, Pet updatedPet, Jwt jwt) {
         Pet existingPet = findPetOrThrow(id);
-        accessGuard.requireOwnerOrAdmin(existingPet.getOwnerID(), jwt);
+
+        accessGuard.requireVeterinarianOrAdmin(jwt);
 
         if (updatedPet.getOwnerID() != null) {
-            // schimbarea ownerului e o operatie sensibila - doar admin
             accessGuard.requireAdmin(jwt);
             userClient.checkUserExists(updatedPet.getOwnerID());
             existingPet.setOwnerID(updatedPet.getOwnerID());
         }
+
         if (updatedPet.getName() != null) {
             existingPet.setName(updatedPet.getName());
         }
@@ -82,10 +82,11 @@ public class PetService {
         return petRepository.save(existingPet);
     }
 
-    // NOU: doar owner sau admin
     public void deletePet(UUID id, Jwt jwt) {
         Pet existingPet = findPetOrThrow(id);
-        accessGuard.requireOwnerOrAdmin(existingPet.getOwnerID(), jwt);
+
+        accessGuard.requireVeterinarianOrAdmin(jwt);
+
         petRepository.delete(existingPet);
     }
 
@@ -119,5 +120,10 @@ public class PetService {
     public List<Pet> getMyPets(Jwt jwt) {
         UUID userId = accessGuard.extractUserId(jwt);
         return petRepository.findAllByOwnerID(userId);
+    }
+
+    public PetPublic getPetInternal(UUID id) {
+        Pet pet = findPetOrThrow(id);
+        return PetBuilder.toPublicPet(pet);
     }
 }

@@ -39,7 +39,7 @@ public class VeterinarianController {
     }
 
     @GetMapping("/clinic/{clinicId}")
-    public ResponseEntity<List<Veterinarian>> getByClinicId(@PathVariable UUID clinicId) {
+    public ResponseEntity<List<VeterinarianPublic>> getByClinicId(@PathVariable UUID clinicId) {
         return ResponseEntity.ok(veterinarianService.getVeterinariansByClinicId(clinicId));
     }
 
@@ -65,5 +65,10 @@ public class VeterinarianController {
     public ResponseEntity<Void> deleteVeterinarian(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
         veterinarianService.deleteVeterinarian(id, jwt);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<VeterinarianPublic> getMyVeterinarian(@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(veterinarianService.getMyVeterinarian(jwt));
     }
 }

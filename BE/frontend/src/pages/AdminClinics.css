@@ -1,0 +1,634 @@
+.admin-clinics-page {
+    min-height: calc(100vh - 72px);
+    background: #f8fafc;
+}
+
+.admin-clinics-container {
+    width: 100%;
+    max-width: 1320px;
+
+    margin: 0 auto;
+
+    padding: 45px 40px 70px;
+}
+
+
+/* HEADERS */
+
+.admin-clinics-top,
+.admin-clinic-detail-header {
+    margin-bottom: 32px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 25px;
+}
+
+.admin-section-eyebrow {
+    margin: 0 0 8px;
+
+    color: #0d9488;
+
+    font-size: 10px;
+    font-weight: 750;
+
+    letter-spacing: 1.5px;
+}
+
+.admin-clinics-top h1,
+.admin-clinic-detail-header h1 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 36px;
+    font-weight: 750;
+
+    letter-spacing: -1.3px;
+}
+
+.admin-clinics-top p:last-child,
+.admin-clinic-detail-header p:last-child {
+    margin: 9px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* BUTTONS */
+
+.admin-primary-button,
+.admin-secondary-button,
+.admin-delete-button-large {
+    min-height: 43px;
+
+    padding: 0 16px;
+
+    border-radius: 9px;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+.admin-primary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border: none;
+
+    background: #0f766e;
+
+    color: white;
+}
+
+.admin-primary-button:hover {
+    background: #115e59;
+}
+
+.admin-secondary-button {
+    border: 1px solid #dbe2ea;
+
+    background: white;
+
+    color: #475569;
+}
+
+.admin-delete-button-large {
+    border: 1px solid #fecaca;
+
+    background: white;
+
+    color: #dc2626;
+}
+
+
+/* CREATE + DETAIL CARDS */
+
+.admin-create-card,
+.admin-detail-card {
+    margin-bottom: 28px;
+
+    padding: 26px;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 17px;
+
+    background: white;
+}
+
+.admin-card-heading {
+    margin-bottom: 22px;
+}
+
+.admin-card-heading h2 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 18px;
+}
+
+.admin-card-heading p {
+    margin: 6px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+/* FORMS */
+
+.admin-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+.admin-form-group {
+    margin-bottom: 16px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.admin-form-group label {
+    color: #334155;
+
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.admin-form-group input,
+.admin-form-group select,
+.admin-form-group textarea {
+    width: 100%;
+
+    padding: 0 13px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: white;
+
+    color: #0f172a;
+
+    font-family: inherit;
+
+    font-size: 13px;
+}
+
+.admin-form-group input,
+.admin-form-group select {
+    height: 47px;
+}
+
+.admin-form-group textarea {
+    min-height: 95px;
+
+    padding-top: 12px;
+
+    resize: vertical;
+}
+
+.admin-form-group input:focus,
+.admin-form-group select:focus,
+.admin-form-group textarea:focus {
+    border-color: #0d9488;
+
+    box-shadow:
+        0 0 0 4px rgba(13, 148, 136, 0.08);
+}
+
+.admin-form-actions {
+    margin-top: 10px;
+
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 9px;
+}
+
+.admin-checkbox {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: #334155;
+
+    font-size: 12px;
+}
+
+
+/* TOOLBAR */
+
+.admin-clinics-toolbar {
+    margin-bottom: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.admin-clinics-toolbar input {
+    width: 100%;
+    max-width: 420px;
+
+    height: 46px;
+
+    padding: 0 14px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: white;
+}
+
+.admin-clinics-toolbar span {
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* CLINIC GRID */
+
+.admin-clinic-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+.admin-clinic-card {
+    padding: 22px;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 16px;
+
+    background: white;
+
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.admin-clinic-card:hover {
+    border-color: #99f6e4;
+
+    transform: translateY(-2px);
+}
+
+.admin-clinic-main {
+    display: flex;
+
+    gap: 15px;
+
+    color: inherit;
+
+    text-decoration: none;
+}
+
+.admin-clinic-icon {
+    width: 45px;
+    height: 45px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    background: #ecfdf5;
+
+    color: #0f766e;
+
+    font-size: 25px;
+}
+
+.admin-clinic-main h2 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 16px;
+}
+
+.admin-clinic-main p {
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.admin-clinic-city {
+    color: #0d9488 !important;
+
+    font-weight: 650;
+}
+
+.admin-clinic-card-bottom {
+    margin-top: 20px;
+
+    padding-top: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-top: 1px solid #f1f5f9;
+}
+
+.admin-manage-link {
+    color: #0f766e;
+
+    font-size: 11px;
+    font-weight: 650;
+
+    text-decoration: none;
+}
+
+.admin-delete-button {
+    padding: 7px 10px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #dc2626;
+
+    font-size: 11px;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+
+/* ERROR */
+
+.admin-error-box {
+    margin-bottom: 20px;
+
+    padding: 13px 15px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 10px;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    font-size: 12px;
+}
+
+
+/* BACK */
+
+.admin-back-link {
+    display: inline-block;
+
+    margin-bottom: 25px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    text-decoration: none;
+}
+
+
+/* TABS */
+
+.admin-tabs {
+    margin-bottom: 25px;
+
+    padding: 5px;
+
+    display: flex;
+
+    gap: 4px;
+
+    overflow-x: auto;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 12px;
+
+    background: white;
+}
+
+.admin-tabs button {
+    min-height: 39px;
+
+    padding: 0 15px;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+.admin-tabs button.active {
+    background: #ecfdf5;
+
+    color: #0f766e;
+}
+
+
+/* MANAGEMENT */
+
+.admin-management-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(300px, 0.7fr) minmax(0, 1.3fr);
+
+    gap: 22px;
+
+    align-items: start;
+}
+
+.admin-resource-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.admin-resource-card {
+    padding: 17px 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 13px;
+
+    background: white;
+}
+
+.admin-resource-card h3 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 14px;
+}
+
+.admin-resource-card p {
+    margin: 5px 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.admin-resource-card span {
+    color: #0d9488;
+
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.admin-resource-actions {
+    display: flex;
+
+    gap: 7px;
+
+    flex-shrink: 0;
+}
+
+.admin-resource-actions button {
+    padding: 7px 10px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    background: white;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 10px;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+.admin-resource-actions .danger {
+    border-color: #fecaca;
+
+    color: #dc2626;
+}
+
+
+/* LOADING */
+
+.admin-loading {
+    min-height: 350px;
+
+    display: grid;
+    place-items: center;
+
+    color: #64748b;
+
+    background: #f8fafc;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+    .admin-clinic-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .admin-management-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .admin-clinics-container {
+        padding: 32px 22px 55px;
+    }
+
+    .admin-clinics-top,
+    .admin-clinic-detail-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-clinic-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-resource-card {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .admin-resource-actions {
+        width: 100%;
+    }
+}
