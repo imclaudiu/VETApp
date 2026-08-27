@@ -90,6 +90,15 @@ http:
       middlewares:
         - cors-headers
 
+            # ---- CHATBOT ROUTER ----
+    chatbot-router:
+      rule: "Host(`localhost`) && PathPrefix(`/chatbot`)"
+      service: chatbot
+      entryPoints:
+        - web
+      middlewares:
+        - cors-headers
+
   middlewares:
     cors-headers:
       headers:
@@ -139,3 +148,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://medicalr:8080"
+
+    chatbot:
+      loadBalancer:
+        servers:
+          - url: "http://chatbot:8080"

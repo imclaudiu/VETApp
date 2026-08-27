@@ -23,6 +23,7 @@ import SettingsPage from './pages/settings/SettingsPage';
 import PetMedicalHistoryPage from './pages/pet/PetMedicalHistoryPage';
 import VeterinarianMedicalRecordPage from './pages/veterinarian/VeterinarianMedicalRecordPage';
 import VeterinarianPetHistoryPage from './pages/veterinarian/VeterinarianPetHistoryPage';
+import ChatbotPage from './pages/chatbot/ChatbotPage';
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -116,11 +117,6 @@ function AppRoutes() {
             <AdminClinicDetailsPage />
           </ProtectedRoute>
         }
-      />
-
-      <Route
-        path="*"
-        element={<Navigate to="/" replace />}
       />
 
       {/* APPOINTMENT ROUTES */}
@@ -221,6 +217,26 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+
+      {/*CHATBOT ROUTES */}
+      <Route
+        path="/chatbot"
+        element={
+          <ProtectedRoute allowedRoles={['OWNER']}>
+            <ChatbotPage />
+          </ProtectedRoute>
+        }
+      />
+
+
+
+
+      <Route
+        path="*"
+        element={<Navigate to="/" replace />}
+      />
+
     </Routes>
 
 

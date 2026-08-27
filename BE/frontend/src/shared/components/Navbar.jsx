@@ -98,9 +98,20 @@ export default function Navbar() {
                                     >
                                         Clinics
                                     </NavLink>
+
+                                    <NavLink
+                                        to="/chatbot"
+                                        onClick={closeMenu}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? 'navbar-link navbar-link-active'
+                                                : 'navbar-link'
+                                        }
+                                    >
+                                        AI Assistant
+                                    </NavLink>
                                 </>
                             )}
-
 
                             {user?.role === 'ADMIN' && (
                                 <NavLink
