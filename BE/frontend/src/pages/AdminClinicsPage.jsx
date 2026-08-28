@@ -16,12 +16,18 @@ import {
 
 import './AdminClinics.css';
 
+import GoogleClinicPicker from '../shared/components/GoogleClinicPicker';
+
 
 const EMPTY_FORM = {
     name: '',
     address: '',
     city: '',
-    phone: ''
+    phone: '',
+    rating: 0,
+    googlePlaceId: '',
+    latitude: null,
+    longitude: null
 };
 
 
@@ -127,21 +133,22 @@ export default function AdminClinicsPage() {
 
     const handleCreate = async (e) => {
 
+
+
         e.preventDefault();
+
+        if (!form.googlePlaceId) {
+            setError('Select the clinic from Google Maps first.');
+            return;
+        }
+
 
         setSaving(true);
         setError(null);
 
         try {
 
-            await addClinic({
-                ...form,
-
-                /*
-                 * Clinica nouă nu are reviews.
-                 */
-                rating: 0
-            });
+            await addClinic(form);
 
 
             setForm(EMPTY_FORM);
@@ -275,6 +282,20 @@ export default function AdminClinicsPage() {
                             </div>
 
 
+                            <div className="admin-form-group">
+                                <label>Find clinic on Google Maps</label>
+
+                                <GoogleClinicPicker
+                                    onSelect={(place) => setForm(current => ({ ...current, ...place }))}
+                                />
+
+                                {form.googlePlaceId && (
+                                    <span className="google-clinic-selected">
+                                        ✓ Linked to Google Maps
+                                    </span>
+                                )}
+                            </div>
+
                             <div className="admin-form-grid">
 
                                 <div className="admin-form-group">
@@ -283,13 +304,7 @@ export default function AdminClinicsPage() {
                                         Clinic name
                                     </label>
 
-                                    <input
-                                        name="name"
-                                        value={form.name}
-                                        onChange={handleChange}
-                                        placeholder="GreenVet Clinic"
-                                        required
-                                    />
+                                    <input name="name" value={form.name} readOnly />
 
                                 </div>
 
@@ -300,13 +315,7 @@ export default function AdminClinicsPage() {
                                         City
                                     </label>
 
-                                    <input
-                                        name="city"
-                                        value={form.city}
-                                        onChange={handleChange}
-                                        placeholder="Cluj-Napoca"
-                                        required
-                                    />
+                                    <input name="city" value={form.city} readOnly />
 
                                 </div>
 
@@ -317,13 +326,7 @@ export default function AdminClinicsPage() {
                                         Address
                                     </label>
 
-                                    <input
-                                        name="address"
-                                        value={form.address}
-                                        onChange={handleChange}
-                                        placeholder="Street and number"
-                                        required
-                                    />
+                                    <input name="address" value={form.address} readOnly />
 
                                 </div>
 

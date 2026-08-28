@@ -567,3 +567,16 @@
         text-align: left;
     }
 }
+
+.clinic-location-section {
+    margin-top: 24px;
+}
+
+.clinic-map {
+    width: 100%;
+    height: 350px;
+    margin-top: 15px;
+    border: 1px solid #e5eaf0;
+    border-radius: 14px;
+    overflow: hidden;
+}

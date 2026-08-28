@@ -29,13 +29,25 @@ public class Clinic {
     @Column(name = "rating", unique = false, nullable = false)
     private Double rating;
 
-    public Clinic(UUID id, String name, String address, String city, String phone, Double rating) {
+    @Column(name = "google_place_id", unique = true)
+    private String googlePlaceId;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
+    public Clinic(UUID id, String name, String address, String city, String phone, Double rating, String googlePlaceId, Double latitude, Double longitude) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.city = city;
         this.phone = phone;
         this.rating = rating;
+        this.googlePlaceId = googlePlaceId;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Clinic(){
@@ -88,5 +100,29 @@ public class Clinic {
 
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    public String getGooglePlaceId() {
+        return googlePlaceId;
+    }
+
+    public void setGooglePlaceId(String googlePlaceId) {
+        this.googlePlaceId = googlePlaceId;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

@@ -81,6 +81,12 @@ public class ClinicService {
         if (updatedClinic.getRating() != null) {
             existingClinic.setRating(updatedClinic.getRating());
         }
+        if (updatedClinic.getGooglePlaceId() != null)
+            existingClinic.setGooglePlaceId(updatedClinic.getGooglePlaceId());
+        if (updatedClinic.getLatitude() != null)
+            existingClinic.setLatitude(updatedClinic.getLatitude());
+        if (updatedClinic.getLongitude() != null)
+            existingClinic.setLongitude(updatedClinic.getLongitude());
 
         return clinicRepository.save(existingClinic);
     }

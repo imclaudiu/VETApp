@@ -11,6 +11,7 @@ import {
 
 import './ClinicDetailsPage.css';
 
+import ClinicMap from '../../features/clinic/components/ClinicMap';
 
 export default function ClinicDetailsPage() {
 
@@ -415,6 +416,29 @@ export default function ClinicDetailsPage() {
                                 ))}
 
                             </div>
+                        )}
+
+                        {clinic.latitude && clinic.longitude && (
+                            <section className="clinic-location-section">
+                                <div className="clinic-section-header">
+                                    <div>
+                                        <p>LOCATION</p>
+                                        <h2>Find us</h2>
+                                        <span>{clinic.address}</span>
+                                    </div>
+                                </div>
+
+                                <ClinicMap clinic={clinic} />
+
+                                <a
+                                    className="clinic-directions-button"
+                                    href={`https://www.google.com/maps/dir/?api=1&destination=${clinic.latitude},${clinic.longitude}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    Get directions
+                                </a>
+                            </section>
                         )}
 
                     </section>

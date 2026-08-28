@@ -632,3 +632,18 @@
         width: 100%;
     }
 }
+
+.google-clinic-picker {
+    width: 100%;
+}
+
+.google-clinic-picker gmp-place-autocomplete {
+    width: 100%;
+}
+
+.google-clinic-selected {
+    margin-top: 6px;
+    color: #0f766e;
+    font-size: 11px;
+    font-weight: 650;
+}
