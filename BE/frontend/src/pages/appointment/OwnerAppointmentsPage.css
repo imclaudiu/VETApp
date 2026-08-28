@@ -1,0 +1,325 @@
+.owner-appointments-page {
+    min-height: calc(100vh - 70px);
+    background: #f8fafc;
+}
+
+.owner-appointments-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 42px 30px 70px;
+}
+
+.owner-appointments-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 28px;
+}
+
+.owner-appointments-header p {
+    margin: 0 0 7px;
+    color: #0d9488;
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: 1.3px;
+}
+
+.owner-appointments-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 30px;
+}
+
+.owner-appointments-header span {
+    display: block;
+    margin-top: 7px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.owner-new-appointment {
+    padding: 11px 16px;
+    border-radius: 9px;
+    background: #0f766e;
+    color: white;
+    font-size: 11px;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.owner-appointments-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.owner-appointments-summary>div {
+    padding: 18px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 13px;
+    background: white;
+}
+
+.owner-appointments-summary span {
+    color: #0d9488;
+    font-size: 8px;
+    font-weight: 750;
+    letter-spacing: 1px;
+}
+
+.owner-appointments-summary strong {
+    display: block;
+    margin: 5px 0 2px;
+    color: #0f172a;
+    font-size: 25px;
+}
+
+.owner-appointments-summary p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+.owner-appointments-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    padding: 5px;
+    width: fit-content;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+}
+
+.owner-appointments-tabs button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.owner-appointments-tabs button.active {
+    background: #ecfdf5;
+    color: #0f766e;
+}
+
+.owner-appointments-tabs span {
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    font-size: 9px;
+}
+
+.owner-appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.owner-appointment-card {
+    display: flex;
+    gap: 18px;
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 15px;
+    background: white;
+}
+
+.owner-appointment-date {
+    display: flex;
+    flex: 0 0 58px;
+    height: 67px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: #ecfdf5;
+    color: #0f766e;
+}
+
+.owner-appointment-date strong {
+    font-size: 20px;
+}
+
+.owner-appointment-date span {
+    margin-top: 2px;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.owner-appointment-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.owner-appointment-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.owner-appointment-heading h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 15px;
+}
+
+.owner-appointment-heading p {
+    margin: 4px 0 0;
+    color: #64748b;
+    font-size: 10px;
+}
+
+.owner-appointment-status {
+    height: fit-content;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 8px;
+    font-weight: 750;
+}
+
+.owner-appointment-status.pending {
+    background: #fef9c3;
+    color: #a16207;
+}
+
+.owner-appointment-status.confirmed {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.owner-appointment-status.finished {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.owner-appointment-status.canceled {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.owner-appointment-status.no_show {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.owner-appointment-details {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    padding: 15px 0;
+}
+
+.owner-appointment-details div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.owner-appointment-details span {
+    color: #94a3b8;
+    font-size: 7px;
+    font-weight: 750;
+    letter-spacing: .8px;
+}
+
+.owner-appointment-details strong {
+    color: #334155;
+    font-size: 10px;
+}
+
+.owner-appointment-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.owner-view-clinic,
+.owner-cancel-appointment {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.owner-view-clinic {
+    border: 1px solid #cbd5e1;
+    background: white;
+    color: #334155;
+}
+
+.owner-cancel-appointment {
+    border: 1px solid #fecaca;
+    background: white;
+    color: #dc2626;
+    cursor: pointer;
+}
+
+.owner-appointments-empty,
+.owner-appointments-loading {
+    padding: 55px 20px;
+    color: #64748b;
+    text-align: center;
+}
+
+.owner-appointments-empty {
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+    background: white;
+}
+
+.owner-appointments-empty h2 {
+    margin: 10px 0 5px;
+    color: #334155;
+    font-size: 16px;
+}
+
+.owner-appointments-empty p {
+    margin: 0;
+    font-size: 11px;
+}
+
+.owner-appointments-error {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border: 1px solid #fecaca;
+    border-radius: 9px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 11px;
+}
+
+@media (max-width: 800px) {
+    .owner-appointments-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .owner-appointment-details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 550px) {
+    .owner-appointments-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .owner-appointment-card {
+        flex-direction: column;
+    }
+}

@@ -25,6 +25,9 @@ import VeterinarianMedicalRecordPage from './pages/veterinarian/VeterinarianMedi
 import VeterinarianPetHistoryPage from './pages/veterinarian/VeterinarianPetHistoryPage';
 import ChatbotPage from './pages/chatbot/ChatbotPage';
 import NotificationsPage from './pages/notification/NotificationsPage';
+import OwnerAppointmentsPage from './pages/appointment/OwnerAppointmentsPage';
+import AdminAccountPage from './pages/account/AdminAccountPage';
+import VeterinarianProfilePage from './pages/veterinarian/VeterinarianProfilePage';
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -120,7 +123,43 @@ function AppRoutes() {
         }
       />
 
+      <Route
+        path="/admin/users/:userId"
+        element={
+          <ProtectedRoute allowedRoles={['ADMIN']}>
+            <AdminAccountPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/veterinarians/:veterinarianId"
+        element={
+          <ProtectedRoute allowedRoles={['OWNER', 'ADMIN', 'VETERINARIAN']}>
+            <VeterinarianProfilePage />
+          </ProtectedRoute>
+        }
+      />
+
       {/* APPOINTMENT ROUTES */}
+      <Route
+        path="/appointments/new"
+        element={
+          <ProtectedRoute allowedRoles={['OWNER']}>
+            <BookAppointmentPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/appointments"
+        element={
+          <ProtectedRoute allowedRoles={['OWNER']}>
+            <OwnerAppointmentsPage />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/appointments/new"
         element={

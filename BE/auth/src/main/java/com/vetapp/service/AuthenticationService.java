@@ -1,9 +1,6 @@
 package com.vetapp.service;
 
-import com.vetapp.DTO.AuthResponse;
-import com.vetapp.DTO.AuthenticationPublic;
-import com.vetapp.DTO.RegisterRequest;
-import com.vetapp.DTO.UserRegistrationEvent;
+import com.vetapp.DTO.*;
 import com.vetapp.DTO.builder.AuthenticationBuilder;
 import com.vetapp.entity.Authentication;
 import com.vetapp.entity.Role;
@@ -65,10 +62,19 @@ public class AuthenticationService {
         return AuthenticationBuilder.toPublicAuthentication(saved);
     }
 
-    // NOU: doar admin vede toate conturile
-    public List<Authentication> getAll(Jwt jwt) {
+    public List<AdminAuthenticationPublic> getAll(Jwt jwt) {
         accessGuard.requireAdmin(jwt);
-        return authenticationRepository.findAll();
+
+        return authenticationRepository.findAll()
+                .stream()
+                .map(user -> new AdminAuthenticationPublic(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getTelefon()
+                ))
+                .toList();
     }
 
     // NOU: doar owner sau admin
@@ -195,5 +201,23 @@ public class AuthenticationService {
 
         authentication.setPassword(encoder.encode(newPassword));
         authenticationRepository.save(authentication);
+    }
+
+    public AdminAuthenticationPublic getAdminAccount(UUID id, Jwt jwt) {
+        accessGuard.requireAdmin(jwt);
+
+        Authentication auth = authenticationRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Contul nu a fost găsit."
+                ));
+
+        return new AdminAuthenticationPublic(
+                auth.getId(),
+                auth.getUsername(),
+                auth.getEmail(),
+                auth.getRole(),
+                auth.getTelefon()
+        );
     }
 }

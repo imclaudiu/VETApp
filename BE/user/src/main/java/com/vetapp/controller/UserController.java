@@ -1,6 +1,7 @@
 package com.vetapp.controller;
 
 
+import com.vetapp.DTO.AdminUserDetails;
 import com.vetapp.DTO.UserProfile;
 import com.vetapp.DTO.UserPublic;
 import com.vetapp.entity.RolUser;
@@ -67,5 +68,14 @@ public class UserController {
         );
     }
 
+    @GetMapping("/admin/{id}")
+    public ResponseEntity<AdminUserDetails> getAdminUserDetails(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal Jwt jwt) {
+
+        return ResponseEntity.ok(
+                userService.getAdminUserDetails(id, jwt)
+        );
+    }
 
 }

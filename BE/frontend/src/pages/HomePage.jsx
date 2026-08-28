@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Navbar from '../shared/components/Navbar';
 import { useAuth } from '../features/auth/contexts/AuthContext';
@@ -15,6 +15,7 @@ import './HomePage.css';
 export default function HomePage() {
 
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     const [pets, setPets] = useState([]);
     const [petsLoading, setPetsLoading] = useState(false);
@@ -862,19 +863,14 @@ export default function HomePage() {
                                 </div>
 
 
-                                {appointments.length > 0 && (
-
+                                {appointments.length > 0 && appointments[0].veterinarian?.clinicId && (
                                     <Link
-                                        to="/appointments"
+                                        to={`/clinics/${appointments[0].veterinarian.clinicId}`}
                                         className="section-link"
                                     >
-                                        View all
-
-                                        <span>
-                                            →
-                                        </span>
+                                        View clinic
+                                        <span>→</span>
                                     </Link>
-
                                 )}
 
                             </div>
@@ -952,6 +948,11 @@ export default function HomePage() {
                                             <article
                                                 key={appointment.id}
                                                 className="dashboard-appointment-card"
+                                                onClick={() => {
+                                                    if (appointment.veterinarian?.clinicId) {
+                                                        navigate(`/clinics/${appointment.veterinarian.clinicId}`);
+                                                    }
+                                                }}
                                             >
 
                                                 <div className="appointment-date-box">
@@ -1056,11 +1057,10 @@ export default function HomePage() {
                                                                 ===
                                                                 appointment.id
                                                             }
-                                                            onClick={() =>
-                                                                handleCancelAppointment(
-                                                                    appointment
-                                                                )
-                                                            }
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleCancelAppointment(appointment);
+                                                            }}
                                                         >
 
                                                             {cancelingAppointmentId

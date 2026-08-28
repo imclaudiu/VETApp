@@ -1,5 +1,6 @@
 package com.vetapp.service;
 
+import com.vetapp.DTO.AdminUserDetails;
 import com.vetapp.DTO.UserProfile;
 import com.vetapp.DTO.UserPublic;
 import com.vetapp.DTO.builder.UserBuilder;
@@ -121,4 +122,22 @@ public class UserService {
         userRepository.deleteAll();
     }
 
+
+    public AdminUserDetails getAdminUserDetails(UUID id, Jwt jwt) {
+        accessGuard.requireAdmin(jwt);
+
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Utilizatorul nu a fost găsit."
+                ));
+
+        return new AdminUserDetails(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getAddress()
+        );
+    }
 }

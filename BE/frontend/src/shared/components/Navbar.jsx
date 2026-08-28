@@ -196,8 +196,36 @@ export default function Navbar() {
                     <p className="side-panel-title">Quick access</p>
 
                     {user?.role === 'OWNER' && (
+                        <>
+                            <NavLink
+                                to="/pets"
+                                onClick={closeMenu}
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? 'side-panel-link side-panel-link-active'
+                                        : 'side-panel-link'
+                                }
+                            >
+                                My pets
+                            </NavLink>
+
+                            <NavLink
+                                to="/appointments"
+                                onClick={closeMenu}
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? 'side-panel-link side-panel-link-active'
+                                        : 'side-panel-link'
+                                }
+                            >
+                                Appointments
+                            </NavLink>
+                        </>
+                    )}
+
+                    {user?.role === 'VETERINARIAN' && (
                         <NavLink
-                            to="/pets"
+                            to="/veterinarian/appointments"
                             onClick={closeMenu}
                             className={({ isActive }) =>
                                 isActive
@@ -205,7 +233,7 @@ export default function Navbar() {
                                     : 'side-panel-link'
                             }
                         >
-                            My pets
+                            Appointments
                         </NavLink>
                     )}
 

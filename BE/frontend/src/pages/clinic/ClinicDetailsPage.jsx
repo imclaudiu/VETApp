@@ -260,40 +260,27 @@ export default function ClinicDetailsPage() {
                                         key={vet.id}
                                     >
 
-                                        <div className="veterinarian-avatar">
-
-                                            {vet.name
-                                                ?.charAt(0)
-                                                ?.toUpperCase() ||
-                                                'V'}
-
-                                        </div>
-
-
-                                        <div className="veterinarian-card-content">
-
-                                            <div>
-
-                                                <h3>
-                                                    Dr. {vet.name}
-                                                </h3>
-
-                                                <p>
-                                                    Veterinarian
-                                                </p>
-
+                                        <Link
+                                            to={`/veterinarians/${vet.id}`}
+                                            className="veterinarian-profile-link"
+                                        >
+                                            <div className="veterinarian-avatar">
+                                                {vet.name?.charAt(0)?.toUpperCase() || 'V'}
                                             </div>
 
+                                            <div className="veterinarian-card-content">
+                                                <div>
+                                                    <h3>Dr. {vet.name}</h3>
+                                                    <p>Veterinarian</p>
+                                                </div>
 
-                                            {vet.surgeon && (
-
-                                                <span className="surgeon-badge">
-                                                    Surgeon
-                                                </span>
-
-                                            )}
-
-                                        </div>
+                                                {vet.surgeon && (
+                                                    <span className="surgeon-badge">
+                                                        Surgeon
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </Link>
 
 
                                         <Link

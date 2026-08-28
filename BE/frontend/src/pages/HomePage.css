@@ -833,7 +833,8 @@
 
     border: 1px solid #edf1f5;
     border-radius: 11px;
-
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     background: #ffffff;
 
     transition:
@@ -844,11 +845,8 @@
 
 .dashboard-appointment-card:hover {
     border-color: #99f6e4;
-
+    box-shadow: 0 5px 18px rgba(15, 118, 110, 0.08);
     transform: translateY(-1px);
-
-    box-shadow:
-        0 7px 18px rgba(15, 23, 42, 0.04);
 }
 
 .appointment-date-box {

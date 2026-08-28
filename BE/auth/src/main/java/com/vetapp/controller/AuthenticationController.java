@@ -1,5 +1,6 @@
 package com.vetapp.controller;
 
+import com.vetapp.DTO.AdminAuthenticationPublic;
 import com.vetapp.DTO.AuthResponse;
 import com.vetapp.DTO.AuthenticationPublic;
 import com.vetapp.DTO.RegisterRequest;
@@ -41,7 +42,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Authentication>> getAll(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<List<AdminAuthenticationPublic>> getAll(@AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(authenticationService.getAll(jwt));
     }
 
@@ -93,6 +94,16 @@ public class AuthenticationController {
     public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request, @AuthenticationPrincipal Jwt jwt) {
         authenticationService.changePassword(request.currentPassword(), request.newPassword(), jwt);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/admin/{id}")
+    public ResponseEntity<AdminAuthenticationPublic> getAdminAccount(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal Jwt jwt) {
+
+        return ResponseEntity.ok(
+                authenticationService.getAdminAccount(id, jwt)
+        );
     }
 
     public record ChangePasswordRequest(String currentPassword, String newPassword) {}

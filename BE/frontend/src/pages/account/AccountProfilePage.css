@@ -1,0 +1,188 @@
+.account-profile-page {
+    min-height: calc(100vh - 70px);
+    background: #f8fafc;
+}
+
+.account-profile-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 30px 70px;
+}
+
+.account-profile-back {
+    margin-bottom: 18px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #64748b;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.account-profile-back:hover {
+    color: #0f766e;
+}
+
+.account-profile-card {
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    background: white;
+}
+
+.account-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 25px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.account-profile-avatar {
+    display: flex;
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: #ecfdf5;
+    color: #0f766e;
+    font-size: 22px;
+    font-weight: 750;
+}
+
+.account-profile-header>div:nth-child(2) {
+    flex: 1;
+}
+
+.account-profile-header p,
+.account-profile-label {
+    margin: 0 0 5px;
+    color: #0d9488;
+    font-size: 8px;
+    font-weight: 750;
+    letter-spacing: 1px;
+}
+
+.account-profile-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 23px;
+}
+
+.account-profile-header div>span {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 10px;
+}
+
+.account-role-badge,
+.account-surgeon-badge {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 8px;
+    font-weight: 750;
+}
+
+.account-role-badge.owner {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.account-role-badge.veterinarian {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.account-role-badge.admin {
+    background: #f3e8ff;
+    color: #7e22ce;
+}
+
+.account-surgeon-badge {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.account-profile-section {
+    padding: 24px;
+}
+
+.account-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.account-profile-info {
+    padding: 14px;
+    border: 1px solid #f1f5f9;
+    border-radius: 10px;
+    background: #f8fafc;
+}
+
+.account-profile-info span {
+    display: block;
+    margin-bottom: 5px;
+    color: #94a3b8;
+    font-size: 7px;
+    font-weight: 750;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+}
+
+.account-profile-info strong {
+    color: #334155;
+    font-size: 11px;
+    word-break: break-word;
+}
+
+.veterinarian-profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+    padding: 0 24px 24px;
+}
+
+.profile-primary-button,
+.profile-secondary-button {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.profile-primary-button {
+    background: #0f766e;
+    color: white;
+}
+
+.profile-secondary-button {
+    border: 1px solid #cbd5e1;
+    color: #334155;
+}
+
+.account-profile-state {
+    padding: 70px 20px;
+    color: #64748b;
+    text-align: center;
+}
+
+.account-profile-error {
+    color: #b91c1c;
+}
+
+@media (max-width: 650px) {
+    .account-profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .account-profile-header {
+        align-items: flex-start;
+    }
+}
