@@ -99,6 +99,15 @@ http:
       middlewares:
         - cors-headers
 
+            # ---- NOTIFICATION ROUTER ----
+    notification-router:
+      rule: "Host(`localhost`) && PathPrefix(`/notification`)"
+      service: notification
+      entryPoints:
+        - web
+      middlewares:
+        - cors-headers
+
   middlewares:
     cors-headers:
       headers:
@@ -153,3 +162,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://chatbot:8080"
+
+    notification:
+      loadBalancer:
+        servers:
+          - url: "http://notification:8080"

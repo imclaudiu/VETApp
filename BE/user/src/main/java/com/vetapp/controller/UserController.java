@@ -1,6 +1,7 @@
 package com.vetapp.controller;
 
 
+import com.vetapp.DTO.UserProfile;
 import com.vetapp.DTO.UserPublic;
 import com.vetapp.entity.RolUser;
 import com.vetapp.service.UserService;
@@ -54,6 +55,15 @@ public class UserController {
 
         return ResponseEntity.ok(
                 userService.getPublicUserById(id)
+        );
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserProfile> getMyProfile(
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        return ResponseEntity.ok(
+                userService.getMyProfile(jwt)
         );
     }
 

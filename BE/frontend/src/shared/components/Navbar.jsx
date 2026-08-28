@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../features/auth/contexts/AuthContext';
+import { useAuth } from '../../features/auth/contexts/AuthContext'
+import { getUnreadCount } from '../../features/notification/services/notificationService';;
 import './Navbar.css';
 
 export default function Navbar() {
@@ -8,6 +9,20 @@ export default function Navbar() {
     const navigate = useNavigate();
 
     const [menuOpen, setMenuOpen] = useState(false);
+
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    useEffect(() => {
+        const loadCount = async () => {
+            try {
+                setUnreadCount(await getUnreadCount());
+            } catch { }
+        };
+
+        loadCount();
+        const interval = setInterval(loadCount, 30000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleLogout = () => {
         logout();
@@ -132,6 +147,16 @@ export default function Navbar() {
 
                         {/* USER */}
                         <div className="navbar-user">
+
+                            <NavLink to="/notifications" className="navbar-notification-button" aria-label="Notifications">
+                                <span className="navbar-bell">!</span>
+
+                                {unreadCount > 0 && (
+                                    <span className="navbar-notification-count">
+                                        {unreadCount > 99 ? '99+' : unreadCount}
+                                    </span>
+                                )}
+                            </NavLink>
 
                             <div className="navbar-user-avatar">
                                 {getInitial()}

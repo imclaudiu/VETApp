@@ -301,6 +301,45 @@ services:
     networks:
       - demo-net
 
+ # ---------------- NOTIFICATION ----------------
+  notification_db:
+    image: postgres:18
+    container_name: notification_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: notification_db
+    volumes:
+      - notification_db:/var/lib/postgresql
+    networks:
+      - demo-net
+
+
+
+  notification:
+    build:
+      context: ./notification
+      dockerfile: Dockerfile
+    image: notification:latest
+    container_name: notification
+    depends_on:
+      - notification_db
+      - kafka
+      - auth
+    environment:
+      - DB_IP=notification_db
+      - DB_PORT=5432
+      - DB_DBNAME=notification_db
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.notification.rule=Host(`notification.localhost`)"
+      - "traefik.http.services.notification.loadbalancer.server.port=8080"
+    networks:
+      - demo-net
+
 
 
 volumes:
@@ -310,6 +349,7 @@ volumes:
   clinic_db:
   appointment_db:
   medicalr_db:
+  notification_db:
   kafka_data:
 
 networks:

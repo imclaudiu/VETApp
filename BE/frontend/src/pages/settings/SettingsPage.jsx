@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../shared/components/Navbar';
 import { useAuth } from '../../features/auth/contexts/AuthContext';
 import { changePassword, deleteAccount } from '../../features/auth/services/authService';
+import { getMyProfile } from '../../features/user/services/userService';
 
 import './SettingsPage.css';
 
@@ -11,6 +12,14 @@ export default function SettingsPage() {
 
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+
+    const [profile, setProfile] = useState(null);
+
+    const [profileLoading, setProfileLoading] =
+        useState(true);
+
+    const [profileError, setProfileError] =
+        useState(null);
 
     const [passwordForm, setPasswordForm] = useState({
         currentPassword: '',
@@ -26,6 +35,44 @@ export default function SettingsPage() {
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [deleteError, setDeleteError] = useState(null);
 
+    useEffect(() => {
+
+        const loadProfile = async () => {
+
+            try {
+
+                setProfileLoading(true);
+                setProfileError(null);
+
+                const data =
+                    await getMyProfile();
+
+                setProfile(data);
+
+            } catch (err) {
+
+                console.error(
+                    'Could not load profile:',
+                    err
+                );
+
+                setProfileError(
+                    err.response?.data?.message ||
+                    err.response?.data?.detail ||
+                    err.message ||
+                    'Could not load profile information.'
+                );
+
+            } finally {
+
+                setProfileLoading(false);
+            }
+        };
+
+
+        loadProfile();
+
+    }, []);
 
     const handlePasswordChange = (e) => {
         const { name, value } = e.target;
@@ -138,6 +185,149 @@ export default function SettingsPage() {
                         <p className="settings-eyebrow">ACCOUNT</p>
                         <h1>Settings</h1>
                         <p>Manage your account and security settings.</p>
+                    </section>
+
+                    <section className="settings-card">
+
+                        <div className="settings-card-heading">
+
+                            <div>
+
+                                <p className="settings-section-label">
+                                    PROFILE
+                                </p>
+
+                                <h2>
+                                    Personal information
+                                </h2>
+
+                                <span>
+                                    Your VETApp account information.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        {profileLoading && (
+
+                            <div className="settings-profile-loading">
+                                Loading profile...
+                            </div>
+
+                        )}
+
+
+                        {profileError && (
+
+                            <div className="settings-message error">
+                                {profileError}
+                            </div>
+
+                        )}
+
+
+                        {!profileLoading && profile && (
+
+                            <div className="settings-profile-grid">
+
+
+                                <div className="settings-profile-field">
+
+                                    <span>
+                                        Username
+                                    </span>
+
+                                    <strong>
+                                        {user?.username || '—'}
+                                    </strong>
+
+                                </div>
+
+
+                                <div className="settings-profile-field">
+
+                                    <span>
+                                        Name
+                                    </span>
+
+                                    <strong>
+                                        {profile.name || '—'}
+                                    </strong>
+
+                                </div>
+
+
+                                <div className="settings-profile-field">
+
+                                    <span>
+                                        Email
+                                    </span>
+
+                                    <strong>
+                                        {profile.email || '—'}
+                                    </strong>
+
+                                </div>
+
+
+                                <div className="settings-profile-field">
+
+                                    <span>
+                                        Phone
+                                    </span>
+
+                                    <strong>
+                                        {profile.phone || '—'}
+                                    </strong>
+
+                                </div>
+
+
+                                <div className="settings-profile-field settings-profile-field-wide">
+
+                                    <span>
+                                        Address
+                                    </span>
+
+                                    <strong>
+                                        {profile.address || '—'}
+                                    </strong>
+
+                                </div>
+
+
+                                <div className="settings-profile-field">
+
+                                    <span>
+                                        Role
+                                    </span>
+
+                                    <strong className="settings-role-badge">
+                                        {user?.role || '—'}
+                                    </strong>
+
+                                </div>
+
+
+                                <div className="settings-profile-field settings-profile-field-wide">
+
+                                    <span>
+                                        User ID
+                                    </span>
+
+                                    <strong className="settings-user-id">
+                                        {profile.id || '—'}
+                                    </strong>
+
+                                </div>
+
+
+                            </div>
+
+                        )}
+
                     </section>
 
 

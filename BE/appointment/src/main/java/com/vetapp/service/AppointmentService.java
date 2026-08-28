@@ -30,14 +30,20 @@ public class AppointmentService {
     private final AccessGuard accessGuard;
     private final ClinicClient clinicClient;
     private static final ZoneId APP_ZONE = ZoneId.of("Europe/Bucharest");
+    private final NotificationProducer notificationProducer;
 
 
-    public AppointmentService(AppointmentRepository appointmentRepository, PetClient petClient, VeterinarianClient veterinarianClient, AccessGuard accessGuard, ClinicClient clinicClient) {
+    public AppointmentService(AppointmentRepository appointmentRepository, PetClient petClient, VeterinarianClient veterinarianClient, AccessGuard accessGuard, ClinicClient clinicClient, NotificationProducer notificationProducer) {
         this.appointmentRepository = appointmentRepository;
         this.petClient = petClient;
         this.veterinarianClient = veterinarianClient;
         this.accessGuard = accessGuard;
         this.clinicClient = clinicClient;
+        this.notificationProducer = notificationProducer;
+    }
+
+    private void notify(UUID userId, String type, String title, String message, UUID relatedId) {
+        notificationProducer.send(new NotificationEvent(userId, type, title, message, relatedId));
     }
 
     private LocalDateTime now(){
@@ -127,6 +133,9 @@ public class AppointmentService {
 
 
         appointmentRepository.save(appointmentSave);
+
+        UUID vetUserId = veterinarianClient.getVeterinarianUserId(appointmentSave.getVeterinarianId());
+        notify(vetUserId, "APPOINTMENT_CREATED", "New appointment", "A new appointment was requested for " + pet.getName() + " on " + start + ".", appointmentSave.getId());
 
 
         return appointmentSave.getId();
@@ -283,7 +292,21 @@ public class AppointmentService {
         }
 
         appointment.setStatus(Status.CANCELED);
-        return appointmentRepository.save(appointment);
+        Appointment saved = appointmentRepository.save(appointment);
+
+        UUID actorId = accessGuard.extractUserId(jwt);
+        UUID vetUserId = veterinarianClient.getVeterinarianUserId(saved.getVeterinarianId());
+
+        if (accessGuard.isAdmin(jwt)) {
+            notify(saved.getOwnerId(), "APPOINTMENT_CANCELED", "Appointment canceled", "Your appointment on " + saved.getStartOfAppointment() + " was canceled.", saved.getId());
+            notify(vetUserId, "APPOINTMENT_CANCELED", "Appointment canceled", "The appointment on " + saved.getStartOfAppointment() + " was canceled.", saved.getId());
+        } else if (actorId.equals(saved.getOwnerId())) {
+            notify(vetUserId, "APPOINTMENT_CANCELED", "Appointment canceled", "The owner canceled the appointment on " + saved.getStartOfAppointment() + ".", saved.getId());
+        } else {
+            notify(saved.getOwnerId(), "APPOINTMENT_CANCELED", "Appointment canceled", "The veterinarian canceled your appointment on " + saved.getStartOfAppointment() + ".", saved.getId());
+        }
+
+        return saved;
     }
 
     private VeterinarianAppointmentPublic toVeterinarianAppointmentPublic(Appointment appointment) {
@@ -329,8 +352,9 @@ public class AppointmentService {
         }
 
         appointment.setStatus(Status.CONFIRMED);
-
-        return appointmentRepository.save(appointment);
+        Appointment saved = appointmentRepository.save(appointment);
+        notify(saved.getOwnerId(), "APPOINTMENT_CONFIRMED", "Appointment confirmed", "Your appointment on " + saved.getStartOfAppointment() + " was confirmed.", saved.getId());
+        return saved;
     }
 
     public Appointment markNoShow(UUID id, Jwt jwt) {
@@ -348,7 +372,9 @@ public class AppointmentService {
         }
 
         appointment.setStatus(Status.NO_SHOW);
-        return appointmentRepository.save(appointment);
+        Appointment saved = appointmentRepository.save(appointment);
+        notify(saved.getOwnerId(), "APPOINTMENT_NO_SHOW", "Missed appointment", "Your appointment on " + saved.getStartOfAppointment() + " was marked as no-show.", saved.getId());
+        return saved;
     }
 
     public Appointment getAppointmentInternal(UUID id) {

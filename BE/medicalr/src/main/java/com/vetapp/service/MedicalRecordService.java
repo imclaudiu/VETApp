@@ -1,6 +1,7 @@
 package com.vetapp.service;
 
 import com.vetapp.DTO.AppointmentMedical;
+import com.vetapp.DTO.NotificationEvent;
 import com.vetapp.DTO.PetPublic;
 import com.vetapp.DTO.RegisterMedicalRecord;
 import com.vetapp.client.AppointmentClient;
@@ -29,19 +30,21 @@ public class MedicalRecordService {
     private final PetClient petClient;
     private final VeterinarianClient veterinarianClient; // NOU
     private final AccessGuard accessGuard;
+    private final NotificationProducer notificationProducer;
 
     public MedicalRecordService(MedicalRecordRepository medicalRecordRepository,
                                 AppointmentClient appointmentClient,
                                 ClinicClient clinicClient,
                                 PetClient petClient,
                                 VeterinarianClient veterinarianClient,
-                                AccessGuard accessGuard) {
+                                AccessGuard accessGuard, NotificationProducer notificationProducer) {
         this.medicalRecordRepository = medicalRecordRepository;
         this.appointmentClient = appointmentClient;
         this.clinicClient = clinicClient;
         this.petClient = petClient;
         this.veterinarianClient = veterinarianClient;
         this.accessGuard = accessGuard;
+        this.notificationProducer = notificationProducer;
     }
 
     public UUID addMedicalRecord(RegisterMedicalRecord request, Jwt jwt) {
@@ -114,6 +117,9 @@ public class MedicalRecordService {
             medicalRecordRepository.delete(saved);
             throw e;
         }
+
+        PetPublic pet = petClient.getPetById(appointment.getPetId());
+        notificationProducer.send(new NotificationEvent(appointment.getOwnerId(), "MEDICAL_RECORD_ADDED", "New medical record", "A new medical record was added for " + pet.getName() + ".", saved.getId()));
 
         return saved.getId();
     }

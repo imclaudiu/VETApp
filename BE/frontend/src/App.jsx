@@ -24,6 +24,7 @@ import PetMedicalHistoryPage from './pages/pet/PetMedicalHistoryPage';
 import VeterinarianMedicalRecordPage from './pages/veterinarian/VeterinarianMedicalRecordPage';
 import VeterinarianPetHistoryPage from './pages/veterinarian/VeterinarianPetHistoryPage';
 import ChatbotPage from './pages/chatbot/ChatbotPage';
+import NotificationsPage from './pages/notification/NotificationsPage';
 
 function RootRedirect() {
   const { isAuthenticated } = useAuth();
@@ -179,14 +180,16 @@ function AppRoutes() {
         }
       />
 
-      {/* <Route
+
+      {/* NOTIFICATIONS ROUTES */}
+      <Route
         path="/notifications"
         element={
           <ProtectedRoute>
             <NotificationsPage />
           </ProtectedRoute>
         }
-      /> */}
+      />
 
 
       {/* MEDICALR ROUTES */}
