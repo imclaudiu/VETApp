@@ -15,26 +15,23 @@ import java.util.UUID;
 public class ClinicService {
 
     private final ClinicRepository clinicRepository;
-    private final AccessGuard accessGuard; // NOU
+    private final AccessGuard accessGuard;
 
     public ClinicService(ClinicRepository clinicRepository, AccessGuard accessGuard) {
         this.clinicRepository = clinicRepository;
         this.accessGuard = accessGuard;
     }
 
-    // NOU: doar admin poate adauga o clinica
     public UUID addClinic(Clinic clinic, Jwt jwt) {
         accessGuard.requireAdmin(jwt);
         clinicRepository.save(clinic);
         return clinic.getId();
     }
 
-    // ramane public - browse
     public List<Clinic> getAllClinics() {
         return clinicRepository.findAll();
     }
 
-    // ramane public - browse
     public List<Clinic> getClinicsByCity(String city) {
         List<Clinic> clinicList = clinicRepository.findByCityIgnoreCase(city)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -47,7 +44,6 @@ public class ClinicService {
         return clinicList;
     }
 
-    // ramane public - browse
     public Clinic getClinicById(UUID id) {
         return clinicRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -56,7 +52,6 @@ public class ClinicService {
                 ));
     }
 
-    // NOU: doar admin + update partial
     public Clinic updateClinic(UUID id, Clinic updatedClinic, Jwt jwt) {
         accessGuard.requireAdmin(jwt);
 
@@ -91,7 +86,6 @@ public class ClinicService {
         return clinicRepository.save(existingClinic);
     }
 
-    // NOU: doar admin
     public void deleteClinic(UUID id, Jwt jwt) {
         accessGuard.requireAdmin(jwt);
 

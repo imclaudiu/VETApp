@@ -51,7 +51,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.getAuthById(id, jwt));
     }
 
-    // AuthenticationController.java
     @GetMapping("/username/{username}")
     public ResponseEntity<AuthenticationPublic> getAuthByUsername(@PathVariable String username, @AuthenticationPrincipal Jwt jwt) {
         return ResponseEntity.ok(authenticationService.getAuthByUsername(username, jwt));

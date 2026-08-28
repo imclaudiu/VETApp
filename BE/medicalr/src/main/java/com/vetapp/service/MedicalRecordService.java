@@ -28,7 +28,7 @@ public class MedicalRecordService {
     private final AppointmentClient appointmentClient;
     private final ClinicClient clinicClient;
     private final PetClient petClient;
-    private final VeterinarianClient veterinarianClient; // NOU
+    private final VeterinarianClient veterinarianClient;
     private final AccessGuard accessGuard;
     private final NotificationProducer notificationProducer;
 
@@ -199,7 +199,6 @@ public class MedicalRecordService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fisa medicala cu ID-ul " + id + " nu a fost gasita!"));
     }
 
-    // FIX: acum verifica real - owner-ul pet-ului SAU veterinarul asignat SAU admin
     private void requireAccessToRecord(MedicalRecord record, Jwt jwt) {
         PetPublic pet = petClient.getPetById(record.getPetId());
         UUID vetUserId = veterinarianClient.getVeterinarianUserId(record.getVeterinarianId());

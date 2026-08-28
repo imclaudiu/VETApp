@@ -22,7 +22,7 @@ public class AuthenticationService {
     private final BCryptPasswordEncoder encoder;
     private final KafkaMessageProducer kafkaMessageProducer;
     private final JwtService jwtService;
-    private final AccessGuard accessGuard; // NOU
+    private final AccessGuard accessGuard;
 
     public AuthenticationService(AuthenticationRepository authenticationRepository,
                                  KafkaMessageProducer kafkaMessageProducer,
@@ -46,7 +46,7 @@ public class AuthenticationService {
         authentication.setPassword(encoder.encode(request.getPassword()));
         authentication.setEmail(request.getEmail());
         authentication.setTelefon(request.getPhone());
-        authentication.setRole(Role.OWNER); // FIX: era Role.ADMIN, gaura de securitate
+        authentication.setRole(Role.OWNER);
 
         Authentication saved = authenticationRepository.save(authentication);
 
@@ -77,7 +77,6 @@ public class AuthenticationService {
                 .toList();
     }
 
-    // NOU: doar owner sau admin
     public AuthenticationPublic getAuthById(UUID id, Jwt jwt) {
         accessGuard.requireOwnerOrAdmin(id, jwt);
         Authentication authentication = authenticationRepository.findById(id)
@@ -89,19 +88,17 @@ public class AuthenticationService {
         Authentication authentication = this.authenticationRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilizatorul cu ID-ul " + username + " nu a fost gasit"));
 
-        accessGuard.requireOwnerOrAdmin(authentication.getId(), jwt); // NOU
+        accessGuard.requireOwnerOrAdmin(authentication.getId(), jwt);
 
         return AuthenticationBuilder.toPublicAuthentication(authentication);
     }
 
-    // NOU: owner sau admin + update partial (doar campurile trimise)
     public AuthenticationPublic updateAuth(UUID id, Authentication updatedAuth, Jwt jwt) {
         accessGuard.requireOwnerOrAdmin(id, jwt);
 
         Authentication existingAuth = authenticationRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilizatorul cu ID-ul " + id + " nu a fost găsit."));
 
-        // Username - doar daca a fost trimis
         if (updatedAuth.getUsername() != null && !updatedAuth.getUsername().isBlank()) {
             authenticationRepository.findByUsername(updatedAuth.getUsername())
                     .filter(found -> !found.getId().equals(id))
@@ -112,24 +109,19 @@ public class AuthenticationService {
         }
 
 
-        // Email - doar daca a fost trimis
         if (updatedAuth.getEmail() != null && !updatedAuth.getEmail().isBlank()) {
             existingAuth.setEmail(updatedAuth.getEmail());
         }
 
-        // Telefon - doar daca a fost trimis
         if (updatedAuth.getTelefon() != null && !updatedAuth.getTelefon().isBlank()) {
             existingAuth.setTelefon(updatedAuth.getTelefon());
         }
 
-        // ATENTIE: rolul NU se schimba de aici, indiferent daca a fost trimis sau nu -
-        // schimbarea rolului ar trebui sa fie un endpoint separat, doar-admin (updateRole)
 
         Authentication saved = authenticationRepository.save(existingAuth);
         return AuthenticationBuilder.toPublicAuthentication(saved);
     }
 
-    // NOU: doar admin
     public void deleteAuth(UUID id, Jwt jwt) {
         accessGuard.requireAdmin(jwt);
         Authentication existingAuth = authenticationRepository.findById(id)
@@ -152,7 +144,6 @@ public class AuthenticationService {
         return new AuthResponse(token, publicUser);
     }
 
-    // NOU: doar admin
     public void deleteAll(Jwt jwt){
         accessGuard.requireAdmin(jwt);
         authenticationRepository.deleteAll();
@@ -168,9 +159,7 @@ public class AuthenticationService {
         kafkaMessageProducer.publishUserDeleted(userId);
     }
 
-// AuthenticationService.java
 
-    // NOU: doar admin poate schimba rolul unui user
     public void updateRole(UUID id, Role newRole, Jwt jwt) {
         accessGuard.requireAdmin(jwt);
 

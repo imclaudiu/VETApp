@@ -32,7 +32,6 @@ public class MessageConsumer {
             );
             userService.addUser(user);
         } catch (ResponseStatusException e) {
-            // conflict (nume/email/telefon duplicat) - nu are rost să reîncercăm
             System.err.println("Nu s-a putut crea userul pentru " + event.getId() + ": " + e.getReason());
         }
     }

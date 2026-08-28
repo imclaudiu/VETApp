@@ -39,7 +39,6 @@ public class AccessGuard {
         }
     }
 
-    // AccessGuard.java, adaugat
 
     public void requireOneOfOrAdmin(Jwt jwt, UUID... allowedUserIds) {
         if (isAdmin(jwt)) {

@@ -55,7 +55,6 @@ public class VeterinarianController {
         return ResponseEntity.ok(veterinarianService.updateVeterinarian(id, updatedVeterinarian, jwt));
     }
 
-    // VeterinarianController.java (in clinic)
     @GetMapping("/{id}/userId")
     public ResponseEntity<UUID> getUserId(@PathVariable UUID id) {
         return ResponseEntity.ok(veterinarianService.getVeterinarianUserId(id));

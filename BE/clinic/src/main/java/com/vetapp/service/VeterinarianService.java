@@ -21,8 +21,8 @@ public class VeterinarianService {
     private final VeterinarianRepository veterinarianRepository;
     private final ClinicService clinicService;
     private final UserClient userClient;
-    private final AuthClient authClient; // NOU
-    private final AccessGuard accessGuard; // NOU
+    private final AuthClient authClient;
+    private final AccessGuard accessGuard;
 
     public VeterinarianService(VeterinarianRepository veterinarianRepository,
                                ClinicService clinicService,
@@ -36,7 +36,6 @@ public class VeterinarianService {
         this.accessGuard = accessGuard;
     }
 
-    // NOU: doar admin poate adauga un veterinar
     public UUID addVeterinarian(Veterinarian veterinarian, Jwt jwt) {
         accessGuard.requireAdmin(jwt);
 
@@ -58,12 +57,10 @@ public class VeterinarianService {
         return veterinarian.getId();
     }
 
-    // ramane public - browse
     public List<Veterinarian> getAllVeterinarians() {
         return veterinarianRepository.findAll();
     }
 
-    // ramane public - browse
     public VeterinarianPublic getVeterinarianById(UUID id) {
 
         Veterinarian veterinarian = veterinarianRepository.findById(id).orElseThrow(() ->
@@ -80,7 +77,6 @@ public class VeterinarianService {
         );
     }
 
-    // ramane public - browse
     public List<VeterinarianPublic> getVeterinariansByClinicId(UUID clinicId) {
 
         List<Veterinarian> veterinarians = veterinarianRepository.findByClinicId(clinicId);
@@ -99,7 +95,6 @@ public class VeterinarianService {
                 .toList();
     }
 
-    // ramane public
     public UUID getVeterinarianClinicId(UUID veterinarianId) {
         Veterinarian veterinarian = veterinarianRepository.findById(veterinarianId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Veterinarul nu a fost găsit."));
@@ -112,7 +107,6 @@ public class VeterinarianService {
         return veterinarian.getUserId();
     }
 
-    // NOU: veterinarul isi poate edita propriul profil, sau admin editeaza pe oricine
     public Veterinarian updateVeterinarian(UUID id, Veterinarian updatedVeterinarian, Jwt jwt) {
         Veterinarian veterinarian = veterinarianRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Veterinarul cu ID-ul " + id + " nu a fost găsit."));
@@ -120,27 +114,23 @@ public class VeterinarianService {
         accessGuard.requireOwnerOrAdmin(veterinarian.getUserId(), jwt);
 
         if (updatedVeterinarian.getUserId() != null) {
-            // schimbarea userId-ului asociat = operatie sensibila, doar admin
             accessGuard.requireAdmin(jwt);
             veterinarian.setUserId(updatedVeterinarian.getUserId());
         }
 
         if (updatedVeterinarian.getClinicId() != null) {
-            // schimbarea clinicii = doar admin (relocare veterinar)
             accessGuard.requireAdmin(jwt);
             clinicService.getClinicById(updatedVeterinarian.getClinicId());
             veterinarian.setClinicId(updatedVeterinarian.getClinicId());
         }
 
         if (updatedVeterinarian.getSurgeon() != null) {
-            // asta o poate schimba si veterinarul insusi
             veterinarian.setSurgeon(updatedVeterinarian.getSurgeon());
         }
 
         return veterinarianRepository.save(veterinarian);
     }
 
-    // NOU: doar admin
     public void deleteVeterinarian(UUID id, Jwt jwt) {
         accessGuard.requireAdmin(jwt);
 

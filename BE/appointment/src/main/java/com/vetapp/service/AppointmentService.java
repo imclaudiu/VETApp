@@ -89,10 +89,7 @@ public class AppointmentService {
         LocalDateTime end = start.plusMinutes(service.getDuration()
                 );
 
-
-        /*
-         * Verificăm programul de lucru.
-         */
+    //program lucru
         AvailabilityPublic availability = clinicClient.getAvailability(appointment.getVeterinarianId(), start.toLocalDate());
 
 
@@ -106,9 +103,7 @@ public class AppointmentService {
         }
 
 
-        /*
-         * Verificăm programările existente.
-         */
+       //programari existente
         List<Appointment> overlaps = appointmentRepository.findByVeterinarianIdAndStartOfAppointmentLessThanAndEndOfAppointmentGreaterThan(appointment.getVeterinarianId(), end, start);
 
 
@@ -141,26 +136,23 @@ public class AppointmentService {
         return appointmentSave.getId();
     }
 
-    // NOU: doar admin vede toate programarile din sistem
+
     public List<Appointment> getAllAppointments(Jwt jwt) {
         accessGuard.requireAdmin(jwt);
         return appointmentRepository.findAll();
     }
 
-    // NOU: owner, veterinarul asignat, sau admin
     public Appointment getAppointmentById(UUID id, Jwt jwt) {
         Appointment appointment = findAppointmentOrThrow(id);
         requireInvolvedOrAdmin(appointment, jwt);
         return appointment;
     }
 
-    // NOU: doar owner-ul respectiv sau admin (endpoint de tip "programarile mele")
     public List<Appointment> getAppointmentsByOwnerId(UUID ownerId, Jwt jwt) {
         accessGuard.requireOwnerOrAdmin(ownerId, jwt);
         return appointmentRepository.findByOwnerId(ownerId);
     }
 
-    // NOU: doar owner-ul pet-ului sau admin
     public List<Appointment> getAppointmentsByPetId(UUID petId, Jwt jwt) {
         PetPublic pet = petClient.checkPetNUserExists(petId);
         accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
@@ -177,15 +169,11 @@ public class AppointmentService {
                 .toList();
     }
 
-    /*Pt simplificare - la modificarea programarii se va sterge si se va crea una noua pentru a nu verifica 100 de cazuri de conflicte
-     * de ex ora setata corect din nou, e corecta clinica? dar userul exista? coincid cei doi useri samd. E deja verificata in add*/
-    // NOU: owner, veterinarul asignat, sau admin
     public Appointment updateAppointment(UUID id, Appointment updatedAppointment, Jwt jwt) {
         Appointment existingAppointment = findAppointmentOrThrow(id);
         requireInvolvedOrAdmin(existingAppointment, jwt);
 
         if (updatedAppointment.getOwnerId() != null) {
-            // schimbarea ownerului - operatie sensibila, doar admin
             accessGuard.requireAdmin(jwt);
             existingAppointment.setOwnerId(updatedAppointment.getOwnerId());
         }
@@ -227,7 +215,6 @@ public class AppointmentService {
         return appointmentRepository.save(existingAppointment);
     }
 
-    // NOU: owner, veterinarul asignat, sau admin (poate anula programarea)
     public void deleteAppointment(UUID id, Jwt jwt) {
         Appointment existingAppointment = findAppointmentOrThrow(id);
         requireInvolvedOrAdmin(existingAppointment, jwt);

@@ -11,7 +11,7 @@ import java.security.interfaces.RSAPublicKey;
 @Component
 public class RsaKeyProvider {
 //la fiecare restart cheile generate se pierd (tokjenurile anterioare nu mai sunt valide). Cheile trebuie sa fie permanente, nu generate la
-    //runtime. Poti sa ascunzi in PEM montate c a secrete Kubernetes Secret, etc. In dezvoltare e ok
+    //runtime. Poti sa ascunzi in PEM montate c a secrete Kubernetes Secret, etc.
     private final RSAPrivateKey privateKey;
     private final RSAPublicKey publicKey;
     private final String keyId = "vetapp-auth-key-1"; // identificator fix pentru cheia curenta

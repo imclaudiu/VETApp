@@ -20,7 +20,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final KafkaMessageProducer kafkaMessageProducer;
-    private final AccessGuard accessGuard; // NOU
+    private final AccessGuard accessGuard;
 
     public UserService(UserRepository userRepository, KafkaMessageProducer kafkaMessageProducer, AccessGuard accessGuard){
         this.userRepository = userRepository;
@@ -33,13 +33,11 @@ public class UserService {
         return user.getId();
     }
 
-    // NOU: doar admin poate vedea toti userii
     public List<Users> getAllUsers(Jwt jwt) {
         accessGuard.requireAdmin(jwt);
         return userRepository.findAll();
     }
 
-    // NOU: doar userul insusi sau admin
     public UserPublic getUserById(UUID id, Jwt jwt) {
         accessGuard.requireOwnerOrAdmin(id, jwt);
 
@@ -48,7 +46,6 @@ public class UserService {
         return UserBuilder.toPublicUser(user);
     }
 
-    // NOU: doar userul insusi sau admin
     public Users updateUser(UUID id, Users updatedUser, Jwt jwt) {
         accessGuard.requireOwnerOrAdmin(id, jwt);
 
@@ -62,8 +59,7 @@ public class UserService {
         existingUser.setPhone(updatedUser.getPhone());
         existingUser.setAddress(updatedUser.getAddress());
 
-        // ATENTIE: am scos `existingUser.setRol(updatedUser.getRol())` de aici -
-        // vezi explicatia de mai jos, sub cod
+
 
         return userRepository.save(existingUser);
     }
@@ -116,7 +112,6 @@ public class UserService {
         return new UserProfile(user.getId(), user.getName(), user.getEmail(), user.getPhone(), user.getAddress());
     }
 
-    // NOU: doar admin
     public void deleteAll(Jwt jwt){
         accessGuard.requireAdmin(jwt);
         userRepository.deleteAll();

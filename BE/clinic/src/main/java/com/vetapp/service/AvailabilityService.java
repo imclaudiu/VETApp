@@ -51,12 +51,12 @@ public class AvailabilityService {
         return availabilityRepository.save(availability);
     }
 
-    // ramane public - browse (clientii vad programul liber, ca sa faca rezervari)
+
     public List<Availability> getAllAvailabilities() {
         return availabilityRepository.findAll();
     }
 
-    // ramane public - browse
+
     public Availability getAvailability(UUID veterinarianId, LocalDate day) {
         AvailabilityId id = new AvailabilityId(veterinarianId, day);
 
@@ -67,7 +67,7 @@ public class AvailabilityService {
                 ));
     }
 
-    // NOU: doar veterinarul insusi sau admin
+
     public Availability updateAvailability(UUID veterinarianId, LocalDate day, Availability updatedAvailability, Jwt jwt) {
         UUID vetUserId = veterinarianService.getVeterinarianUserId(veterinarianId);
         accessGuard.requireOwnerOrAdmin(vetUserId, jwt);
@@ -98,7 +98,6 @@ public class AvailabilityService {
         return availabilityRepository.save(existingAvailability);
     }
 
-    // NOU: doar veterinarul insusi sau admin
     public void deleteAvailability(UUID veterinarianId, LocalDate day, Jwt jwt) {
         UUID vetUserId = veterinarianService.getVeterinarianUserId(veterinarianId);
         accessGuard.requireOwnerOrAdmin(vetUserId, jwt);

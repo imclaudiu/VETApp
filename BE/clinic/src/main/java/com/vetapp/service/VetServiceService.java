@@ -48,7 +48,6 @@ public class VetServiceService {
         return vetService.getId();
     }
 
-    // ramane public - browse
     public VetService getServiceById(Long id) {
         return vetServiceRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -57,12 +56,10 @@ public class VetServiceService {
                 ));
     }
 
-    // ramane public - browse
     public List<VetService> getServicesByClinicId(UUID clinicId) {
         return vetServiceRepository.findByClinicId(clinicId);
     }
 
-    // NOU: doar admin
     public VetService updateService(Long id, VetService updatedVetService, Jwt jwt) {
         accessGuard.requireAdmin(jwt);
 
@@ -96,7 +93,6 @@ public class VetServiceService {
         return vetServiceRepository.save(existingVetService);
     }
 
-    // NOU: doar admin
     public void deleteService(Long id, Jwt jwt) {
         accessGuard.requireAdmin(jwt);
 
@@ -109,7 +105,6 @@ public class VetServiceService {
         vetServiceRepository.delete(existingVetService);
     }
 
-    // ramane public - folosit probabil la validarea unei programari
     public UUID checkServiceForVeterinarian(UUID veterinarianId, Long serviceId) {
 
         Veterinarian veterinarian = veterinarianRepository.findById(veterinarianId)

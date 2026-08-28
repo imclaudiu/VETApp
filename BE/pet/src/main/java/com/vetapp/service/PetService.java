@@ -18,7 +18,7 @@ import java.util.UUID;
 public class PetService {
     private final PetRepository petRepository;
     private final UserClient userClient;
-    private final AccessGuard accessGuard; // NOU
+    private final AccessGuard accessGuard;
 
     public PetService(PetRepository petRepository, UserClient userClient, AccessGuard accessGuard) {
         this.petRepository = petRepository;
@@ -26,7 +26,6 @@ public class PetService {
         this.accessGuard = accessGuard;
     }
 
-    // NOU: userul poate adauga pet doar pe numele lui (sau admin, pe numele oricui)
     public UUID addPet(Pet pet, Jwt jwt) {
         accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
 
@@ -39,7 +38,6 @@ public class PetService {
         return savedPet.getId();
     }
 
-    // NOU: doar admin vede toate animalele din sistem
     public List<Pet> getAllPets(Jwt jwt) {
         accessGuard.requireAdmin(jwt);
         return petRepository.findAll();
@@ -90,7 +88,6 @@ public class PetService {
         petRepository.delete(existingPet);
     }
 
-    // Ramane INTERNA - apelata din Kafka listener cand un user e sters din auth, nu are Jwt
     public void deleteAllPetsOwner(UUID ownerId) {
         List<Pet> pets = petRepository.findAllByOwnerID(ownerId);
         for (Pet pet : pets) {
@@ -99,7 +96,6 @@ public class PetService {
         petRepository.saveAll(pets);
     }
 
-    // NOU: doar owner sau admin (desprindere manuala a unui pet de owner, prin HTTP)
     public void deleteOwner(UUID petID, Jwt jwt) {
         Pet pet = petRepository.findById(petID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
@@ -107,7 +103,6 @@ public class PetService {
         petRepository.save(pet);
     }
 
-    // NOU: doar admin
     public void deleteAll(Jwt jwt) {
         accessGuard.requireAdmin(jwt);
         petRepository.deleteAll();

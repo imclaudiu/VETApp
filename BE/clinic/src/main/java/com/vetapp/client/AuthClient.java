@@ -24,10 +24,7 @@ public class AuthClient {
     ) {
 
         restClient.patch()
-                .uri("/auth/{id}/role", userId)
-                .header(
-                        "Authorization",
-                        "Bearer " + jwtToken
+                .uri("/auth/{id}/role", userId).header("Authorization", "Bearer " + jwtToken
                 )
                 .body(new UpdateRoleRequest(role))
                 .retrieve()
