@@ -11,3 +11,13 @@ export const getAdminAccount = async userId => {
         profile: userResponse.data
     };
 };
+
+export const updateAdminAccountRole = async (userId, role) => {
+    await api.patch(`/auth/${userId}/role`, {
+        role
+    });
+};
+
+export const deleteAdminAccount = async userId => {
+    await api.delete(`/auth/delete/${userId}`);
+};

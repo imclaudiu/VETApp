@@ -209,4 +209,24 @@ public class AuthenticationService {
                 auth.getTelefon()
         );
     }
+
+    public List<AdminUserLookup> searchUsersByUsername(String username, Jwt jwt) {
+        accessGuard.requireAdmin(jwt);
+
+        if (username == null || username.trim().length() < 2) {
+            return List.of();
+        }
+
+        return authenticationRepository
+                .findTop10ByUsernameContainingIgnoreCaseOrderByUsernameAsc(username.trim()).stream()
+                .map(authentication ->
+                        new AdminUserLookup(
+                                authentication.getId(),
+                                authentication.getUsername(),
+                                authentication.getEmail(),
+                                authentication.getRole()
+                        )
+                )
+                .toList();
+    }
 }

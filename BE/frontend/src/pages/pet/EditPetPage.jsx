@@ -73,29 +73,48 @@ export default function EditPetPage() {
 
     }, [id]);
 
+    const parseDob = (dob) => {
+        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dob)) return null;
+
+        const [day, month, year] = dob.split('/').map(Number);
+        const date = new Date(year, month - 1, day);
+
+        if (
+            date.getFullYear() !== year ||
+            date.getMonth() !== month - 1 ||
+            date.getDate() !== day ||
+            date > new Date()
+        ) return null;
+
+        return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    };
 
     const handleSubmit = async (formData) => {
+        const backendDob = parseDob(formData.dob);
+
+        if (!backendDob) {
+            setError('Please enter a valid date of birth in DD/MM/YYYY format.');
+            return;
+        }
 
         setSaving(true);
         setError(null);
 
         try {
-            await updatePet(id, formData);
+            await updatePet(id, {
+                ...formData,
+                dob: backendDob
+            });
 
             goBack();
-
         } catch (err) {
-
             setError(
                 err.response?.data?.message ||
                 err.message ||
                 'Could not update this pet.'
             );
-
         } finally {
-
             setSaving(false);
-
         }
     };
 
@@ -166,109 +185,30 @@ export default function EditPetPage() {
             <Navbar />
 
             <main className="pet-editor-page">
-
                 <div className="pet-editor-container">
 
                     <div className="pet-editor-back">
-                        <button
-                            type="button"
-                            onClick={goBack}
-                        >
-                            ← Back
-                        </button>
+                        <button type="button" onClick={goBack}>← Back</button>
                     </div>
 
-                    <section className="pet-editor-header">
+                    <header className="pet-editor-header">
+                        <span>EDIT PET</span>
+                        <h1>Edit {pet.name}</h1>
+                        <p>Update the information stored for this pet.</p>
+                    </header>
 
-                        <div>
-
-                            <p className="pet-editor-eyebrow">
-                                EDIT PET
-                            </p>
-
-                            <h1>
-                                Edit {pet.name}
-                            </h1>
-
-                            <p>
-                                Update your pet's information below.
-                            </p>
-
-                        </div>
-
-                    </section>
-
-
-                    <div className="pet-editor-layout">
-
-                        <div className="pet-editor-main">
-
-                            <PetForm
-                                initialData={pet}
-                                onSubmit={handleSubmit}
-                                loading={saving}
-                                error={error}
-                                submitLabel="Save changes"
-                            />
-
-                        </div>
-
-
-                        <aside className="pet-editor-sidebar">
-
-                            <div className="pet-editor-profile-card">
-
-                                <div className="pet-editor-avatar">
-                                    {pet.name
-                                        ?.charAt(0)
-                                        ?.toUpperCase()}
-                                </div>
-
-                                <h2>
-                                    {pet.name}
-                                </h2>
-
-                                <p>
-                                    {pet.race || pet.species}
-                                </p>
-
-
-                                <div className="pet-editor-profile-details">
-
-                                    <div>
-                                        <span>
-                                            Species
-                                        </span>
-
-                                        <strong>
-                                            {pet.species}
-                                        </strong>
-                                    </div>
-
-                                    <div>
-                                        <span>
-                                            Sex
-                                        </span>
-
-                                        <strong>
-                                            {pet.sex === 'M'
-                                                ? 'Male'
-                                                : pet.sex === 'F'
-                                                    ? 'Female'
-                                                    : pet.sex}
-                                        </strong>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </aside>
-
+                    <div className="pet-editor-form">
+                        <PetForm
+                            initialData={pet}
+                            onSubmit={handleSubmit}
+                            onCancel={goBack}
+                            loading={saving}
+                            error={error}
+                            submitLabel="Save changes"
+                        />
                     </div>
 
                 </div>
-
             </main>
         </>
     );

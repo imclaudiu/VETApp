@@ -1,9 +1,6 @@
 package com.vetapp.controller;
 
-import com.vetapp.DTO.AdminAuthenticationPublic;
-import com.vetapp.DTO.AuthResponse;
-import com.vetapp.DTO.AuthenticationPublic;
-import com.vetapp.DTO.RegisterRequest;
+import com.vetapp.DTO.*;
 import com.vetapp.entity.Authentication;
 import com.vetapp.entity.Role;
 import com.vetapp.service.AuthenticationService;
@@ -103,6 +100,11 @@ public class AuthenticationController {
         return ResponseEntity.ok(
                 authenticationService.getAdminAccount(id, jwt)
         );
+    }
+
+    @GetMapping("/admin/search")
+    public ResponseEntity<List<AdminUserLookup>> searchUsers(@RequestParam String username, @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(authenticationService.searchUsersByUsername(username, jwt));
     }
 
     public record ChangePasswordRequest(String currentPassword, String newPassword) {}

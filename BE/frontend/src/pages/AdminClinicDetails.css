@@ -1,0 +1,1150 @@
+.admin-clinic-detail-page {
+    min-height: calc(100vh - 68px);
+    background: var(--bg);
+}
+
+.admin-clinic-detail-container {
+    width: min(1120px, calc(100% - 64px));
+    margin: 0 auto;
+    padding: 40px 0 75px;
+}
+
+/* BACK */
+
+.admin-clinic-detail-back {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: var(--text-soft);
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.admin-clinic-detail-back:hover {
+    color: var(--green);
+}
+
+/* HEADER */
+
+.admin-clinic-detail-header {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.admin-clinic-detail-heading>span {
+    display: block;
+    color: var(--green);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.admin-clinic-detail-heading h1 {
+    margin: 6px 0 0;
+    color: var(--text);
+    font-size: 31px;
+    font-weight: 600;
+    letter-spacing: -1px;
+}
+
+.admin-clinic-detail-heading p {
+    margin: 7px 0 0;
+    color: var(--text-soft);
+    font-size: 12px;
+}
+
+/* MESSAGES */
+
+.admin-clinic-detail-message {
+    margin-bottom: 17px;
+    padding: 13px 15px;
+    border-radius: 8px;
+    font-size: 10px;
+}
+
+.admin-clinic-detail-message.error {
+    border: 1px solid #edcfcb;
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.admin-clinic-detail-message.success {
+    border: 1px solid #cadfce;
+    background: #edf6f0;
+    color: #356048;
+}
+
+/* SUMMARY */
+
+.admin-clinic-detail-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.admin-clinic-detail-summary-card {
+    padding: 17px 18px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+}
+
+.admin-clinic-detail-summary-card:first-child {
+    border-color: #cadbcf;
+    background: #f2f7f4;
+}
+
+.admin-clinic-detail-summary-card>span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--green);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+.admin-clinic-detail-summary-card strong {
+    display: block;
+    color: var(--text);
+    font-size: 23px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-summary-card p {
+    margin: 4px 0 0;
+    color: var(--text-soft);
+    font-size: 8px;
+}
+
+/* TABS */
+
+.admin-clinic-detail-tabs {
+    margin: 27px 0 16px;
+    padding: 4px;
+    display: flex;
+    gap: 3px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+}
+
+.admin-clinic-detail-tabs button {
+    min-height: 37px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.admin-clinic-detail-tabs button:hover {
+    color: var(--green);
+}
+
+.admin-clinic-detail-tabs button.active {
+    background: var(--green-soft);
+    color: var(--green);
+}
+
+.admin-clinic-detail-tabs button span {
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    display: grid;
+    place-items: center;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, .04);
+    font-size: 7px;
+}
+
+/* LAYOUT */
+
+.admin-clinic-detail-single-layout {
+    max-width: 760px;
+}
+
+.admin-clinic-detail-management {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 15px;
+    align-items: start;
+}
+
+.admin-clinic-detail-panel,
+.admin-clinic-detail-resource-panel {
+    padding: 23px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+}
+
+.admin-clinic-detail-form-panel {
+    position: sticky;
+    top: 88px;
+}
+
+/* HEADINGS */
+
+.admin-clinic-detail-section-heading {
+    margin-bottom: 20px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #ecece8;
+}
+
+.admin-clinic-detail-section-heading>span {
+    display: block;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .9px;
+}
+
+.admin-clinic-detail-section-heading h2 {
+    margin: 5px 0 0;
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-section-heading p {
+    margin: 5px 0 0;
+    color: var(--text-soft);
+    font-size: 9px;
+    line-height: 1.55;
+}
+
+/* FORM */
+
+.admin-clinic-detail-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.admin-clinic-detail-field {
+    min-width: 0;
+    margin-bottom: 13px;
+}
+
+.admin-clinic-detail-field.full {
+    grid-column: 1 / -1;
+}
+
+.admin-clinic-detail-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text);
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-field input,
+.admin-clinic-detail-field select,
+.admin-clinic-detail-field textarea {
+    width: 100%;
+    border: 1px solid #d9ddd8;
+    border-radius: 7px;
+    outline: none;
+    background: white;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 10px;
+}
+
+.admin-clinic-detail-field input,
+.admin-clinic-detail-field select {
+    height: 42px;
+    padding: 0 11px;
+}
+
+.admin-clinic-detail-field textarea {
+    min-height: 105px;
+    padding: 11px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.admin-clinic-detail-field input:focus,
+.admin-clinic-detail-field select:focus,
+.admin-clinic-detail-field textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(35, 72, 58, .06);
+}
+
+.admin-clinic-detail-field input:disabled,
+.admin-clinic-detail-field select:disabled {
+    background: #f5f5f2;
+    color: #727a74;
+    opacity: 1;
+}
+
+/* INPUT SUFFIX */
+
+.admin-clinic-detail-input-suffix {
+    position: relative;
+}
+
+.admin-clinic-detail-input-suffix input {
+    padding-right: 48px;
+}
+
+.admin-clinic-detail-input-suffix span {
+    position: absolute;
+    top: 50%;
+    right: 11px;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 8px;
+}
+
+/* CHECKBOX */
+
+.admin-clinic-detail-checkbox {
+    margin-top: 5px;
+    padding: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    border: 1px solid #e4e7e2;
+    border-radius: 7px;
+    background: #fafaf8;
+    cursor: pointer;
+}
+
+.admin-clinic-detail-checkbox input {
+    margin-top: 2px;
+    accent-color: var(--green);
+}
+
+.admin-clinic-detail-checkbox strong,
+.admin-clinic-detail-checkbox small {
+    display: block;
+}
+
+.admin-clinic-detail-checkbox strong {
+    color: var(--text);
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-checkbox small {
+    margin-top: 3px;
+    color: var(--text-soft);
+    font-size: 8px;
+    line-height: 1.45;
+}
+
+/* FORM ACTIONS */
+
+.admin-clinic-detail-form-actions {
+    margin-top: 19px;
+    padding-top: 17px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    border-top: 1px solid #ecece8;
+}
+
+/* GOOGLE */
+
+.admin-clinic-detail-google {
+    margin-top: 4px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    border-radius: 7px;
+    background: #f6f7f4;
+}
+
+.admin-clinic-detail-google span,
+.admin-clinic-detail-google strong {
+    display: block;
+}
+
+.admin-clinic-detail-google span {
+    margin-bottom: 4px;
+    color: var(--text-light);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+.admin-clinic-detail-google strong {
+    overflow: hidden;
+    color: var(--text);
+    font-size: 9px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* HINT */
+
+.admin-clinic-detail-hint {
+    margin-bottom: 13px;
+    padding: 11px;
+    border-radius: 7px;
+    background: #f4f4f1;
+    color: var(--text-soft);
+    font-size: 8px;
+    line-height: 1.5;
+}
+
+/* VETERINARIANS */
+
+.admin-clinic-detail-vet-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-clinic-detail-vet {
+    padding: 15px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    border-bottom: 1px solid #ecece8;
+}
+
+.admin-clinic-detail-vet:first-child {
+    padding-top: 0;
+}
+
+.admin-clinic-detail-vet:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.admin-clinic-detail-vet-avatar {
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.admin-clinic-detail-vet-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-clinic-detail-vet-title {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.admin-clinic-detail-vet-title h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-vet-title p {
+    margin: 4px 0 0;
+    color: var(--text-soft);
+    font-size: 8px;
+}
+
+.admin-clinic-detail-vet-title>span {
+    min-height: 23px;
+    padding: 0 7px;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 5px;
+    background: #eef0ed;
+    color: #6d756f;
+    font-size: 7px;
+    font-weight: 700;
+}
+
+.admin-clinic-detail-vet-title>span.surgeon {
+    background: #f4eddb;
+    color: #755d27;
+}
+
+/* RESOURCE ACTIONS */
+
+.admin-clinic-detail-resource-actions {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+.admin-clinic-detail-resource-actions .primary-button,
+.admin-clinic-detail-resource-actions .secondary-button,
+.admin-clinic-detail-resource-actions .danger-button {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 8px;
+}
+
+/* SERVICES */
+
+.admin-clinic-detail-service-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.admin-clinic-detail-service {
+    padding: 16px;
+    border: 1px solid #e4e7e2;
+    border-radius: 8px;
+    background: #fdfdfb;
+}
+
+.admin-clinic-detail-service-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.admin-clinic-detail-service-heading>div>span {
+    display: block;
+    color: var(--green);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: .6px;
+}
+
+.admin-clinic-detail-service-heading h3 {
+    margin: 5px 0 0;
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-service-heading>strong {
+    flex-shrink: 0;
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.admin-clinic-detail-service>p {
+    min-height: 40px;
+    margin: 11px 0 0;
+    color: var(--text-soft);
+    font-size: 8px;
+    line-height: 1.55;
+}
+
+.admin-clinic-detail-service-footer {
+    margin-top: 13px;
+    padding-top: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-top: 1px solid #ecece8;
+}
+
+.admin-clinic-detail-service-footer>span {
+    color: var(--text-light);
+    font-size: 8px;
+}
+
+.admin-clinic-detail-service-footer .admin-clinic-detail-resource-actions {
+    margin: 0;
+}
+
+/* SCHEDULE */
+
+.admin-clinic-detail-schedule-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-clinic-detail-schedule {
+    padding: 13px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-bottom: 1px solid #ecece8;
+}
+
+.admin-clinic-detail-schedule:first-child {
+    padding-top: 0;
+}
+
+.admin-clinic-detail-schedule:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.admin-clinic-detail-schedule-date {
+    width: 48px;
+    height: 52px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 7px;
+    background: var(--green-soft);
+    color: var(--green);
+}
+
+.admin-clinic-detail-schedule-date strong {
+    font-size: 16px;
+    font-weight: 650;
+    line-height: 1;
+}
+
+.admin-clinic-detail-schedule-date span {
+    margin-top: 4px;
+    font-size: 7px;
+    font-weight: 700;
+}
+
+.admin-clinic-detail-schedule-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-clinic-detail-schedule-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.admin-clinic-detail-schedule-heading h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-schedule-heading p {
+    margin: 4px 0 0;
+    color: var(--text-soft);
+    font-size: 8px;
+}
+
+.admin-clinic-detail-schedule-heading>strong {
+    flex-shrink: 0;
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 650;
+}
+
+/* EMPTY */
+
+.admin-clinic-detail-empty {
+    padding: 48px 20px;
+    text-align: center;
+}
+
+.admin-clinic-detail-empty>div {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 12px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 16px;
+}
+
+.admin-clinic-detail-empty h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-empty p {
+    margin: 5px 0 0;
+    color: var(--text-soft);
+    font-size: 8px;
+}
+
+/* DELETE MODAL */
+
+.admin-clinic-detail-modal-backdrop {
+    position: fixed;
+    z-index: 5000;
+    inset: 0;
+    padding: 20px;
+    display: grid;
+    place-items: center;
+    background: rgba(24, 35, 28, .4);
+    backdrop-filter: blur(2px);
+}
+
+.admin-clinic-detail-modal {
+    width: min(420px, 100%);
+    padding: 25px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 20px 55px rgba(20, 30, 23, .18);
+}
+
+.admin-clinic-detail-modal>span {
+    color: var(--danger);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.admin-clinic-detail-modal h2 {
+    margin: 7px 0 0;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-modal>p {
+    margin: 8px 0 0;
+    color: var(--text-soft);
+    font-size: 9px;
+    line-height: 1.6;
+}
+
+.admin-clinic-detail-modal-actions {
+    margin-top: 21px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.admin-clinic-detail-delete-confirm {
+    min-height: 42px;
+    padding: 0 15px;
+    border: 1px solid var(--danger);
+    border-radius: 7px;
+    background: var(--danger);
+    color: white;
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admin-clinic-detail-delete-confirm:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* LOADING */
+
+.admin-clinic-detail-loading {
+    min-height: calc(100vh - 68px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 11px;
+    color: var(--text-soft);
+    font-size: 10px;
+}
+
+.admin-clinic-detail-spinner {
+    width: 29px;
+    height: 29px;
+    border: 3px solid var(--green-soft);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: admin-clinic-detail-spin .7s linear infinite;
+}
+
+@keyframes admin-clinic-detail-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.admin-clinic-detail-not-found {
+    max-width: 480px;
+    margin: 70px auto;
+    padding: 38px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    text-align: center;
+}
+
+.admin-clinic-detail-not-found h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.admin-clinic-detail-not-found p {
+    margin: 7px 0 18px;
+    color: var(--text-soft);
+    font-size: 9px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+    .admin-clinic-detail-management {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-clinic-detail-form-panel {
+        position: static;
+    }
+
+    .admin-clinic-detail-service-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 750px) {
+    .admin-clinic-detail-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .admin-clinic-detail-container {
+        width: calc(100% - 30px);
+        padding: 30px 0 55px;
+    }
+
+    .admin-clinic-detail-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-clinic-detail-heading h1 {
+        font-size: 27px;
+    }
+
+    .admin-clinic-detail-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-clinic-detail-field.full {
+        grid-column: auto;
+    }
+
+    .admin-clinic-detail-google {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-clinic-detail-vet-title,
+    .admin-clinic-detail-schedule-heading,
+    .admin-clinic-detail-service-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-clinic-detail-resource-actions {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 450px) {
+    .admin-clinic-detail-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-clinic-detail-panel,
+    .admin-clinic-detail-resource-panel {
+        padding: 19px;
+    }
+
+    .admin-clinic-detail-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .admin-clinic-detail-modal-actions button {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   VETERINARIAN USER SEARCH
+   ========================================================= */
+
+.admin-clinic-vet-search {
+    position: relative;
+    margin-bottom: 14px;
+}
+
+.admin-clinic-vet-search>label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text);
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.admin-clinic-vet-search-input {
+    position: relative;
+}
+
+.admin-clinic-vet-search-input>span {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.admin-clinic-vet-search-input input {
+    width: 100%;
+    height: 42px;
+    padding: 0 39px 0 35px;
+    border: 1px solid #d9ddd8;
+    border-radius: 7px;
+    outline: none;
+    background: white;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 10px;
+}
+
+.admin-clinic-vet-search-input input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(35, 72, 58, .06);
+}
+
+.admin-clinic-vet-search-input input::placeholder {
+    color: #a0a6a1;
+}
+
+.admin-clinic-vet-search-input>button {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--text-light);
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.admin-clinic-vet-search-input>button:hover {
+    background: #f0f1ee;
+    color: var(--text);
+}
+
+.admin-clinic-vet-search-hint {
+    margin: 6px 0 0;
+    color: var(--text-light);
+    font-size: 8px;
+}
+
+.admin-clinic-vet-searching,
+.admin-clinic-vet-no-results {
+    margin-top: 8px;
+    padding: 11px 12px;
+    border: 1px solid #e4e6e2;
+    border-radius: 7px;
+    background: #fafaf8;
+    color: var(--text-soft);
+    font-size: 8px;
+}
+
+/* RESULTS */
+
+.admin-clinic-vet-results {
+    position: absolute;
+    z-index: 50;
+    top: 69px;
+    left: 0;
+    right: 0;
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid #d9ddd8;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 12px 28px rgba(28, 39, 32, .12);
+}
+
+.admin-clinic-vet-result {
+    width: 100%;
+    min-height: 61px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 0;
+    border-bottom: 1px solid #eeeeea;
+    background: white;
+    color: inherit;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.admin-clinic-vet-result:last-child {
+    border-bottom: 0;
+}
+
+.admin-clinic-vet-result:hover {
+    background: #f7f9f7;
+}
+
+.admin-clinic-vet-result-avatar {
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.admin-clinic-vet-result-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-clinic-vet-result-info strong,
+.admin-clinic-vet-result-info span {
+    display: block;
+}
+
+.admin-clinic-vet-result-info strong {
+    color: var(--text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.admin-clinic-vet-result-info span {
+    margin-top: 3px;
+    overflow: hidden;
+    color: var(--text-soft);
+    font-size: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-clinic-vet-result-role {
+    min-height: 23px;
+    padding: 0 7px;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 5px;
+    background: #eeeeeb;
+    color: #687069;
+    font-size: 7px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.admin-clinic-vet-result-role.owner {
+    background: #e5f0e8;
+    color: #356048;
+}
+
+.admin-clinic-vet-result-role.veterinarian {
+    background: #e7edf1;
+    color: #526c7a;
+}
+
+/* SELECTED USER */
+
+.admin-clinic-vet-selected {
+    margin-top: 11px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #bcd1c2;
+    border-radius: 8px;
+    background: #f3f8f5;
+}
+
+.admin-clinic-vet-selected-avatar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.admin-clinic-vet-selected>div:nth-child(2) {
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-clinic-vet-selected>div:nth-child(2)>span {
+    display: block;
+    color: var(--green);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: .6px;
+}
+
+.admin-clinic-vet-selected strong {
+    display: block;
+    margin-top: 3px;
+    color: var(--text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.admin-clinic-vet-selected p {
+    margin: 3px 0 0;
+    overflow: hidden;
+    color: var(--text-soft);
+    font-size: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-clinic-vet-selected>button {
+    padding: 6px 8px;
+    flex-shrink: 0;
+    border: 1px solid #cbd4cd;
+    border-radius: 5px;
+    background: white;
+    color: var(--green);
+    font-family: inherit;
+    font-size: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admin-clinic-vet-selected>button:hover {
+    border-color: var(--green);
+}

@@ -1,0 +1,469 @@
+.vet-profile-page {
+    min-height: calc(100vh - 68px);
+    background: var(--bg);
+}
+
+.vet-profile-container {
+    width: min(1050px, calc(100% - 64px));
+    margin: 0 auto;
+    padding: 40px 0 75px;
+}
+
+/* BACK */
+
+.vet-profile-back {
+    margin-bottom: 25px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.vet-profile-back:hover {
+    color: var(--green);
+}
+
+/* LAYOUT */
+
+.vet-profile-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 20px;
+    align-items: start;
+}
+
+.vet-profile-main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* HERO */
+
+.vet-profile-hero {
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+}
+
+.vet-profile-avatar {
+    width: 68px;
+    height: 68px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.vet-profile-heading {
+    min-width: 0;
+}
+
+.vet-profile-heading>span {
+    display: block;
+    color: var(--green);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.vet-profile-heading h1 {
+    margin: 6px 0 0;
+    color: var(--text);
+    font-size: 27px;
+    font-weight: 600;
+    letter-spacing: -.7px;
+}
+
+.vet-profile-role-row {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vet-profile-role {
+    color: var(--text-soft);
+    font-size: 11px;
+}
+
+.vet-profile-surgeon-badge {
+    padding: 5px 8px;
+    border-radius: 5px;
+    background: #f4edda;
+    color: #7a6127;
+    font-size: 8px;
+    font-weight: 700;
+}
+
+/* SECTIONS */
+
+.vet-profile-section {
+    padding: 25px 27px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+}
+
+.vet-profile-section-heading {
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #ecece8;
+}
+
+.vet-profile-section-heading>span {
+    display: block;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .9px;
+}
+
+.vet-profile-section-heading h2 {
+    margin: 6px 0 0;
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.vet-profile-section-heading p {
+    margin: 6px 0 0;
+    color: var(--text-soft);
+    font-size: 10px;
+    line-height: 1.55;
+}
+
+/* INFO */
+
+.vet-profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.vet-profile-info {
+    padding: 14px;
+    border: 1px solid #e7e9e5;
+    border-radius: 7px;
+    background: #fafaf8;
+}
+
+.vet-profile-info span,
+.vet-profile-info strong {
+    display: block;
+}
+
+.vet-profile-info span {
+    margin-bottom: 6px;
+    color: var(--text-light);
+    font-size: 8px;
+    font-weight: 650;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.vet-profile-info strong {
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+/* CLINIC */
+
+.vet-profile-clinic-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.vet-profile-clinic-details>div.full {
+    grid-column: 1 / -1;
+}
+
+.vet-profile-clinic-details span,
+.vet-profile-clinic-details strong {
+    display: block;
+}
+
+.vet-profile-clinic-details span {
+    margin-bottom: 5px;
+    color: var(--text-light);
+    font-size: 8px;
+    font-weight: 650;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.vet-profile-clinic-details strong {
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.vet-profile-clinic-link {
+    width: fit-content;
+    margin-top: 19px;
+    display: block;
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.vet-profile-clinic-link:hover {
+    text-decoration: underline;
+}
+
+/* SIDEBAR */
+
+.vet-profile-sidebar {
+    position: sticky;
+    top: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vet-profile-summary-card {
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+}
+
+.vet-profile-sidebar-label {
+    display: block;
+    margin-bottom: 18px;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.vet-profile-summary-doctor {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.vet-profile-summary-avatar {
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.vet-profile-summary-doctor h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.vet-profile-summary-doctor p {
+    margin: 4px 0 0;
+    color: var(--text-soft);
+    font-size: 9px;
+}
+
+.vet-profile-summary-details {
+    margin-top: 18px;
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    border-top: 1px solid #ecece8;
+}
+
+.vet-profile-summary-details span,
+.vet-profile-summary-details strong {
+    display: block;
+}
+
+.vet-profile-summary-details span {
+    margin-bottom: 4px;
+    color: var(--text-light);
+    font-size: 8px;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.vet-profile-summary-details strong {
+    color: var(--text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.vet-profile-book,
+.vet-profile-view-clinic {
+    width: 100%;
+}
+
+.vet-profile-book {
+    margin-top: 20px;
+}
+
+.vet-profile-view-clinic {
+    margin-top: 8px;
+}
+
+/* SURGERY */
+
+.vet-profile-surgery-card {
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    border: 1px solid #e4d9b9;
+    border-radius: 8px;
+    background: #faf7ed;
+}
+
+.vet-profile-surgery-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #eee4c7;
+    color: #735c26;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.vet-profile-surgery-card strong {
+    display: block;
+    color: #5c4b27;
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.vet-profile-surgery-card p {
+    margin: 5px 0 0;
+    color: #776844;
+    font-size: 9px;
+    line-height: 1.55;
+}
+
+/* STATES */
+
+.vet-profile-loading {
+    min-height: calc(100vh - 68px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--text-soft);
+    font-size: 11px;
+}
+
+.vet-profile-spinner {
+    width: 29px;
+    height: 29px;
+    border: 3px solid var(--green-soft);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: vet-profile-spin .7s linear infinite;
+}
+
+@keyframes vet-profile-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.vet-profile-error-state {
+    max-width: 500px;
+    margin: 70px auto;
+    padding: 40px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    text-align: center;
+}
+
+.vet-profile-error-state h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.vet-profile-error-state p {
+    margin: 8px 0 20px;
+    color: var(--text-soft);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+    .vet-profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .vet-profile-sidebar {
+        position: static;
+        grid-row: 1;
+    }
+}
+
+@media (max-width: 650px) {
+    .vet-profile-container {
+        width: calc(100% - 30px);
+        padding: 30px 0 55px;
+    }
+
+    .vet-profile-hero {
+        padding: 22px;
+    }
+
+    .vet-profile-heading h1 {
+        font-size: 23px;
+    }
+
+    .vet-profile-section {
+        padding: 21px;
+    }
+
+    .vet-profile-info-grid,
+    .vet-profile-clinic-details {
+        grid-template-columns: 1fr;
+    }
+
+    .vet-profile-clinic-details>div.full {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 450px) {
+    .vet-profile-hero {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

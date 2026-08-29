@@ -1,260 +1,103 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import './PetForm.css';
 
-export default function PetForm({
-    initialData = null,
-    onSubmit,
-    loading = false,
-    error = null,
-    submitLabel = 'Save pet'
-}) {
+export default function PetForm({ initialData = null, onSubmit, onCancel, loading = false, error = null, submitLabel = 'Save pet' }) {
     const navigate = useNavigate();
-
-    const [form, setForm] = useState({
-        name: '',
-        species: '',
-        race: '',
-        dob: '',
-        sex: '',
-    });
+    const [form, setForm] = useState({ name: '', species: '', race: '', dob: '', sex: '' });
 
     useEffect(() => {
-        if (!initialData) {
-            return;
+        if (initialData) {
+            setForm({
+                name: initialData.name || '',
+                species: initialData.species || '',
+                race: initialData.race || '',
+                dob: formatDobForDisplay(initialData.dob),
+                sex: initialData.sex || ''
+            });
         }
-
-        setForm({
-            name: initialData.name || '',
-            species: initialData.species || '',
-            race: initialData.race || '',
-            dob: initialData.dob
-                ? initialData.dob.split('T')[0]
-                : '',
-            sex: initialData.sex || '',
-        });
     }, [initialData]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-        setForm((currentForm) => ({
-            ...currentForm,
-            [name]: value,
-        }));
+    const handleDobChange = (e) => {
+        let value = e.target.value.replace(/\D/g, '').slice(0, 8);
+
+        if (value.length > 4) value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4)}`;
+        else if (value.length > 2) value = `${value.slice(0, 2)}/${value.slice(2)}`;
+
+        setForm({ ...form, dob: value });
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const formatDobForDisplay = (dob) => {
+        if (!dob) return '';
 
-        onSubmit(form);
+        const date = dob.split('T')[0];
+        const [year, month, day] = date.split('-');
+
+        return `${day}/${month}/${year}`;
     };
 
     return (
-        <form
-            className="pet-form"
-            onSubmit={handleSubmit}
-        >
+        <form className="pet-form" onSubmit={e => { e.preventDefault(); onSubmit(form); }}>
 
-            <div className="pet-form-section">
+            <div className="pet-form-card">
+                <div className="pet-form-heading">
+                    <h2>Pet information</h2>
+                    <p>Enter the basic information used in appointments and medical records.</p>
+                </div>
 
-                <div className="pet-form-section-heading">
-                    <span className="pet-form-section-number">
-                        01
-                    </span>
+                <div className="pet-form-group">
+                    <label>Pet name</label>
+                    <input name="name" value={form.name} onChange={handleChange} placeholder="e.g. Luna" required />
+                </div>
 
-                    <div>
-                        <h2>Basic information</h2>
+                <div className="pet-form-row">
+                    <div className="pet-form-group">
+                        <label>Species</label>
+                        <input name="species" value={form.species} onChange={handleChange} placeholder="e.g. Cat" required />
+                    </div>
 
-                        <p>
-                            Add the general information about your pet.
-                        </p>
+                    <div className="pet-form-group">
+                        <label>Breed</label>
+                        <input name="race" value={form.race} onChange={handleChange} placeholder="e.g. British Shorthair" />
                     </div>
                 </div>
 
-
-                <div className="pet-form-fields">
-
-                    <div className="pet-form-group pet-form-group-full">
-
-                        <label htmlFor="name">
-                            Pet name
-                        </label>
-
-                        <input
-                            id="name"
-                            name="name"
+                <div className="pet-form-row">
+                    <div className="pet-form-group">
+                        <label>Date of birth</label>
+                        <input name="dob"
                             type="text"
-                            placeholder="e.g. Luna"
-                            value={form.name}
-                            onChange={handleChange}
+                            value={form.dob}
+                            onChange={handleDobChange}
+                            placeholder="DD/MM/YYYY"
+                            maxLength={10}
                             required
                         />
-
                     </div>
 
-
-                    <div className="pet-form-row">
-
-                        <div className="pet-form-group">
-
-                            <label htmlFor="species">
-                                Species
-                            </label>
-
-                            <input
-                                id="species"
-                                name="species"
-                                type="text"
-                                placeholder="e.g. Cat"
-                                value={form.species}
-                                onChange={handleChange}
-                                required
-                            />
-
-                        </div>
-
-
-                        <div className="pet-form-group">
-
-                            <label htmlFor="race">
-                                Breed
-                            </label>
-
-                            <input
-                                id="race"
-                                name="race"
-                                type="text"
-                                placeholder="e.g. British Shorthair"
-                                value={form.race}
-                                onChange={handleChange}
-                            />
-
-                        </div>
-
+                    <div className="pet-form-group">
+                        <label>Sex</label>
+                        <select name="sex" value={form.sex} onChange={handleChange} required>
+                            <option value="">Select sex</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
                     </div>
-
                 </div>
-
             </div>
 
-
-            <div className="pet-form-section">
-
-                <div className="pet-form-section-heading">
-                    <span className="pet-form-section-number">
-                        02
-                    </span>
-
-                    <div>
-                        <h2>Additional details</h2>
-
-                        <p>
-                            Enter your pet's birth date and sex.
-                        </p>
-                    </div>
-                </div>
-
-
-                <div className="pet-form-fields">
-
-                    <div className="pet-form-row">
-
-                        <div className="pet-form-group">
-
-                            <label htmlFor="dob">
-                                Date of birth
-                            </label>
-
-                            <input
-                                id="dob"
-                                name="dob"
-                                type="date"
-                                value={form.dob}
-                                onChange={handleChange}
-                                max={
-                                    new Date()
-                                        .toISOString()
-                                        .split('T')[0]
-                                }
-                                required
-                            />
-
-                        </div>
-
-
-                        <div className="pet-form-group">
-
-                            <label htmlFor="sex">
-                                Sex
-                            </label>
-
-                            <select
-                                id="sex"
-                                name="sex"
-                                value={form.sex}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="">
-                                    Select sex
-                                </option>
-
-                                <option value="M">
-                                    Male
-                                </option>
-
-                                <option value="F">
-                                    Female
-                                </option>
-                            </select>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            {error && (
-                <div className="pet-form-error">
-
-                    <strong>
-                        Could not save pet
-                    </strong>
-
-                    <p>
-                        {error}
-                    </p>
-
-                </div>
-            )}
-
+            {error && <div className="pet-form-error">{error}</div>}
 
             <div className="pet-form-actions">
-
-                <button
-                    type="button"
-                    className="pet-form-cancel"
-                    onClick={() => navigate('/pets')}
-                    disabled={loading}
-                >
+                <button type="button" className="secondary-button" onClick={() => onCancel ? onCancel() : navigate('/pets')} disabled={loading}>
                     Cancel
                 </button>
 
-                <button
-                    type="submit"
-                    className="pet-form-submit"
-                    disabled={loading}
-                >
-                    {loading
-                        ? 'Saving...'
-                        : submitLabel}
+                <button type="submit" className="primary-button" disabled={loading}>
+                    {loading ? 'Saving...' : submitLabel}
                 </button>
-
             </div>
 
         </form>

@@ -1,0 +1,407 @@
+{
+  "password": "Vetapp123",
+  "accounts": [
+    {
+      "id": "1e76b8a0-3020-4e0f-87b8-b4b90f5b8c64",
+      "username": "seed_owner_29124329_1",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_1@seed.vetapp.local"
+    },
+    {
+      "id": "67f73e7c-0d61-4775-b582-673db69fc46f",
+      "username": "seed_owner_29124329_2",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_2@seed.vetapp.local"
+    },
+    {
+      "id": "f0db8ee9-d870-47c7-8ce3-c6804c4e368e",
+      "username": "seed_owner_29124329_3",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_3@seed.vetapp.local"
+    },
+    {
+      "id": "8a531034-07b8-4923-a4de-b678ae22c109",
+      "username": "seed_owner_29124329_4",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_4@seed.vetapp.local"
+    },
+    {
+      "id": "b9bf5a28-e238-41b4-ae14-2d698c633755",
+      "username": "seed_owner_29124329_5",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_5@seed.vetapp.local"
+    },
+    {
+      "id": "432e7f9c-6c3d-4b8a-aa9e-5677285db4c1",
+      "username": "seed_owner_29124329_6",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_6@seed.vetapp.local"
+    },
+    {
+      "id": "7cf06ce5-351e-484b-9cdb-34d2f81cdb86",
+      "username": "seed_owner_29124329_7",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_7@seed.vetapp.local"
+    },
+    {
+      "id": "ed65722e-537e-415f-aff0-97c9b3b369ee",
+      "username": "seed_owner_29124329_8",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_8@seed.vetapp.local"
+    },
+    {
+      "id": "070713f7-ea93-432e-8c22-c2aad48ac10e",
+      "username": "seed_owner_29124329_9",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_9@seed.vetapp.local"
+    },
+    {
+      "id": "88eb577a-1332-4bfd-aeb9-ab24c63a55bc",
+      "username": "seed_owner_29124329_10",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_10@seed.vetapp.local"
+    },
+    {
+      "id": "331486f2-37bb-41ca-907e-24654edc347f",
+      "username": "seed_owner_29124329_11",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_11@seed.vetapp.local"
+    },
+    {
+      "id": "0f44a2e8-b95a-4a0d-aaf2-fd4a3c6ef6b6",
+      "username": "seed_owner_29124329_12",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_12@seed.vetapp.local"
+    },
+    {
+      "id": "9b028bc3-d58b-4d88-8eec-1d8c5933dba9",
+      "username": "seed_owner_29124329_13",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_13@seed.vetapp.local"
+    },
+    {
+      "id": "029569a6-03ca-4a5a-9d9c-7fe5cd21ee00",
+      "username": "seed_owner_29124329_14",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_14@seed.vetapp.local"
+    },
+    {
+      "id": "2459565b-84fa-483b-94ac-4ba4f1d07f81",
+      "username": "seed_owner_29124329_15",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_15@seed.vetapp.local"
+    },
+    {
+      "id": "e0688814-362b-4515-999c-6dd2d4ecfb04",
+      "username": "seed_owner_29124329_16",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_16@seed.vetapp.local"
+    },
+    {
+      "id": "b6cb64ed-dc60-47db-ae78-65638fa652ec",
+      "username": "seed_owner_29124329_17",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_17@seed.vetapp.local"
+    },
+    {
+      "id": "6fbed37e-a417-42f6-b51c-1fd265fbdaf4",
+      "username": "seed_owner_29124329_18",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_18@seed.vetapp.local"
+    },
+    {
+      "id": "4489d609-5a0d-4c36-8298-b79516868dd3",
+      "username": "seed_owner_29124329_19",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_19@seed.vetapp.local"
+    },
+    {
+      "id": "9a897276-08b3-4636-8ddb-ed5b8194d274",
+      "username": "seed_owner_29124329_20",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_20@seed.vetapp.local"
+    },
+    {
+      "id": "19e237a6-5cf3-42af-833e-6439363e3d25",
+      "username": "seed_owner_29124329_21",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_21@seed.vetapp.local"
+    },
+    {
+      "id": "64ac496c-605f-4a87-b709-a2c7ba8b4e80",
+      "username": "seed_owner_29124329_22",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_22@seed.vetapp.local"
+    },
+    {
+      "id": "3c9ca6c0-89be-4a90-a874-65e777d368a0",
+      "username": "seed_owner_29124329_23",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_23@seed.vetapp.local"
+    },
+    {
+      "id": "ef56d684-9de2-48fa-a60c-76a58806f46b",
+      "username": "seed_owner_29124329_24",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_24@seed.vetapp.local"
+    },
+    {
+      "id": "a7f0c6c8-ff89-48cd-9844-fbe2a668d556",
+      "username": "seed_owner_29124329_25",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_25@seed.vetapp.local"
+    },
+    {
+      "id": "6540b413-0b0d-4374-be6d-bdb275425fa7",
+      "username": "seed_owner_29124329_26",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_26@seed.vetapp.local"
+    },
+    {
+      "id": "4e5e6014-2844-448c-9d22-34c99e09ab7a",
+      "username": "seed_owner_29124329_27",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_27@seed.vetapp.local"
+    },
+    {
+      "id": "e3fa8ce0-9066-4127-b10f-38078d6b7d19",
+      "username": "seed_owner_29124329_28",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_28@seed.vetapp.local"
+    },
+    {
+      "id": "a297ab97-3ab7-4759-9c04-2451e3e7f11f",
+      "username": "seed_owner_29124329_29",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_29@seed.vetapp.local"
+    },
+    {
+      "id": "544468d0-92a7-45e7-a595-cc85d8523f33",
+      "username": "seed_owner_29124329_30",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_30@seed.vetapp.local"
+    },
+    {
+      "id": "f7ccede7-5ccb-406a-950e-104279ce7ed9",
+      "username": "seed_owner_29124329_31",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_31@seed.vetapp.local"
+    },
+    {
+      "id": "0646c746-9fcd-4b1d-a9b0-83d13ccf9677",
+      "username": "seed_owner_29124329_32",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_32@seed.vetapp.local"
+    },
+    {
+      "id": "6247ec3a-7716-4b10-8624-c1383e05bb25",
+      "username": "seed_owner_29124329_33",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_33@seed.vetapp.local"
+    },
+    {
+      "id": "38102cac-d13c-4be1-8898-78b9896269bd",
+      "username": "seed_owner_29124329_34",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_34@seed.vetapp.local"
+    },
+    {
+      "id": "1cf9eeb3-886e-4ab9-aece-515b29784e8a",
+      "username": "seed_owner_29124329_35",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_35@seed.vetapp.local"
+    },
+    {
+      "id": "04828c9f-a770-48e9-973f-e233f5f40418",
+      "username": "seed_owner_29124329_36",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_36@seed.vetapp.local"
+    },
+    {
+      "id": "f928c6a9-7cb7-4a29-a28f-f71063cff9c0",
+      "username": "seed_owner_29124329_37",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_37@seed.vetapp.local"
+    },
+    {
+      "id": "4278c6a4-1ded-4053-ad2c-6f4579045952",
+      "username": "seed_owner_29124329_38",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_38@seed.vetapp.local"
+    },
+    {
+      "id": "0f70b015-20ab-4a0c-b91f-e3f030470ea3",
+      "username": "seed_owner_29124329_39",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_39@seed.vetapp.local"
+    },
+    {
+      "id": "abf26c5b-97cf-4377-b8e1-a1ce81fc80c4",
+      "username": "seed_owner_29124329_40",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_40@seed.vetapp.local"
+    },
+    {
+      "id": "4cf40690-f05e-42a5-b8e8-90b7aac4ed9b",
+      "username": "seed_owner_29124329_41",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_41@seed.vetapp.local"
+    },
+    {
+      "id": "0bf022d0-09c9-4c25-837a-3a4c1d0f5ff0",
+      "username": "seed_owner_29124329_42",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_42@seed.vetapp.local"
+    },
+    {
+      "id": "2c8c2309-f2be-418e-b7fc-f40b21b2ef55",
+      "username": "seed_owner_29124329_43",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_43@seed.vetapp.local"
+    },
+    {
+      "id": "094b6bd9-754c-4dea-92be-87cfb0830ca6",
+      "username": "seed_owner_29124329_44",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_44@seed.vetapp.local"
+    },
+    {
+      "id": "3e2a7d21-be69-431f-861e-a4f8da9f098a",
+      "username": "seed_owner_29124329_45",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_45@seed.vetapp.local"
+    },
+    {
+      "id": "0469fb80-234c-466c-9b96-a61b43a81dc7",
+      "username": "seed_owner_29124329_46",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_46@seed.vetapp.local"
+    },
+    {
+      "id": "3c8a6088-ecbb-44a8-97e6-e154a5ddfeb2",
+      "username": "seed_owner_29124329_47",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_47@seed.vetapp.local"
+    },
+    {
+      "id": "887fe224-c767-46d1-bb1d-b67b5269f27a",
+      "username": "seed_owner_29124329_48",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_48@seed.vetapp.local"
+    },
+    {
+      "id": "1162f223-dfc3-481f-819e-0da77fdad0d3",
+      "username": "seed_owner_29124329_49",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_49@seed.vetapp.local"
+    },
+    {
+      "id": "5588bd3a-7b8f-4dd5-aeee-78cd5b8a3352",
+      "username": "seed_owner_29124329_50",
+      "role": "OWNER",
+      "email": "seed_owner_29124329_50@seed.vetapp.local"
+    },
+    {
+      "id": "98175045-9956-45db-a716-9dfb8c8c80de",
+      "username": "seed_veterinarian_29124329_1",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_1@seed.vetapp.local"
+    },
+    {
+      "id": "0351944a-fcbd-4ddd-877d-599b0c1b8d3b",
+      "username": "seed_veterinarian_29124329_2",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_2@seed.vetapp.local"
+    },
+    {
+      "id": "a2e488be-1118-4a1d-8f36-e4d6feca9404",
+      "username": "seed_veterinarian_29124329_3",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_3@seed.vetapp.local"
+    },
+    {
+      "id": "3ca8ad19-ce1e-40c6-bf4d-6660347829b4",
+      "username": "seed_veterinarian_29124329_4",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_4@seed.vetapp.local"
+    },
+    {
+      "id": "649500b6-c005-462e-a438-23223eefbaba",
+      "username": "seed_veterinarian_29124329_5",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_5@seed.vetapp.local"
+    },
+    {
+      "id": "3b792610-c0a3-47aa-90d1-700c08f2c0ad",
+      "username": "seed_veterinarian_29124329_6",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_6@seed.vetapp.local"
+    },
+    {
+      "id": "a5f60d86-3906-4e14-a253-b8638a556cec",
+      "username": "seed_veterinarian_29124329_7",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_7@seed.vetapp.local"
+    },
+    {
+      "id": "a3f3cc15-ef01-412e-9af6-5079be341091",
+      "username": "seed_veterinarian_29124329_8",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_8@seed.vetapp.local"
+    },
+    {
+      "id": "db7ea0e1-468e-4cbb-8d37-15dbef7dbaa3",
+      "username": "seed_veterinarian_29124329_9",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_9@seed.vetapp.local"
+    },
+    {
+      "id": "a443bd88-e855-4aba-8af2-77cabba96cfe",
+      "username": "seed_veterinarian_29124329_10",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_10@seed.vetapp.local"
+    },
+    {
+      "id": "2025bf16-d93b-4dcd-aab0-914411ec97ea",
+      "username": "seed_veterinarian_29124329_11",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_11@seed.vetapp.local"
+    },
+    {
+      "id": "b05047a3-7c36-44be-b0b4-61be882b0373",
+      "username": "seed_veterinarian_29124329_12",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_12@seed.vetapp.local"
+    },
+    {
+      "id": "a3c82eb1-7892-40e6-9d5d-30f7d395c77f",
+      "username": "seed_veterinarian_29124329_13",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_13@seed.vetapp.local"
+    },
+    {
+      "id": "746fae20-8623-4402-8059-d69b07450a1e",
+      "username": "seed_veterinarian_29124329_14",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_14@seed.vetapp.local"
+    },
+    {
+      "id": "c7df0a0a-378e-41fd-bff4-ec7d4dafde30",
+      "username": "seed_veterinarian_29124329_15",
+      "role": "VETERINARIAN",
+      "email": "seed_veterinarian_29124329_15@seed.vetapp.local"
+    },
+    {
+      "id": "e42851e1-707d-44cf-965a-2c802842d0db",
+      "username": "seed_admin_29124329_1",
+      "role": "ADMIN",
+      "email": "seed_admin_29124329_1@seed.vetapp.local"
+    },
+    {
+      "id": "935d842c-483c-48a6-8b7f-45b895d4d93a",
+      "username": "seed_admin_29124329_2",
+      "role": "ADMIN",
+      "email": "seed_admin_29124329_2@seed.vetapp.local"
+    }
+  ]
+}

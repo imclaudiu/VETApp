@@ -1,169 +1,588 @@
 .vet-history-page {
-    min-height: calc(100vh - 70px);
-    background: #f8fafc;
+    min-height: calc(100vh - 68px);
+    background: var(--bg);
 }
 
 .vet-history-container {
-    width: 100%;
-    max-width: 1050px;
+    width: min(1050px, calc(100% - 64px));
     margin: 0 auto;
-    padding: 42px 32px 70px;
+    padding: 40px 0 75px;
 }
 
+/* BACK */
+
 .vet-history-back {
-    display: inline-block;
-    margin-bottom: 26px;
-    color: #64748b;
-    font-size: 11px;
+    color: var(--text-soft);
+    font-size: 12px;
     font-weight: 600;
     text-decoration: none;
 }
 
 .vet-history-back:hover {
-    color: #0f766e;
+    color: var(--green);
 }
+
+/* HEADER */
 
 .vet-history-header {
-    margin-bottom: 30px;
+    margin: 28px 0 30px;
 }
 
-.vet-history-header>p {
-    margin: 0 0 7px;
-    color: #0d9488;
-    font-size: 9px;
-    font-weight: 750;
-    letter-spacing: 1.4px;
+.vet-history-header>div>span {
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
 }
 
 .vet-history-header h1 {
-    margin: 0;
-    color: #0f172a;
-    font-size: 32px;
+    margin: 7px 0 0;
+    color: var(--text);
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: -1.2px;
 }
 
-.vet-history-header>span {
+.vet-history-header p {
+    margin: 8px 0 0;
+    color: var(--text-soft);
+    font-size: 14px;
+}
+
+/* PATIENT */
+
+.vet-history-patient-card {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+}
+
+.vet-history-patient-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.vet-history-patient-avatar {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.vet-history-patient-main span {
     display: block;
-    margin-top: 7px;
-    color: #64748b;
-    font-size: 12px;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .9px;
 }
 
-.vet-history-list {
+.vet-history-patient-main h2 {
+    margin: 4px 0 0;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.vet-history-patient-main p {
+    margin: 4px 0 0;
+    color: var(--text-soft);
+    font-size: 10px;
+}
+
+.vet-history-patient-details {
+    min-width: 0;
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.vet-history-patient-details span,
+.vet-history-patient-details strong {
+    display: block;
+}
+
+.vet-history-patient-details span {
+    margin-bottom: 5px;
+    color: var(--text-light);
+    font-size: 8px;
+    font-weight: 650;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.vet-history-patient-details strong {
+    overflow: hidden;
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* SUMMARY */
+
+.vet-history-summary {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.vet-history-summary>div {
+    padding: 18px 19px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+}
+
+.vet-history-summary>div:first-child {
+    border-color: #cadbcf;
+    background: #f2f7f4;
+}
+
+.vet-history-summary span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .8px;
+}
+
+.vet-history-summary strong {
+    display: block;
+    color: var(--text);
+    font-size: 21px;
+    font-weight: 600;
+}
+
+.vet-history-summary strong.vet-history-summary-text {
+    font-size: 15px;
+}
+
+.vet-history-summary p {
+    margin: 5px 0 0;
+    overflow: hidden;
+    color: var(--text-soft);
+    font-size: 9px;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* CONTENT */
+
+.vet-history-content {
+    margin-top: 42px;
+}
+
+.vet-history-section-heading {
+    margin-bottom: 18px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.vet-history-section-heading>div>span {
+    color: var(--green);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.vet-history-section-heading h2 {
+    margin: 5px 0 0;
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.vet-history-section-heading>p {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 10px;
+}
+
+/* TIMELINE */
+
+.vet-history-timeline {
     display: flex;
     flex-direction: column;
-    gap: 16px;
 }
 
-.vet-history-card {
-    padding: 23px;
-    border: 1px solid #e2e8f0;
-    border-radius: 15px;
+.vet-history-timeline-item {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 13px;
+}
+
+.vet-history-timeline-line {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.vet-history-timeline-line::after {
+    content: "";
+    position: absolute;
+    top: 19px;
+    bottom: 0;
+    width: 1px;
+    background: #d7ddd8;
+}
+
+.vet-history-timeline-item:last-child .vet-history-timeline-line::after {
+    display: none;
+}
+
+.vet-history-timeline-line>span {
+    width: 11px;
+    height: 11px;
+    margin-top: 15px;
+    position: relative;
+    z-index: 1;
+    border: 2px solid #b6c2b9;
+    border-radius: 50%;
+    background: var(--bg);
+}
+
+.vet-history-timeline-line>span.latest {
+    border-color: var(--green);
+    background: var(--green);
+}
+
+/* RECORD */
+
+.vet-history-record {
+    margin-bottom: 15px;
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
     background: white;
-    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
 }
 
-.vet-history-card-top {
+.vet-history-record-header {
+    padding-bottom: 17px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid #ecece8;
 }
 
-.vet-history-card-top span {
+.vet-history-date {
     display: block;
-    margin-bottom: 6px;
-    color: #0d9488;
+    color: var(--green);
     font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
+    font-weight: 650;
 }
 
-.vet-history-card-top h2 {
-    margin: 0;
-    color: #0f172a;
-    font-size: 18px;
+.vet-history-record-header h3 {
+    margin: 6px 0 0;
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 600;
 }
 
-.vet-history-card-top>strong {
-    color: #0f766e;
-    font-size: 11px;
+.vet-history-record-header p {
+    margin: 5px 0 0;
+    color: var(--text-soft);
+    font-size: 10px;
 }
 
-.vet-history-meta {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    padding: 18px 0;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.vet-history-meta div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.vet-history-meta span,
-.vet-history-section>span {
-    color: #94a3b8;
+.vet-history-latest {
+    padding: 5px 7px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    background: var(--green-soft);
+    color: var(--green);
     font-size: 8px;
     font-weight: 700;
-    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
 }
 
-.vet-history-meta strong {
-    color: #334155;
-    font-size: 11px;
+/* RECORD META */
+
+.vet-history-record-meta {
+    padding: 17px 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    border-bottom: 1px solid #ecece8;
 }
 
-.vet-history-section {
-    padding-top: 16px;
+.vet-history-record-meta span,
+.vet-history-record-meta strong {
+    display: block;
 }
 
-.vet-history-section p {
+.vet-history-record-meta span {
+    margin-bottom: 5px;
+    color: var(--text-light);
+    font-size: 8px;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.vet-history-record-meta strong {
+    overflow: hidden;
+    color: #414941;
+    font-size: 10px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* CLINICAL */
+
+.vet-history-clinical-grid {
+    padding-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px;
+}
+
+.vet-history-clinical-section {
+    padding: 15px;
+    border-radius: 7px;
+    background: #f7f7f4;
+}
+
+.vet-history-clinical-section.diagnosis {
+    background: #f1f6f3;
+}
+
+.vet-history-clinical-section>span,
+.vet-history-observations>span {
+    display: block;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+.vet-history-clinical-section p,
+.vet-history-observations p {
     margin: 6px 0 0;
-    color: #475569;
+    color: #48524b;
+    font-size: 10px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+.vet-history-observations {
+    margin-top: 13px;
+    padding: 15px;
+    border: 1px solid #ecece8;
+    border-radius: 7px;
+}
+
+/* CURRENT APPOINTMENT */
+
+.vet-history-current-appointment {
+    margin-top: 26px;
+    padding: 19px 21px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    border: 1px solid #cadbcf;
+    border-radius: 9px;
+    background: #f2f7f4;
+}
+
+.vet-history-current-appointment>div>span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .9px;
+}
+
+.vet-history-current-appointment strong {
+    display: block;
+    color: var(--text);
     font-size: 12px;
+    font-weight: 600;
+}
+
+.vet-history-current-appointment p {
+    margin: 4px 0 0;
+    color: var(--text-soft);
+    font-size: 9px;
+}
+
+/* EMPTY */
+
+.vet-history-empty {
+    padding: 60px 30px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    text-align: center;
+}
+
+.vet-history-empty>div {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 15px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 19px;
+}
+
+.vet-history-empty h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.vet-history-empty p {
+    max-width: 390px;
+    margin: 7px auto 0;
+    color: var(--text-soft);
+    font-size: 10px;
     line-height: 1.6;
 }
 
-.vet-history-empty {
-    padding: 55px 20px;
-    border: 1px dashed #cbd5e1;
-    border-radius: 15px;
-    background: white;
-    color: #64748b;
-    text-align: center;
-    font-size: 12px;
-}
+/* ERROR */
 
 .vet-history-error {
-    padding: 12px;
-    border: 1px solid #fecaca;
+    margin-bottom: 18px;
+    padding: 13px 15px;
+    border: 1px solid #edcfcb;
     border-radius: 8px;
-    background: #fef2f2;
-    color: #b91c1c;
+    background: var(--danger-soft);
+    color: var(--danger);
     font-size: 11px;
 }
 
+/* LOADING */
+
 .vet-history-loading {
-    padding: 60px;
-    color: #64748b;
+    min-height: calc(100vh - 68px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--text-soft);
+    font-size: 12px;
+}
+
+.vet-history-spinner {
+    width: 29px;
+    height: 29px;
+    border: 3px solid var(--green-soft);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: vet-history-spin .7s linear infinite;
+}
+
+@keyframes vet-history-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* LOAD ERROR */
+
+.vet-history-load-error {
+    max-width: 500px;
+    margin: 70px auto;
+    padding: 40px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
     text-align: center;
 }
 
-@media (max-width: 750px) {
-    .vet-history-container {
-        padding: 30px 20px 55px;
-    }
+.vet-history-load-error h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 600;
+}
 
-    .vet-history-card-top {
+.vet-history-load-error p {
+    margin: 8px 0 20px;
+    color: var(--text-soft);
+    font-size: 11px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+    .vet-history-patient-card {
+        align-items: flex-start;
         flex-direction: column;
     }
 
-    .vet-history-meta {
+    .vet-history-patient-details {
+        width: 100%;
+    }
+
+    .vet-history-record-meta {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .vet-history-container {
+        width: calc(100% - 30px);
+        padding: 30px 0 55px;
+    }
+
+    .vet-history-header h1 {
+        font-size: 28px;
+    }
+
+    .vet-history-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .vet-history-patient-details {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .vet-history-clinical-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .vet-history-current-appointment {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .vet-history-current-appointment .primary-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 450px) {
+    .vet-history-record-meta {
+        grid-template-columns: 1fr;
     }
 }

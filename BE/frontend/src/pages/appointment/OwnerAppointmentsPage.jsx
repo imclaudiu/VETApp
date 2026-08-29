@@ -23,16 +23,17 @@ export default function OwnerAppointmentsPage() {
     const [activeTab, setActiveTab] = useState('upcoming');
     const [loading, setLoading] = useState(true);
     const [cancelingId, setCancelingId] = useState(null);
+    const [appointmentToCancel, setAppointmentToCancel] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         if (!user?.userId) return;
 
         const loadAppointments = async () => {
-            try {
-                setLoading(true);
-                setError(null);
+            setLoading(true);
+            setError(null);
 
+            try {
                 const [appointmentData, pets] = await Promise.all([
                     getAppointmentsByOwner(user.userId),
                     getMyPets()
@@ -88,37 +89,41 @@ export default function OwnerAppointmentsPage() {
         loadAppointments();
     }, [user?.userId]);
 
-    const upcomingAppointments = useMemo(() => {
-        return appointments
+    const upcomingAppointments = useMemo(() =>
+        appointments
             .filter(a => ['PENDING', 'CONFIRMED'].includes(a.status))
-            .sort((a, b) => new Date(a.startOfAppointment) - new Date(b.startOfAppointment));
-    }, [appointments]);
+            .sort((a, b) => new Date(a.startOfAppointment) - new Date(b.startOfAppointment)),
+        [appointments]
+    );
 
-    const historyAppointments = useMemo(() => {
-        return appointments
+    const historyAppointments = useMemo(() =>
+        appointments
             .filter(a => ['FINISHED', 'CANCELED', 'NO_SHOW'].includes(a.status))
-            .sort((a, b) => new Date(b.startOfAppointment) - new Date(a.startOfAppointment));
-    }, [appointments]);
+            .sort((a, b) => new Date(b.startOfAppointment) - new Date(a.startOfAppointment)),
+        [appointments]
+    );
 
     const displayedAppointments =
         activeTab === 'upcoming' ? upcomingAppointments : historyAppointments;
 
-    const handleCancel = async appointment => {
-        if (!window.confirm('Are you sure you want to cancel this appointment?')) return;
+    const confirmCancel = async () => {
+        if (!appointmentToCancel) return;
 
         try {
-            setCancelingId(appointment.id);
+            setCancelingId(appointmentToCancel.id);
             setError(null);
 
-            await cancelAppointment(appointment.id);
+            await cancelAppointment(appointmentToCancel.id);
 
             setAppointments(current =>
                 current.map(item =>
-                    item.id === appointment.id
+                    item.id === appointmentToCancel.id
                         ? { ...item, status: 'CANCELED' }
                         : item
                 )
             );
+
+            setAppointmentToCancel(null);
         } catch (err) {
             setError(
                 err.response?.data?.detail ||
@@ -132,25 +137,33 @@ export default function OwnerAppointmentsPage() {
     };
 
     const formatDate = value =>
-        new Intl.DateTimeFormat('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-        }).format(new Date(value));
+        new Date(value).toLocaleDateString('en-GB');
 
     const formatTime = value =>
-        new Intl.DateTimeFormat('en-GB', {
+        new Date(value).toLocaleTimeString('en-GB', {
             hour: '2-digit',
             minute: '2-digit'
-        }).format(new Date(value));
+        });
+
+    const getStatusLabel = status => {
+        if (status === 'NO_SHOW') return 'No show';
+        if (status === 'FINISHED') return 'Finished';
+        if (status === 'CANCELED') return 'Canceled';
+        if (status === 'CONFIRMED') return 'Confirmed';
+        if (status === 'PENDING') return 'Pending';
+        return status;
+    };
 
     if (loading) {
         return (
             <>
                 <Navbar />
-                <div className="owner-appointments-loading">
-                    Loading appointments...
-                </div>
+                <main className="appointments-page">
+                    <div className="appointments-loading">
+                        <div className="appointments-spinner" />
+                        <p>Loading appointments...</p>
+                    </div>
+                </main>
             </>
         );
     }
@@ -159,44 +172,28 @@ export default function OwnerAppointmentsPage() {
         <>
             <Navbar />
 
-            <main className="owner-appointments-page">
-                <div className="owner-appointments-container">
+            <main className="appointments-page">
+                <div className="appointments-container">
 
-                    <section className="owner-appointments-header">
+                    <header className="appointments-header">
                         <div>
-                            <p>APPOINTMENTS</p>
+                            <span>APPOINTMENTS</span>
                             <h1>My appointments</h1>
-                            <span>
-                                View your upcoming visits and appointment history.
-                            </span>
+                            <p>Manage your upcoming veterinary visits and view previous appointments.</p>
                         </div>
 
-                        <Link to="/clinics" className="owner-new-appointment">
-                            + Book appointment
+                        <Link to="/clinics" className="primary-button">
+                            Book appointment
                         </Link>
-                    </section>
+                    </header>
 
                     {error && (
-                        <div className="owner-appointments-error">
+                        <div className="appointments-error">
                             {error}
                         </div>
                     )}
 
-                    <div className="owner-appointments-summary">
-                        <div>
-                            <span>UPCOMING</span>
-                            <strong>{upcomingAppointments.length}</strong>
-                            <p>Active appointments</p>
-                        </div>
-
-                        <div>
-                            <span>HISTORY</span>
-                            <strong>{historyAppointments.length}</strong>
-                            <p>Previous appointments</p>
-                        </div>
-                    </div>
-
-                    <div className="owner-appointments-tabs">
+                    <div className="appointments-tabs">
                         <button
                             type="button"
                             className={activeTab === 'upcoming' ? 'active' : ''}
@@ -217,35 +214,44 @@ export default function OwnerAppointmentsPage() {
                     </div>
 
                     {displayedAppointments.length === 0 ? (
-                        <div className="owner-appointments-empty">
-                            <div>+</div>
+                        <div className="appointments-empty">
+                            <div className="appointments-empty-icon">
+                                {activeTab === 'upcoming' ? '+' : '✓'}
+                            </div>
+
                             <h2>
                                 {activeTab === 'upcoming'
                                     ? 'No upcoming appointments'
                                     : 'No appointment history'}
                             </h2>
+
                             <p>
                                 {activeTab === 'upcoming'
                                     ? 'You currently have no scheduled veterinary visits.'
                                     : 'Completed and canceled appointments will appear here.'}
                             </p>
+
+                            {activeTab === 'upcoming' && (
+                                <Link to="/clinics" className="primary-button">
+                                    Find a clinic
+                                </Link>
+                            )}
                         </div>
                     ) : (
-                        <div className="owner-appointments-list">
+                        <div className="appointments-list">
                             {displayedAppointments.map(appointment => {
                                 const canCancel =
                                     ['PENDING', 'CONFIRMED'].includes(appointment.status) &&
                                     new Date(appointment.startOfAppointment) > new Date();
 
                                 return (
-                                    <article
-                                        key={appointment.id}
-                                        className="owner-appointment-card"
-                                    >
-                                        <div className="owner-appointment-date">
+                                    <article className="appointment-card" key={appointment.id}>
+
+                                        <div className="appointment-card-date">
                                             <strong>
-                                                {new Date(appointment.startOfAppointment).getDate()}
+                                                {String(new Date(appointment.startOfAppointment).getDate()).padStart(2, '0')}
                                             </strong>
+
                                             <span>
                                                 {new Date(appointment.startOfAppointment)
                                                     .toLocaleString('en-GB', { month: 'short' })
@@ -253,8 +259,9 @@ export default function OwnerAppointmentsPage() {
                                             </span>
                                         </div>
 
-                                        <div className="owner-appointment-content">
-                                            <div className="owner-appointment-heading">
+                                        <div className="appointment-card-content">
+
+                                            <div className="appointment-card-header">
                                                 <div>
                                                     <h2>
                                                         {appointment.pet?.name || 'Pet'}
@@ -268,38 +275,40 @@ export default function OwnerAppointmentsPage() {
                                                 </div>
 
                                                 <span
-                                                    className={`owner-appointment-status ${appointment.status?.toLowerCase()}`}
+                                                    className={`appointment-status ${appointment.status?.toLowerCase()}`}
                                                 >
-                                                    {appointment.status}
+                                                    {getStatusLabel(appointment.status)}
                                                 </span>
                                             </div>
 
-                                            <div className="owner-appointment-details">
+                                            <div className="appointment-information">
                                                 <div>
-                                                    <span>DATE</span>
+                                                    <span>Date</span>
                                                     <strong>
                                                         {formatDate(appointment.startOfAppointment)}
                                                     </strong>
                                                 </div>
 
                                                 <div>
-                                                    <span>TIME</span>
+                                                    <span>Time</span>
                                                     <strong>
                                                         {formatTime(appointment.startOfAppointment)}
-                                                        {' — '}
-                                                        {formatTime(appointment.endOfAppointment)}
+                                                        {appointment.endOfAppointment &&
+                                                            ` – ${formatTime(appointment.endOfAppointment)}`}
                                                     </strong>
                                                 </div>
 
                                                 <div>
-                                                    <span>VETERINARIAN</span>
+                                                    <span>Veterinarian</span>
                                                     <strong>
-                                                        Dr. {appointment.veterinarian?.name || 'Veterinarian'}
+                                                        {appointment.veterinarian?.name
+                                                            ? `Dr. ${appointment.veterinarian.name}`
+                                                            : 'Veterinarian'}
                                                     </strong>
                                                 </div>
 
                                                 <div>
-                                                    <span>SERVICE</span>
+                                                    <span>Service</span>
                                                     <strong>
                                                         {appointment.service?.serviceName ||
                                                             'Veterinary appointment'}
@@ -307,29 +316,36 @@ export default function OwnerAppointmentsPage() {
                                                 </div>
                                             </div>
 
-                                            <div className="owner-appointment-actions">
+                                            <div className="appointment-card-actions">
                                                 {appointment.veterinarian?.clinicId && (
                                                     <Link
                                                         to={`/clinics/${appointment.veterinarian.clinicId}`}
-                                                        className="owner-view-clinic"
+                                                        className="appointment-secondary-action"
                                                     >
                                                         View clinic
+                                                    </Link>
+                                                )}
+
+                                                {appointment.status === 'FINISHED' && appointment.pet?.id && (
+                                                    <Link
+                                                        to={`/pets/${appointment.pet.id}/medical-history`}
+                                                        className="appointment-secondary-action"
+                                                    >
+                                                        Medical history
                                                     </Link>
                                                 )}
 
                                                 {canCancel && (
                                                     <button
                                                         type="button"
-                                                        className="owner-cancel-appointment"
-                                                        disabled={cancelingId === appointment.id}
-                                                        onClick={() => handleCancel(appointment)}
+                                                        className="appointment-cancel-action"
+                                                        onClick={() => setAppointmentToCancel(appointment)}
                                                     >
-                                                        {cancelingId === appointment.id
-                                                            ? 'Canceling...'
-                                                            : 'Cancel appointment'}
+                                                        Cancel appointment
                                                     </button>
                                                 )}
                                             </div>
+
                                         </div>
                                     </article>
                                 );
@@ -339,6 +355,51 @@ export default function OwnerAppointmentsPage() {
 
                 </div>
             </main>
+
+            {appointmentToCancel && (
+                <div
+                    className="appointment-modal-backdrop"
+                    onMouseDown={() => {
+                        if (!cancelingId) setAppointmentToCancel(null);
+                    }}
+                >
+                    <div
+                        className="appointment-modal"
+                        onMouseDown={e => e.stopPropagation()}
+                    >
+                        <span className="appointment-modal-label">CANCEL APPOINTMENT</span>
+
+                        <h2>Cancel this appointment?</h2>
+
+                        <p>
+                            The appointment for{' '}
+                            <strong>{appointmentToCancel.pet?.name || 'your pet'}</strong>{' '}
+                            on {formatDate(appointmentToCancel.startOfAppointment)} at{' '}
+                            {formatTime(appointmentToCancel.startOfAppointment)} will be canceled.
+                        </p>
+
+                        <div className="appointment-modal-actions">
+                            <button
+                                type="button"
+                                className="secondary-button"
+                                disabled={cancelingId}
+                                onClick={() => setAppointmentToCancel(null)}
+                            >
+                                Keep appointment
+                            </button>
+
+                            <button
+                                type="button"
+                                className="appointment-modal-danger"
+                                disabled={cancelingId}
+                                onClick={confirmCancel}
+                            >
+                                {cancelingId ? 'Canceling...' : 'Cancel appointment'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

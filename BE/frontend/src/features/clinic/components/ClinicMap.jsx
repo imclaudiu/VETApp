@@ -5,21 +5,37 @@ export default function ClinicMap({ clinic }) {
     const mapRef = useRef(null);
 
     useEffect(() => {
-        if (!clinic?.latitude || !clinic?.longitude) return;
+        if (
+            !mapRef.current ||
+            clinic?.latitude == null ||
+            clinic?.longitude == null
+        ) return;
+
+        let marker;
 
         const initMap = async () => {
-            const [{ Map }, { AdvancedMarkerElement }] = await Promise.all([loadMaps(), loadMarkers()]);
-            const position = { lat: clinic.latitude, lng: clinic.longitude };
+            const [{ Map }, { AdvancedMarkerElement }] = await Promise.all([
+                loadMaps(),
+                loadMarkers()
+            ]);
+
+            const position = {
+                lat: Number(clinic.latitude),
+                lng: Number(clinic.longitude)
+            };
+
+            if (!Number.isFinite(position.lat) || !Number.isFinite(position.lng)) return;
 
             const map = new Map(mapRef.current, {
                 center: position,
-                zoom: 16,
+                zoom: 17,
                 mapId: 'DEMO_MAP_ID',
                 mapTypeControl: false,
-                streetViewControl: false
+                streetViewControl: true,
+                fullscreenControl: true
             });
 
-            new AdvancedMarkerElement({
+            marker = new AdvancedMarkerElement({
                 map,
                 position,
                 title: clinic.name
@@ -27,9 +43,11 @@ export default function ClinicMap({ clinic }) {
         };
 
         initMap();
-    }, [clinic]);
 
-    if (!clinic?.latitude || !clinic?.longitude) return null;
+        return () => {
+            if (marker) marker.map = null;
+        };
+    }, [clinic]);
 
     return <div ref={mapRef} className="clinic-map" />;
 }

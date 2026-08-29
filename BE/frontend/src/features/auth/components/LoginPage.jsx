@@ -1,157 +1,123 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import './LoginPage.css';
+import './AuthPage.css';
 
 export default function LoginPage() {
     const { login, loading, error } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const [form, setForm] = useState({
-        username: '',
-        password: ''
-    });
-
+    const [form, setForm] = useState({ username: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        });
-    };
+    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             await login(form);
             navigate('/');
-        } catch {
-            // eroarea este gestionată în AuthContext
-        }
+        } catch { }
     };
 
     return (
-        <div className="login-page">
+        <div className="auth-page">
 
-            <section className="login-brand-section">
-                <div className="login-brand">
-                    <div className="login-logo">
-                        <span className="login-logo-icon">+</span>
-                        <span>VETApp</span>
-                    </div>
+            <header className="auth-header">
+                <Link to="/login" className="auth-logo">
+                    <span className="auth-logo-mark">+</span>
+                    <span>VETApp</span>
+                </Link>
 
-                    <div className="login-brand-content">
-                        <span className="login-badge">
-                            Veterinary care, simplified
-                        </span>
+                <span className="auth-header-text">Pet care, organized.</span>
+            </header>
 
-                        <h1>
-                            Better care for
-                            <span> every pet.</span>
-                        </h1>
+            <main className="auth-layout">
 
-                        <p>
-                            Manage your pets, appointments and medical history
-                            from one simple platform.
-                        </p>
-                    </div>
+                <section className="auth-intro">
+                    <p className="auth-kicker">VETERINARY CARE PLATFORM</p>
 
-                    <p className="login-brand-footer">
-                        Care. Connect. Simplify.
+                    <h1>Care for your pet without the paperwork.</h1>
+
+                    <p className="auth-description">
+                        Keep appointments, medical records and your pet's information together in one simple place.
                     </p>
-                </div>
-            </section>
 
-            <section className="login-form-section">
-                <div className="login-container">
+                    <div className="auth-features">
+                        <span>Appointments</span>
+                        <span>Medical history</span>
+                        <span>Veterinary clinics</span>
+                        <span>AI assistance</span>
+                    </div>
+                </section>
 
-                    <div className="login-mobile-logo">
-                        <span>+</span>
-                        VETApp
+                <section className="auth-card">
+                    <div className="auth-card-header">
+                        <h2>Welcome back</h2>
+                        <p>Sign in to access your VETApp account.</p>
                     </div>
 
-                    <div className="login-header">
-                        <p className="login-eyebrow">WELCOME BACK</p>
+                    {location.state?.registered && (
+                        <div className="auth-success">
+                            Account created successfully. You can now sign in.
+                        </div>
+                    )}
 
-                        <h2>Sign in to your account</h2>
+                    <form className="auth-form" onSubmit={handleSubmit}>
 
-                        <p>
-                            Enter your credentials to continue to VETApp.
-                        </p>
-                    </div>
-
-                    <form className="login-form" onSubmit={handleSubmit}>
-
-                        <div className="form-group">
-                            <label htmlFor="username">
-                                Username
-                            </label>
-
+                        <div className="auth-field">
+                            <label htmlFor="username">Username</label>
                             <input
                                 id="username"
                                 name="username"
                                 type="text"
-                                placeholder="Enter your username"
                                 value={form.username}
                                 onChange={handleChange}
+                                placeholder="Enter your username"
                                 autoComplete="username"
                                 required
                             />
                         </div>
 
-                        <div className="form-group">
-                            <div className="password-label-row">
-                                <label htmlFor="password">
-                                    Password
-                                </label>
-                            </div>
+                        <div className="auth-field">
+                            <label htmlFor="password">Password</label>
 
-                            <div className="password-wrapper">
+                            <div className="auth-password">
                                 <input
                                     id="password"
                                     name="password"
                                     type={showPassword ? 'text' : 'password'}
-                                    placeholder="Enter your password"
                                     value={form.password}
                                     onChange={handleChange}
+                                    placeholder="Enter your password"
                                     autoComplete="current-password"
                                     required
                                 />
 
-                                <button
-                                    type="button"
-                                    className="password-toggle"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                >
+                                <button type="button" onClick={() => setShowPassword(!showPassword)}>
                                     {showPassword ? 'Hide' : 'Show'}
                                 </button>
                             </div>
                         </div>
 
-                        {error && (
-                            <div className="login-error">
-                                {error}
-                            </div>
-                        )}
+                        {error && <div className="auth-error">{error}</div>}
 
-                        <button
-                            className="login-button"
-                            type="submit"
-                            disabled={loading}
-                        >
+                        <button className="auth-submit" type="submit" disabled={loading}>
                             {loading ? 'Signing in...' : 'Sign in'}
                         </button>
                     </form>
 
-                    <p className="register-link">
-                        Don't have an account?
-                        <Link to="/register"> Create account</Link>
+                    <p className="auth-switch">
+                        New to VETApp? <Link to="/register">Create an account</Link>
                     </p>
+                </section>
 
-                </div>
-            </section>
+            </main>
+
+            <footer className="auth-footer">
+                VETApp · Veterinary care platform
+            </footer>
 
         </div>
     );

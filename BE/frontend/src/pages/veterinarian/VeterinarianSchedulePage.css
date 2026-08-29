@@ -1,143 +1,271 @@
 .vet-schedule-page {
-    min-height: calc(100vh - 70px);
-    background: #f8fafc;
+    min-height: calc(100vh - 68px);
+    background: var(--bg);
 }
 
 .vet-schedule-container {
-    width: 100%;
-    max-width: 1200px;
+    width: min(1100px, calc(100% - 64px));
     margin: 0 auto;
-    padding: 42px 32px 70px;
+    padding: 48px 0 75px;
 }
+
+/* HEADER */
 
 .vet-schedule-header {
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 }
 
-.vet-schedule-eyebrow,
-.vet-schedule-form-heading p,
-.vet-schedule-list-heading p {
-    margin: 0 0 7px;
-    color: #0d9488;
-    font-size: 9px;
-    font-weight: 750;
-    letter-spacing: 1.4px;
+.vet-schedule-header>div>span {
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
 }
 
 .vet-schedule-header h1 {
-    margin: 0;
-    color: #0f172a;
+    margin: 7px 0 0;
+    color: var(--text);
     font-size: 34px;
+    font-weight: 600;
+    letter-spacing: -1.2px;
 }
 
-.vet-schedule-header>div>p:last-child {
-    margin: 9px 0 0;
-    color: #64748b;
-    font-size: 13px;
+.vet-schedule-header p {
+    margin: 8px 0 0;
+    color: var(--text-soft);
+    font-size: 14px;
 }
+
+/* SUMMARY */
+
+.vet-schedule-summary {
+    margin-bottom: 18px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.vet-schedule-summary>div {
+    padding: 19px 21px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+}
+
+.vet-schedule-summary>div:first-child {
+    border-color: #cadbcf;
+    background: #f2f7f4;
+}
+
+.vet-schedule-summary span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--green);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .9px;
+}
+
+.vet-schedule-summary strong {
+    display: block;
+    color: var(--text);
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.vet-schedule-summary strong.text-value {
+    font-size: 18px;
+}
+
+.vet-schedule-summary p {
+    margin: 4px 0 0;
+    color: var(--text-soft);
+    font-size: 10px;
+}
+
+/* MESSAGE */
+
+.vet-schedule-message {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border-radius: 7px;
+    font-size: 10px;
+}
+
+.vet-schedule-message.error {
+    border: 1px solid #edcfcb;
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.vet-schedule-message.success {
+    border: 1px solid #c9dfcf;
+    background: #edf6f0;
+    color: #346148;
+}
+
+/* LAYOUT */
 
 .vet-schedule-layout {
     display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 22px;
+    grid-template-columns: 350px minmax(0, 1fr);
+    gap: 20px;
     align-items: start;
 }
 
-.vet-schedule-form,
-.vet-schedule-list-wrapper {
-    padding: 23px;
-    border: 1px solid #e5eaf0;
-    border-radius: 16px;
+/* FORM */
+
+.vet-schedule-form {
+    position: sticky;
+    top: 90px;
+    padding: 25px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
     background: white;
 }
 
 .vet-schedule-form-heading {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    padding-bottom: 19px;
+    border-bottom: 1px solid #ecece8;
 }
 
-.vet-schedule-form-heading h2,
-.vet-schedule-list-heading h2 {
-    margin: 0;
-    color: #0f172a;
+.vet-schedule-form-heading>span {
+    color: var(--green);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .9px;
+}
+
+.vet-schedule-form-heading h2 {
+    margin: 6px 0 0;
+    color: var(--text);
     font-size: 17px;
+    font-weight: 600;
+}
+
+.vet-schedule-form-heading p {
+    margin: 6px 0 0;
+    color: var(--text-soft);
+    font-size: 10px;
+    line-height: 1.6;
 }
 
 .vet-schedule-field {
-    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
     gap: 7px;
 }
 
 .vet-schedule-field label {
-    color: #334155;
+    color: #3e4740;
     font-size: 11px;
-    font-weight: 650;
+    font-weight: 600;
 }
 
 .vet-schedule-field input {
     width: 100%;
-    height: 44px;
+    height: 45px;
     padding: 0 12px;
-    border: 1px solid #dbe2ea;
-    border-radius: 8px;
+    border: 1px solid #d6d9d4;
+    border-radius: 7px;
     outline: none;
     background: white;
-    color: #0f172a;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
 }
 
 .vet-schedule-field input:focus {
-    border-color: #0d9488;
-    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.08);
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(35, 72, 58, .07);
+}
+
+.vet-schedule-field input:disabled {
+    background: #f4f4f1;
+    color: var(--text-soft);
+    cursor: not-allowed;
+}
+
+.vet-schedule-field small {
+    color: var(--text-light);
+    font-size: 8px;
+}
+
+.vet-schedule-field small.field-error {
+    color: var(--danger);
 }
 
 .vet-schedule-hours {
+    margin-top: 17px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 12px;
+}
+
+.vet-schedule-preview {
+    margin-top: 18px;
+    padding: 12px 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 7px;
+    background: #f4f6f3;
+}
+
+.vet-schedule-preview span {
+    color: var(--text-soft);
+    font-size: 9px;
+}
+
+.vet-schedule-preview strong {
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 650;
 }
 
 .vet-schedule-form-actions {
-    margin-top: 8px;
+    margin-top: 22px;
     display: flex;
     justify-content: flex-end;
     gap: 8px;
 }
 
-.vet-schedule-primary,
-.vet-schedule-secondary {
-    min-height: 40px;
-    padding: 0 13px;
-    border-radius: 8px;
-    font-size: 10px;
-    font-weight: 650;
-    cursor: pointer;
-}
+/* LIST AREA */
 
-.vet-schedule-primary {
-    border: none;
-    background: #0f766e;
-    color: white;
-}
-
-.vet-schedule-secondary {
-    border: 1px solid #dbe2ea;
-    background: white;
-    color: #475569;
+.vet-schedule-list-section {
+    min-width: 0;
 }
 
 .vet-schedule-list-heading {
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 20px;
 }
 
-.vet-schedule-list-heading>span {
-    color: #94a3b8;
+.vet-schedule-list-heading span {
+    color: var(--green);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .9px;
+}
+
+.vet-schedule-list-heading h2 {
+    margin: 5px 0 0;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.vet-schedule-list-heading>p {
+    margin: 0;
+    color: var(--text-soft);
     font-size: 10px;
 }
+
+/* CARDS */
 
 .vet-schedule-list {
     display: flex;
@@ -146,136 +274,299 @@
 }
 
 .vet-schedule-card {
-    padding: 13px;
+    padding: 17px 18px;
     display: flex;
     align-items: center;
-    gap: 13px;
-    border: 1px solid #edf1f5;
-    border-radius: 11px;
+    gap: 15px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+    transition: border-color .15s ease;
+}
+
+.vet-schedule-card:hover {
+    border-color: #bac5bd;
+}
+
+.vet-schedule-card.editing {
+    border-color: #90aa99;
+    background: #f7faf8;
 }
 
 .vet-schedule-date {
-    width: 49px;
-    height: 53px;
+    width: 53px;
+    height: 57px;
+    flex-shrink: 0;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    border-radius: 10px;
-    background: #ecfdf5;
-    color: #0f766e;
+    flex-direction: column;
+    border-radius: 8px;
+    background: var(--green-soft);
+    color: var(--green);
 }
 
 .vet-schedule-date strong {
     font-size: 18px;
+    font-weight: 650;
+    line-height: 1;
 }
 
 .vet-schedule-date span {
+    margin-top: 4px;
     font-size: 8px;
-    font-weight: 750;
+    font-weight: 700;
+    letter-spacing: .7px;
 }
 
 .vet-schedule-card-info {
+    min-width: 0;
     flex: 1;
 }
 
 .vet-schedule-card-info h3 {
     margin: 0;
-    color: #0f172a;
+    color: var(--text);
     font-size: 12px;
+    font-weight: 600;
 }
 
-.vet-schedule-card-info p {
-    margin: 5px 0 0;
-    color: #0d9488;
-    font-size: 10px;
+.vet-schedule-time {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vet-schedule-time strong {
+    color: var(--green);
+    font-size: 11px;
     font-weight: 650;
+}
+
+.vet-schedule-time span {
+    color: var(--text-light);
+    font-size: 9px;
 }
 
 .vet-schedule-card-actions {
     display: flex;
-    gap: 6px;
+    align-items: center;
+    gap: 7px;
 }
 
 .vet-schedule-card-actions button {
-    padding: 7px 9px;
-    border: 1px solid #dbe2ea;
-    border-radius: 7px;
+    min-height: 33px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
     background: white;
-    color: #475569;
+    color: var(--text-soft);
+    font-family: inherit;
     font-size: 9px;
-    font-weight: 650;
+    font-weight: 600;
     cursor: pointer;
 }
 
-.vet-schedule-card-actions button.danger {
-    border-color: #fecaca;
-    color: #dc2626;
+.vet-schedule-card-actions button:hover {
+    border-color: #b7c0b9;
+    color: var(--green);
 }
 
+.vet-schedule-card-actions button.danger {
+    border-color: #e6ceca;
+    color: var(--danger);
+}
+
+.vet-schedule-card-actions button.danger:hover {
+    background: var(--danger-soft);
+}
+
+/* EMPTY */
+
 .vet-schedule-empty {
-    min-height: 180px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed #cbd5e1;
-    border-radius: 12px;
+    padding: 65px 30px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
     text-align: center;
 }
 
 .vet-schedule-empty>div {
-    width: 38px;
-    height: 38px;
-    margin-bottom: 10px;
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 15px;
     display: grid;
     place-items: center;
-    border-radius: 9px;
-    background: #ecfdf5;
-    color: #0f766e;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
     font-size: 20px;
 }
 
 .vet-schedule-empty h3 {
     margin: 0;
-    color: #0f172a;
-    font-size: 12px;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
 }
 
 .vet-schedule-empty p {
-    margin: 6px 0 0;
-    color: #94a3b8;
+    max-width: 370px;
+    margin: 7px auto 0;
+    color: var(--text-soft);
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+/* LOADING */
+
+.vet-schedule-loading {
+    min-height: calc(100vh - 68px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--text-soft);
+    font-size: 12px;
+}
+
+.vet-schedule-spinner {
+    width: 29px;
+    height: 29px;
+    border: 3px solid var(--green-soft);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: vet-schedule-spin .7s linear infinite;
+}
+
+@keyframes vet-schedule-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* DELETE MODAL */
+
+.vet-schedule-modal-backdrop {
+    position: fixed;
+    z-index: 5000;
+    inset: 0;
+    padding: 20px;
+    display: grid;
+    place-items: center;
+    background: rgba(24, 35, 28, .4);
+    backdrop-filter: blur(2px);
+}
+
+.vet-schedule-modal {
+    width: min(430px, 100%);
+    padding: 27px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: white;
+    box-shadow: 0 20px 55px rgba(20, 30, 23, .18);
+}
+
+.vet-schedule-modal>span {
+    color: var(--danger);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.vet-schedule-modal h2 {
+    margin: 7px 0 0;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.vet-schedule-modal>p {
+    margin: 11px 0 0;
+    color: var(--text-soft);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.vet-schedule-modal-day {
+    margin-top: 18px;
+    padding: 13px;
+    border-radius: 7px;
+    background: #f5f5f1;
+}
+
+.vet-schedule-modal-day strong,
+.vet-schedule-modal-day span {
+    display: block;
+}
+
+.vet-schedule-modal-day strong {
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.vet-schedule-modal-day span {
+    margin-top: 5px;
+    color: var(--text-soft);
     font-size: 10px;
 }
 
-.vet-schedule-error {
-    margin-bottom: 20px;
-    padding: 12px 14px;
-    border: 1px solid #fecaca;
-    border-radius: 9px;
-    background: #fef2f2;
-    color: #b91c1c;
-    font-size: 11px;
+.vet-schedule-modal-actions {
+    margin-top: 22px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
-.vet-schedule-loading {
-    min-height: 400px;
-    display: grid;
-    place-items: center;
-    background: #f8fafc;
-    color: #64748b;
+.vet-schedule-delete-button {
+    min-height: 42px;
+    padding: 0 15px;
+    border: 1px solid var(--danger);
+    border-radius: 7px;
+    background: var(--danger);
+    color: white;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
 }
+
+.vet-schedule-delete-button:hover:not(:disabled) {
+    filter: brightness(.94);
+}
+
+.vet-schedule-delete-button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* RESPONSIVE */
 
 @media (max-width: 850px) {
     .vet-schedule-layout {
         grid-template-columns: 1fr;
     }
+
+    .vet-schedule-form {
+        position: static;
+    }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
     .vet-schedule-container {
-        padding: 30px 20px 55px;
+        width: calc(100% - 30px);
+        padding: 32px 0 55px;
+    }
+
+    .vet-schedule-header h1 {
+        font-size: 28px;
+    }
+
+    .vet-schedule-summary {
+        grid-template-columns: 1fr;
     }
 
     .vet-schedule-hours {
@@ -285,5 +576,18 @@
     .vet-schedule-card {
         align-items: flex-start;
         flex-wrap: wrap;
+    }
+
+    .vet-schedule-card-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .vet-schedule-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .vet-schedule-modal-actions button {
+        width: 100%;
     }
 }

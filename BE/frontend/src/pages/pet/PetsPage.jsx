@@ -45,28 +45,13 @@ export default function PetsPage() {
                 <div className="pets-page-container">
 
                     <section className="pets-page-header">
-
                         <div>
-                            <p className="pets-page-eyebrow">
-                                MY PETS
-                            </p>
-
-                            <h1>Your companions</h1>
-
-                            <p className="pets-page-description">
-                                Manage your pets and keep their information
-                                up to date.
-                            </p>
+                            <span className="pets-page-eyebrow">MY PETS</span>
+                            <h1>Your pets</h1>
+                            <p>View your pets and access their veterinary history.</p>
                         </div>
 
-                        <Link
-                            to="/pets/new"
-                            className="pets-add-button"
-                        >
-                            <span>+</span>
-                            Add new pet
-                        </Link>
-
+                        <Link to="/pets/new" className="primary-button">Add pet</Link>
                     </section>
 
 

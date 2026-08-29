@@ -1,46 +1,31 @@
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import './RegisterPage.css';
+import './AuthPage.css';
 
 export default function RegisterPage() {
     const { register, loading, error } = useAuth();
     const navigate = useNavigate();
 
     const [form, setForm] = useState({
-        name: '',
-        username: '',
-        email: '',
-        phone: '',
-        address: '',
-        password: '',
-        confirmPassword: '',
+        name: '', username: '', email: '', phone: '',
+        address: '', password: '', confirmPassword: ''
     });
 
     const [showPassword, setShowPassword] = useState(false);
     const [localError, setLocalError] = useState('');
 
     const handleChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value,
-        });
-
+        setForm({ ...form, [e.target.name]: e.target.value });
         setLocalError('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (form.password !== form.confirmPassword) {
-            setLocalError('Passwords do not match.');
-            return;
-        }
-
-        if (form.password.length < 8) {
-            setLocalError('Password must contain at least 8 characters.');
-            return;
-        }
+        if (form.password !== form.confirmPassword) return setLocalError('Passwords do not match.');
+        if (form.password.length < 8) return setLocalError('Password must contain at least 8 characters.');
 
         try {
             await register({
@@ -49,303 +34,138 @@ export default function RegisterPage() {
                 email: form.email,
                 phone: form.phone,
                 name: form.name,
-                address: form.address,
+                address: form.address
             });
 
-            navigate('/login', {
-                replace: true,
-                state: {
-                    registered: true,
-                },
-            });
-        } catch {
-            // eroarea din backend este gestionată de AuthContext
-        }
+            navigate('/login', { replace: true, state: { registered: true } });
+        } catch { }
     };
 
     return (
-        <div className="register-page">
+        <div className="auth-page">
 
-            {/* LEFT SIDE */}
-            <section className="register-brand-section">
-                <div className="register-brand">
+            <header className="auth-header">
+                <Link to="/login" className="auth-logo">
+                    <span className="auth-logo-mark">+</span>
+                    <span>VETApp</span>
+                </Link>
 
-                    <div className="register-logo">
-                        <span className="register-logo-icon">+</span>
-                        <span>VETApp</span>
-                    </div>
+                <span className="auth-header-text">Pet care, organized.</span>
+            </header>
 
-                    <div className="register-brand-content">
+            <main className="auth-layout auth-layout-register">
 
-                        <span className="register-badge">
-                            Veterinary care, simplified
-                        </span>
+                <section className="auth-intro">
+                    <p className="auth-kicker">YOUR PET'S CARE, IN ONE PLACE</p>
 
-                        <h1>
-                            Everything your pet needs,
-                            <span> in one place.</span>
-                        </h1>
+                    <h1>A simpler way to manage your pet's health.</h1>
 
-                        <p>
-                            Create your account and easily manage your pets,
-                            appointments and medical history.
-                        </p>
-
-                        <div className="register-benefits">
-
-                            <div className="register-benefit">
-                                <span>✓</span>
-                                Manage all your pets
-                            </div>
-
-                            <div className="register-benefit">
-                                <span>✓</span>
-                                Book veterinary appointments
-                            </div>
-
-                            <div className="register-benefit">
-                                <span>✓</span>
-                                Access medical history
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <p className="register-brand-footer">
-                        Care. Connect. Simplify.
+                    <p className="auth-description">
+                        Create an account to book appointments, manage your pets and access their medical history whenever you need it.
                     </p>
 
-                </div>
-            </section>
-
-
-            {/* RIGHT SIDE */}
-            <section className="register-form-section">
-
-                <div className="register-container">
-
-                    <div className="register-mobile-logo">
-                        <span>+</span>
-                        VETApp
+                    <div className="auth-features">
+                        <span>Manage your pets</span>
+                        <span>Book appointments</span>
+                        <span>Follow medical history</span>
+                        <span>Find veterinary clinics</span>
                     </div>
+                </section>
 
-                    <div className="register-header">
-
-                        <p className="register-eyebrow">
-                            GET STARTED
-                        </p>
-
+                <section className="auth-card auth-card-register">
+                    <div className="auth-card-header">
                         <h2>Create your account</h2>
-
-                        <p>
-                            Enter your details to start using VETApp.
-                        </p>
-
+                        <p>Enter your details to get started with VETApp.</p>
                     </div>
 
+                    <form className="auth-form" onSubmit={handleSubmit}>
 
-                    <form
-                        className="register-form"
-                        onSubmit={handleSubmit}
-                    >
-
-                        {/* FULL NAME */}
-                        <div className="register-form-group">
-
-                            <label htmlFor="name">
-                                Full name
-                            </label>
-
-                            <input
-                                id="name"
-                                name="name"
-                                type="text"
-                                placeholder="Enter your full name"
-                                value={form.name}
-                                onChange={handleChange}
-                                autoComplete="name"
-                                required
-                            />
-
+                        <div className="auth-field">
+                            <label htmlFor="name">Full name</label>
+                            <input id="name" name="name" value={form.name} onChange={handleChange} placeholder="Your full name" autoComplete="name" required />
                         </div>
 
-
-                        {/* USERNAME + EMAIL */}
-                        <div className="register-form-row">
-
-                            <div className="register-form-group">
-
-                                <label htmlFor="username">
-                                    Username
-                                </label>
-
-                                <input
-                                    id="username"
-                                    name="username"
-                                    type="text"
-                                    placeholder="Username"
-                                    value={form.username}
-                                    onChange={handleChange}
-                                    autoComplete="username"
-                                    required
-                                />
-
+                        <div className="auth-row">
+                            <div className="auth-field">
+                                <label htmlFor="username">Username</label>
+                                <input id="username" name="username" value={form.username} onChange={handleChange} placeholder="Choose a username" autoComplete="username" required />
                             </div>
 
+                            <div className="auth-field">
+                                <label htmlFor="email">Email</label>
+                                <input id="email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="name@example.com" autoComplete="email" required />
+                            </div>
+                        </div>
 
-                            <div className="register-form-group">
-
-                                <label htmlFor="email">
-                                    Email
-                                </label>
-
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    placeholder="name@example.com"
-                                    value={form.email}
-                                    onChange={handleChange}
-                                    autoComplete="email"
-                                    required
-                                />
-
+                        <div className="auth-row">
+                            <div className="auth-field">
+                                <label htmlFor="phone">Phone number</label>
+                                <input id="phone" name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="+40 7..." autoComplete="tel" required />
                             </div>
 
+                            <div className="auth-field">
+                                <label htmlFor="address">Address</label>
+                                <input id="address" name="address" value={form.address} onChange={handleChange} placeholder="City, street..." autoComplete="street-address" required />
+                            </div>
                         </div>
 
+                        <div className="auth-row">
+                            <div className="auth-field">
+                                <label htmlFor="password">Password</label>
 
-                        {/* PHONE */}
-                        <div className="register-form-group">
+                                <div className="auth-password">
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        value={form.password}
+                                        onChange={handleChange}
+                                        placeholder="Minimum 8 characters"
+                                        autoComplete="new-password"
+                                        minLength={8}
+                                        required
+                                    />
 
-                            <label htmlFor="phone">
-                                Phone number
-                            </label>
+                                    <button type="button" onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? 'Hide' : 'Show'}
+                                    </button>
+                                </div>
+                            </div>
 
-                            <input
-                                id="phone"
-                                name="phone"
-                                type="tel"
-                                placeholder="+40 7..."
-                                value={form.phone}
-                                onChange={handleChange}
-                                autoComplete="tel"
-                                required
-                            />
-
-                        </div>
-
-
-                        {/* ADDRESS */}
-                        <div className="register-form-group">
-
-                            <label htmlFor="address">
-                                Address
-                            </label>
-
-                            <input
-                                id="address"
-                                name="address"
-                                type="text"
-                                placeholder="Enter your address"
-                                value={form.address}
-                                onChange={handleChange}
-                                autoComplete="street-address"
-                                required
-                            />
-
-                        </div>
-
-
-                        {/* PASSWORD */}
-                        <div className="register-form-group">
-
-                            <label htmlFor="password">
-                                Password
-                            </label>
-
-                            <div className="register-password-wrapper">
-
+                            <div className="auth-field">
+                                <label htmlFor="confirmPassword">Confirm password</label>
                                 <input
-                                    id="password"
-                                    name="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
                                     type={showPassword ? 'text' : 'password'}
-                                    placeholder="Minimum 8 characters"
-                                    value={form.password}
+                                    value={form.confirmPassword}
                                     onChange={handleChange}
+                                    placeholder="Repeat password"
                                     autoComplete="new-password"
-                                    minLength={8}
                                     required
                                 />
-
-                                <button
-                                    type="button"
-                                    className="register-password-toggle"
-                                    onClick={() =>
-                                        setShowPassword(!showPassword)
-                                    }
-                                >
-                                    {showPassword ? 'Hide' : 'Show'}
-                                </button>
-
                             </div>
-
                         </div>
-
-
-                        {/* CONFIRM PASSWORD */}
-                        <div className="register-form-group">
-
-                            <label htmlFor="confirmPassword">
-                                Confirm password
-                            </label>
-
-                            <input
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                type={showPassword ? 'text' : 'password'}
-                                placeholder="Repeat your password"
-                                value={form.confirmPassword}
-                                onChange={handleChange}
-                                autoComplete="new-password"
-                                required
-                            />
-
-                        </div>
-
 
                         {(localError || error) && (
-                            <div className="register-error">
-                                {localError || error}
-                            </div>
+                            <div className="auth-error">{localError || error}</div>
                         )}
 
-
-                        <button
-                            className="register-button"
-                            type="submit"
-                            disabled={loading}
-                        >
-                            {loading
-                                ? 'Creating account...'
-                                : 'Create account'}
+                        <button className="auth-submit" type="submit" disabled={loading}>
+                            {loading ? 'Creating account...' : 'Create account'}
                         </button>
-
                     </form>
 
-
-                    <p className="login-link">
-                        Already have an account?
-
-                        <Link to="/login">
-                            Sign in
-                        </Link>
+                    <p className="auth-switch">
+                        Already have an account? <Link to="/login">Sign in</Link>
                     </p>
+                </section>
 
-                </div>
+            </main>
 
-            </section>
+            <footer className="auth-footer">
+                VETApp · Veterinary care platform
+            </footer>
 
         </div>
     );

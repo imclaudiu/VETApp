@@ -7,3 +7,8 @@ export const getMyProfile = async () => {
 
     return response.data;
 };
+
+export const updateMyProfile = async (userId, data) => {
+    const response = await api.put(`/user/update/${userId}`, data);
+    return response.data;
+};

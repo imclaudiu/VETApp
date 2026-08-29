@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import Navbar from '../../shared/components/Navbar';
+import ClinicMap from '../../features/clinic/components/ClinicMap';
+import { useAuth } from '../../features/auth/contexts/AuthContext';
 
 import {
     getClinicById,
@@ -11,427 +13,275 @@ import {
 
 import './ClinicDetailsPage.css';
 
-import ClinicMap from '../../features/clinic/components/ClinicMap';
-
 export default function ClinicDetailsPage() {
-
     const { id } = useParams();
+    const { user } = useAuth();
 
     const [clinic, setClinic] = useState(null);
     const [veterinarians, setVeterinarians] = useState([]);
     const [services, setServices] = useState([]);
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const canBook = user?.role === 'OWNER';
 
     useEffect(() => {
-
         const loadClinic = async () => {
-
             setLoading(true);
             setError(null);
 
             try {
-
-                const [
-                    clinicData,
-                    veterinariansData,
-                    servicesData
-                ] = await Promise.all([
+                const [clinicData, veterinariansData, servicesData] = await Promise.all([
                     getClinicById(id),
                     getVeterinariansByClinic(id),
                     getServicesByClinic(id)
                 ]);
 
                 setClinic(clinicData);
-                setVeterinarians(veterinariansData);
-                setServices(servicesData);
-
+                setVeterinarians(Array.isArray(veterinariansData) ? veterinariansData : []);
+                setServices(Array.isArray(servicesData) ? servicesData : []);
             } catch (err) {
-
-                setError(
-                    err.response?.data?.message ||
-                    err.message ||
-                    'Could not load clinic.'
-                );
-
+                setError(err.response?.data?.message || err.message || 'Could not load clinic.');
             } finally {
-
                 setLoading(false);
-
             }
-
         };
 
         loadClinic();
-
     }, [id]);
 
+    const getRating = () => {
+        const rating = Number(clinic?.rating);
+        return Number.isFinite(rating) && rating > 0 ? rating.toFixed(1) : 'No rating';
+    };
+
+    const getDirectionsUrl = () => {
+        if (clinic.googlePlaceId && !clinic.googlePlaceId.startsWith('seed_')) {
+            return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                clinic.address || clinic.name
+            )}&destination_place_id=${encodeURIComponent(clinic.googlePlaceId)}`;
+        }
+
+        return `https://www.google.com/maps/dir/?api=1&destination=${clinic.latitude},${clinic.longitude}`;
+    };
 
     if (loading) {
         return (
             <>
                 <Navbar />
-
                 <main className="clinic-details-page">
-
                     <div className="clinic-details-loading">
-
                         <div className="clinic-details-spinner" />
-
-                        <p>
-                            Loading clinic...
-                        </p>
-
+                        <p>Loading clinic...</p>
                     </div>
-
                 </main>
             </>
         );
     }
-
 
     if (error || !clinic) {
         return (
             <>
                 <Navbar />
-
                 <main className="clinic-details-page">
-
                     <div className="clinic-details-container">
-
                         <div className="clinic-details-error">
-
-                            <h2>
-                                Clinic could not be loaded
-                            </h2>
-
-                            <p>
-                                {error}
-                            </p>
-
-                            <Link to="/clinics">
-                                Back to clinics
-                            </Link>
-
+                            <h2>Clinic could not be loaded</h2>
+                            <p>{error || 'The requested clinic does not exist.'}</p>
+                            <Link to="/clinics" className="primary-button">Back to clinics</Link>
                         </div>
-
                     </div>
-
                 </main>
             </>
         );
     }
-
 
     return (
         <>
             <Navbar />
 
             <main className="clinic-details-page">
-
                 <div className="clinic-details-container">
 
-
                     <div className="clinic-details-back">
-
-                        <Link to="/clinics">
-                            ← Back to clinics
-                        </Link>
-
+                        <Link to="/clinics">← Back to clinics</Link>
                     </div>
 
+                    <section className="clinic-overview">
+                        <div className="clinic-overview-info">
+                            <span className="clinic-eyebrow">VETERINARY CLINIC</span>
 
-                    {/* HERO */}
+                            <h1>{clinic.name}</h1>
 
-                    <section className="clinic-details-hero">
-
-                        <div className="clinic-details-hero-content">
-
-                            <p className="clinic-details-eyebrow">
-                                VETERINARY CLINIC
+                            <p className="clinic-address">
+                                {clinic.address}
+                                {clinic.city && `, ${clinic.city}`}
                             </p>
 
-                            <h1>
-                                {clinic.name}
-                            </h1>
+                            {clinic.description && (
+                                <p className="clinic-description">{clinic.description}</p>
+                            )}
 
-                            <p className="clinic-details-location">
-                                {clinic.address}, {clinic.city}
-                            </p>
-
-
-                            <div className="clinic-details-meta">
-
+                            <div className="clinic-info-grid">
                                 <div>
-
-                                    <span>
-                                        RATING
-                                    </span>
-
-                                    <strong>
-                                        ★{' '}
-                                        {Number(
-                                            clinic.rating
-                                        ).toFixed(1)}
+                                    <span>Rating</span>
+                                    <strong className="clinic-rating-value">
+                                        <b>★</b> {getRating()}
                                     </strong>
-
                                 </div>
 
-
                                 <div>
-
-                                    <span>
-                                        PHONE
-                                    </span>
-
-                                    <strong>
-                                        {clinic.phone}
-                                    </strong>
-
+                                    <span>Phone</span>
+                                    <strong>{clinic.phone || 'Not available'}</strong>
                                 </div>
 
-
                                 <div>
-
-                                    <span>
-                                        CITY
-                                    </span>
-
-                                    <strong>
-                                        {clinic.city}
-                                    </strong>
-
+                                    <span>City</span>
+                                    <strong>{clinic.city || 'Not available'}</strong>
                                 </div>
-
                             </div>
 
+                            <div className="clinic-overview-actions">
+                                {clinic.latitude != null && clinic.longitude != null && (
+                                    <a
+                                        href={getDirectionsUrl()}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="secondary-button"
+                                    >
+                                        Get directions
+                                    </a>
+                                )}
+
+                                {canBook && (
+                                    <Link
+                                        to={`/appointments/new?clinicId=${clinic.id}`}
+                                        className="primary-button"
+                                    >
+                                        Book appointment
+                                    </Link>
+                                )}
+                            </div>
                         </div>
 
-
-                        <div className="clinic-details-cross">
-                            +
+                        <div className="clinic-overview-map">
+                            {clinic.latitude != null && clinic.longitude != null ? (
+                                <ClinicMap clinic={clinic} />
+                            ) : (
+                                <div className="clinic-map-unavailable">
+                                    <strong>Location unavailable</strong>
+                                    <p>This clinic does not have map coordinates yet.</p>
+                                </div>
+                            )}
                         </div>
-
                     </section>
 
-
-                    {/* VETS */}
-
                     <section className="clinic-detail-section">
-
                         <div className="clinic-section-header">
-
                             <div>
-
-                                <p>
-                                    OUR TEAM
-                                </p>
-
-                                <h2>
-                                    Veterinarians
-                                </h2>
-
+                                <span>OUR TEAM</span>
+                                <h2>Veterinarians</h2>
                             </div>
 
-                            <span className="clinic-section-count">
-                                {veterinarians.length}
-                            </span>
-
+                            <p>
+                                {veterinarians.length} {veterinarians.length === 1 ? 'veterinarian' : 'veterinarians'}
+                            </p>
                         </div>
 
-
                         {veterinarians.length === 0 ? (
-
                             <div className="clinic-section-empty">
-                                No veterinarians are registered
-                                for this clinic yet.
+                                <h3>No veterinarians yet</h3>
+                                <p>No veterinarians are currently registered for this clinic.</p>
                             </div>
-
                         ) : (
-
                             <div className="veterinarians-grid">
-
-                                {veterinarians.map((vet) => (
-
-                                    <article
-                                        className="veterinarian-card"
-                                        key={vet.id}
-                                    >
-
+                                {veterinarians.map(vet => (
+                                    <article className="veterinarian-card" key={vet.id}>
                                         <Link
                                             to={`/veterinarians/${vet.id}`}
-                                            className="veterinarian-profile-link"
+                                            className="veterinarian-profile"
                                         >
                                             <div className="veterinarian-avatar">
                                                 {vet.name?.charAt(0)?.toUpperCase() || 'V'}
                                             </div>
 
-                                            <div className="veterinarian-card-content">
-                                                <div>
-                                                    <h3>Dr. {vet.name}</h3>
-                                                    <p>Veterinarian</p>
+                                            <div className="veterinarian-info">
+                                                <div className="veterinarian-name">
+                                                    <h3>
+                                                        {vet.name
+                                                            ? `Dr. ${vet.name}`
+                                                            : 'Veterinarian'}
+                                                    </h3>
+
+                                                    {vet.surgeon && (
+                                                        <span>Surgeon</span>
+                                                    )}
                                                 </div>
 
-                                                {vet.surgeon && (
-                                                    <span className="surgeon-badge">
-                                                        Surgeon
-                                                    </span>
-                                                )}
+                                                <p>Veterinarian at {clinic.name}</p>
                                             </div>
                                         </Link>
 
-
-                                        <Link
-                                            to={
-                                                `/appointments/new?clinicId=${clinic.id}` +
-                                                `&veterinarianId=${vet.id}`
-                                            }
-                                            className="vet-book-button"
-                                        >
-                                            Book appointment
-
-                                            <span>
-                                                →
-                                            </span>
-                                        </Link>
-
+                                        {canBook && (
+                                            <Link
+                                                to={`/appointments/new?clinicId=${clinic.id}&veterinarianId=${vet.id}`}
+                                                className="vet-book-button"
+                                            >
+                                                Book with this veterinarian
+                                            </Link>
+                                        )}
                                     </article>
-
                                 ))}
-
                             </div>
                         )}
-
                     </section>
 
-
-                    {/* SERVICES */}
-
                     <section className="clinic-detail-section">
-
                         <div className="clinic-section-header">
-
                             <div>
-
-                                <p>
-                                    SERVICES
-                                </p>
-
-                                <h2>
-                                    Veterinary services
-                                </h2>
-
+                                <span>SERVICES</span>
+                                <h2>Veterinary services</h2>
                             </div>
 
-                            <span className="clinic-section-count">
-                                {services.length}
-                            </span>
-
+                            <p>
+                                {services.length} {services.length === 1 ? 'service' : 'services'}
+                            </p>
                         </div>
 
-
                         {services.length === 0 ? (
-
                             <div className="clinic-section-empty">
-                                No veterinary services are
-                                registered yet.
+                                <h3>No services yet</h3>
+                                <p>No veterinary services are currently registered for this clinic.</p>
                             </div>
-
                         ) : (
-
                             <div className="clinic-services-list">
-
-                                {services.map((service) => (
-
-                                    <article
-                                        key={service.id}
-                                        className="clinic-service-card"
-                                    >
-
-                                        <div className="service-number">
-                                            {String(
-                                                service.id
-                                            ).padStart(2, '0')}
-                                        </div>
-
-
+                                {services.map(service => (
+                                    <article className="clinic-service-card" key={service.id}>
                                         <div className="service-content">
-
-                                            <h3>
-                                                {service.serviceName}
-                                            </h3>
-
-                                            <p>
-                                                {service.description ||
-                                                    'Veterinary service'}
-                                            </p>
-
+                                            <h3>{service.serviceName}</h3>
+                                            <p>{service.description || 'Veterinary service'}</p>
                                         </div>
-
 
                                         <div className="service-details">
-
                                             <div>
-                                                <span>
-                                                    Duration
-                                                </span>
-
-                                                <strong>
-                                                    {service.duration} min
-                                                </strong>
+                                                <span>Duration</span>
+                                                <strong>{service.duration} min</strong>
                                             </div>
 
-
                                             <div>
-                                                <span>
-                                                    Price
-                                                </span>
-
+                                                <span>Price</span>
                                                 <strong>
-                                                    {Number(
-                                                        service.price
-                                                    ).toFixed(2)} RON
+                                                    {Number(service.price || 0).toFixed(2)} RON
                                                 </strong>
                                             </div>
-
                                         </div>
-
                                     </article>
-
                                 ))}
-
                             </div>
                         )}
-
-                        {clinic.latitude && clinic.longitude && (
-                            <section className="clinic-location-section">
-                                <div className="clinic-section-header">
-                                    <div>
-                                        <p>LOCATION</p>
-                                        <h2>Find us</h2>
-                                        <span>{clinic.address}</span>
-                                    </div>
-                                </div>
-
-                                <ClinicMap clinic={clinic} />
-
-                                <a
-                                    className="clinic-directions-button"
-                                    href={`https://www.google.com/maps/dir/?api=1&destination=${clinic.latitude},${clinic.longitude}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    Get directions
-                                </a>
-                            </section>
-                        )}
-
                     </section>
 
                 </div>
-
             </main>
         </>
     );

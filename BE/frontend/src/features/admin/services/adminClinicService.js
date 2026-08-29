@@ -80,6 +80,19 @@ export const getAllUsers = async () => {
     return response.data;
 };
 
+export const searchUsersByUsername = async username => {
+    const response = await api.get(
+        '/auth/admin/search',
+        {
+            params: {
+                username
+            }
+        }
+    );
+
+    return response.data;
+};
+
 
 /* =========================================
    VETERINARIANS

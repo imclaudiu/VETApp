@@ -15,6 +15,8 @@ const STATUSES = [
 ];
 
 export default function AdminPanel() {
+    const navigate = useNavigate();
+
     const [data, setData] = useState({
         users: [],
         pets: [],
@@ -23,23 +25,47 @@ export default function AdminPanel() {
         appointments: []
     });
 
-    const navigate = useNavigate();
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [search, setSearch] = useState('');
+    const [roleFilter, setRoleFilter] = useState('ALL');
 
     useEffect(() => {
         const loadDashboard = async () => {
             try {
                 setLoading(true);
                 setError(null);
-                setData(await getAdminDashboardData());
+
+                const dashboardData = await getAdminDashboardData();
+
+                setData({
+                    users: Array.isArray(dashboardData.users)
+                        ? dashboardData.users
+                        : [],
+
+                    pets: Array.isArray(dashboardData.pets)
+                        ? dashboardData.pets
+                        : [],
+
+                    clinics: Array.isArray(dashboardData.clinics)
+                        ? dashboardData.clinics
+                        : [],
+
+                    veterinarians: Array.isArray(dashboardData.veterinarians)
+                        ? dashboardData.veterinarians
+                        : [],
+
+                    appointments: Array.isArray(dashboardData.appointments)
+                        ? dashboardData.appointments
+                        : []
+                });
             } catch (err) {
                 setError(
                     err.response?.data?.detail ||
                     err.response?.data?.message ||
                     err.message ||
-                    'Could not load admin dashboard.'
+                    'Could not load administration data.'
                 );
             } finally {
                 setLoading(false);
@@ -59,26 +85,75 @@ export default function AdminPanel() {
         }, {});
     }, [data.appointments]);
 
-    const roleCounts = useMemo(() => {
-        return {
-            OWNER: data.users.filter(user => user.role === 'OWNER').length,
-            VETERINARIAN: data.users.filter(user => user.role === 'VETERINARIAN').length,
-            ADMIN: data.users.filter(user => user.role === 'ADMIN').length
-        };
-    }, [data.users]);
+    const roleCounts = useMemo(() => ({
+        OWNER: data.users.filter(
+            user => user.role === 'OWNER'
+        ).length,
+
+        VETERINARIAN: data.users.filter(
+            user => user.role === 'VETERINARIAN'
+        ).length,
+
+        ADMIN: data.users.filter(
+            user => user.role === 'ADMIN'
+        ).length
+    }), [data.users]);
+
+    const filteredUsers = useMemo(() => {
+        const query = search.trim().toLowerCase();
+
+        return data.users.filter(user => {
+            const matchesRole =
+                roleFilter === 'ALL' ||
+                user.role === roleFilter;
+
+            const matchesSearch =
+                !query ||
+                user.username?.toLowerCase().includes(query) ||
+                user.email?.toLowerCase().includes(query) ||
+                user.telefon?.toLowerCase().includes(query);
+
+            return matchesRole && matchesSearch;
+        });
+    }, [data.users, search, roleFilter]);
 
     const percentage = count => {
         if (!data.appointments.length) return 0;
-        return Math.round((count / data.appointments.length) * 100);
+
+        return Math.round(
+            (count / data.appointments.length) * 100
+        );
+    };
+
+    const formatRole = role => {
+        if (role === 'OWNER') return 'Pet owner';
+        if (role === 'VETERINARIAN') return 'Veterinarian';
+        if (role === 'ADMIN') return 'Administrator';
+
+        return role || 'Unknown';
+    };
+
+    const formatStatus = status => {
+        if (status === 'NO_SHOW') return 'No show';
+        if (status === 'CANCELED') return 'Canceled';
+        if (status === 'FINISHED') return 'Finished';
+        if (status === 'CONFIRMED') return 'Confirmed';
+        if (status === 'PENDING') return 'Pending';
+
+        return status;
     };
 
     if (loading) {
         return (
             <>
                 <Navbar />
-                <div className="admin-dashboard-loading">
-                    Loading dashboard...
-                </div>
+
+                <main className="admin-panel-page">
+                    <div className="admin-panel-loading">
+                        <div className="admin-panel-spinner" />
+                        <p>Loading administration...</p>
+                    </div>
+                </main>
             </>
         );
     }
@@ -87,148 +162,378 @@ export default function AdminPanel() {
         <>
             <Navbar />
 
-            <main className="admin-dashboard-page">
-                <div className="admin-dashboard-container">
+            <main className="admin-panel-page">
+                <div className="admin-panel-container">
 
-                    <section className="admin-dashboard-header">
+                    <header className="admin-panel-header">
                         <div>
-                            <p>ADMINISTRATION</p>
+                            <span>ADMINISTRATION</span>
+
                             <h1>Platform overview</h1>
-                            <span>
-                                Monitor users, clinics, patients and appointments.
-                            </span>
+
+                            <p>
+                                Monitor users, clinics, patients and appointments across VETApp.
+                            </p>
                         </div>
 
                         <Link
                             to="/admin/clinics"
-                            className="admin-manage-clinics"
+                            className="primary-button"
                         >
                             Manage clinics
                         </Link>
-                    </section>
+                    </header>
 
                     {error && (
-                        <div className="admin-dashboard-error">
+                        <div className="admin-panel-error">
                             {error}
                         </div>
                     )}
 
-                    <section className="admin-stats-grid">
-                        <StatCard label="USERS" value={data.users.length} text="Registered accounts" />
-                        <StatCard label="PETS" value={data.pets.length} text="Registered patients" />
-                        <StatCard label="CLINICS" value={data.clinics.length} text="Veterinary clinics" />
-                        <StatCard label="VETERINARIANS" value={data.veterinarians.length} text="Registered doctors" />
-                        <StatCard label="APPOINTMENTS" value={data.appointments.length} text="Total appointments" />
+                    <section className="admin-panel-stats">
+
+                        <StatCard
+                            label="USERS"
+                            value={data.users.length}
+                            text="Registered accounts"
+                        />
+
+                        <StatCard
+                            label="PETS"
+                            value={data.pets.length}
+                            text="Registered patients"
+                        />
+
+                        <StatCard
+                            label="CLINICS"
+                            value={data.clinics.length}
+                            text="Veterinary clinics"
+                        />
+
+                        <StatCard
+                            label="VETERINARIANS"
+                            value={data.veterinarians.length}
+                            text="Registered doctors"
+                        />
+
+                        <StatCard
+                            label="APPOINTMENTS"
+                            value={data.appointments.length}
+                            text="Total appointments"
+                        />
+
                     </section>
 
-                    <section className="admin-dashboard-grid">
+                    <div className="admin-panel-overview-grid">
 
-                        <div className="admin-dashboard-panel">
-                            <div className="admin-panel-heading">
+                        <section className="admin-panel-card">
+                            <div className="admin-panel-card-heading">
                                 <div>
-                                    <p>APPOINTMENTS</p>
+                                    <span>APPOINTMENTS</span>
                                     <h2>Status overview</h2>
                                 </div>
+
+                                <strong>
+                                    {data.appointments.length} total
+                                </strong>
                             </div>
 
-                            <div className="admin-status-list">
-                                {STATUSES.map(status => (
-                                    <div
-                                        key={status}
-                                        className="admin-status-row"
-                                    >
-                                        <div className="admin-status-info">
-                                            <span className={`admin-status-dot ${status.toLowerCase()}`} />
+                            <div className="admin-appointment-status-list">
 
-                                            <strong>
-                                                {status.replace('_', ' ')}
-                                            </strong>
+                                {STATUSES.map(status => {
+                                    const count =
+                                        appointmentCounts[status] || 0;
 
-                                            <span>
-                                                {appointmentCounts[status]}
-                                            </span>
+                                    const percent =
+                                        percentage(count);
+
+                                    return (
+                                        <div
+                                            className="admin-appointment-status"
+                                            key={status}
+                                        >
+                                            <div className="admin-status-header">
+
+                                                <div>
+                                                    <span
+                                                        className={
+                                                            `admin-status-dot ${status.toLowerCase()}`
+                                                        }
+                                                    />
+
+                                                    <strong>
+                                                        {formatStatus(status)}
+                                                    </strong>
+                                                </div>
+
+                                                <span>
+                                                    {count}
+                                                </span>
+
+                                            </div>
+
+                                            <div className="admin-status-progress-row">
+
+                                                <div className="admin-status-track">
+                                                    <div
+                                                        className={
+                                                            `admin-status-progress ${status.toLowerCase()}`
+                                                        }
+                                                        style={{
+                                                            width: `${percent}%`
+                                                        }}
+                                                    />
+                                                </div>
+
+                                                <span>
+                                                    {percent}%
+                                                </span>
+
+                                            </div>
                                         </div>
+                                    );
+                                })}
 
-                                        <div className="admin-progress-track">
-                                            <div
-                                                className={`admin-progress-value ${status.toLowerCase()}`}
-                                                style={{
-                                                    width: `${percentage(appointmentCounts[status])}%`
-                                                }}
-                                            />
-                                        </div>
-
-                                        <small>
-                                            {percentage(appointmentCounts[status])}%
-                                        </small>
-                                    </div>
-                                ))}
                             </div>
-                        </div>
+                        </section>
 
-                        <div className="admin-dashboard-panel">
-                            <div className="admin-panel-heading">
+                        <section className="admin-panel-card">
+                            <div className="admin-panel-card-heading">
                                 <div>
-                                    <p>USERS</p>
+                                    <span>USERS</span>
                                     <h2>Accounts by role</h2>
                                 </div>
                             </div>
 
-                            <div className="admin-role-list">
-                                <RoleCard label="Pet owners" value={roleCounts.OWNER} />
-                                <RoleCard label="Veterinarians" value={roleCounts.VETERINARIAN} />
-                                <RoleCard label="Administrators" value={roleCounts.ADMIN} />
+                            <div className="admin-role-breakdown">
+
+                                <RoleRow
+                                    label="Pet owners"
+                                    role="OWNER"
+                                    value={roleCounts.OWNER}
+                                    total={data.users.length}
+                                />
+
+                                <RoleRow
+                                    label="Veterinarians"
+                                    role="VETERINARIAN"
+                                    value={roleCounts.VETERINARIAN}
+                                    total={data.users.length}
+                                />
+
+                                <RoleRow
+                                    label="Administrators"
+                                    role="ADMIN"
+                                    value={roleCounts.ADMIN}
+                                    total={data.users.length}
+                                />
+
                             </div>
-                        </div>
 
-                    </section>
+                            <div className="admin-role-total">
+                                <span>Total accounts</span>
+                                <strong>{data.users.length}</strong>
+                            </div>
+                        </section>
 
-                    <section className="admin-dashboard-panel admin-users-panel">
-                        <div className="admin-panel-heading">
+                    </div>
+
+                    <section className="admin-users-section">
+
+                        <div className="admin-users-heading">
                             <div>
-                                <p>USERS</p>
+                                <span>USER MANAGEMENT</span>
                                 <h2>Registered accounts</h2>
+
+                                <p>
+                                    Search accounts and open a user to view or manage their information.
+                                </p>
                             </div>
 
-                            <span>{data.users.length} total</span>
+                            <strong>
+                                {filteredUsers.length}
+                                {' '}
+                                {filteredUsers.length === 1
+                                    ? 'account'
+                                    : 'accounts'}
+                            </strong>
                         </div>
 
-                        <div className="admin-users-table-wrapper">
-                            <table className="admin-users-table">
-                                <thead>
-                                    <tr>
-                                        <th>Username</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Role</th>
-                                    </tr>
-                                </thead>
+                        <div className="admin-users-toolbar">
 
-                                <tbody>
-                                    {data.users.map(user => (
-                                        <tr
-                                            key={user.id}
-                                            className="admin-user-row"
-                                            onClick={() => navigate(`/admin/users/${user.id}`)}
-                                        >
-                                            <td>
-                                                <strong>{user.username}</strong>
-                                            </td>
+                            <div className="admin-users-search">
+                                <span>⌕</span>
 
-                                            <td>{user.email}</td>
+                                <input
+                                    type="text"
+                                    value={search}
+                                    onChange={e =>
+                                        setSearch(e.target.value)
+                                    }
+                                    placeholder="Search username, email or phone..."
+                                />
 
-                                            <td>{user.telefon || '—'}</td>
+                                {search && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setSearch('')}
+                                    >
+                                        ×
+                                    </button>
+                                )}
+                            </div>
 
-                                            <td>
-                                                <span className={`admin-role-badge ${user.role?.toLowerCase()}`}>
-                                                    {user.role}
-                                                </span>
-                                            </td>
+                            <div className="admin-role-filter">
+
+                                <button
+                                    type="button"
+                                    className={
+                                        roleFilter === 'ALL'
+                                            ? 'active'
+                                            : ''
+                                    }
+                                    onClick={() =>
+                                        setRoleFilter('ALL')
+                                    }
+                                >
+                                    All
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className={
+                                        roleFilter === 'OWNER'
+                                            ? 'active'
+                                            : ''
+                                    }
+                                    onClick={() =>
+                                        setRoleFilter('OWNER')
+                                    }
+                                >
+                                    Owners
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className={
+                                        roleFilter === 'VETERINARIAN'
+                                            ? 'active'
+                                            : ''
+                                    }
+                                    onClick={() =>
+                                        setRoleFilter('VETERINARIAN')
+                                    }
+                                >
+                                    Veterinarians
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className={
+                                        roleFilter === 'ADMIN'
+                                            ? 'active'
+                                            : ''
+                                    }
+                                    onClick={() =>
+                                        setRoleFilter('ADMIN')
+                                    }
+                                >
+                                    Admins
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        {filteredUsers.length === 0 ? (
+                            <div className="admin-users-empty">
+                                <div>⌕</div>
+
+                                <h3>No accounts found</h3>
+
+                                <p>
+                                    Try changing the search term or selected role.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="admin-users-table-wrapper">
+
+                                <table className="admin-users-table">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Role</th>
+                                            <th />
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+
+                                    <tbody>
+                                        {filteredUsers.map(user => (
+                                            <tr
+                                                key={user.id}
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/admin/users/${user.id}`
+                                                    )
+                                                }
+                                            >
+                                                <td>
+                                                    <div className="admin-user-cell">
+
+                                                        <div className="admin-user-avatar">
+                                                            {user.username
+                                                                ?.charAt(0)
+                                                                ?.toUpperCase() || 'U'}
+                                                        </div>
+
+                                                        <div>
+                                                            <strong>
+                                                                {user.username}
+                                                            </strong>
+
+                                                            <span>
+                                                                VETApp account
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    {user.email || '—'}
+                                                </td>
+
+                                                <td>
+                                                    {user.telefon || '—'}
+                                                </td>
+
+                                                <td>
+                                                    <span
+                                                        className={
+                                                            `admin-user-role ${user.role?.toLowerCase()}`
+                                                        }
+                                                    >
+                                                        {formatRole(
+                                                            user.role
+                                                        )}
+                                                    </span>
+                                                </td>
+
+                                                <td>
+                                                    <span className="admin-user-arrow">
+                                                        →
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        )}
+
                     </section>
 
                 </div>
@@ -239,7 +544,7 @@ export default function AdminPanel() {
 
 function StatCard({ label, value, text }) {
     return (
-        <div className="admin-stat-card">
+        <div className="admin-panel-stat">
             <span>{label}</span>
             <strong>{value}</strong>
             <p>{text}</p>
@@ -247,11 +552,46 @@ function StatCard({ label, value, text }) {
     );
 }
 
-function RoleCard({ label, value }) {
+function RoleRow({ label, role, value, total }) {
+    const percentage =
+        total > 0
+            ? Math.round((value / total) * 100)
+            : 0;
+
     return (
-        <div className="admin-role-card">
-            <span>{label}</span>
-            <strong>{value}</strong>
+        <div className="admin-role-row">
+
+            <div className="admin-role-row-heading">
+                <div>
+                    <span
+                        className={
+                            `admin-role-dot ${role.toLowerCase()}`
+                        }
+                    />
+
+                    <strong>{label}</strong>
+                </div>
+
+                <span>{value}</span>
+            </div>
+
+            <div className="admin-role-progress-row">
+
+                <div className="admin-role-track">
+                    <div
+                        className={
+                            `admin-role-progress ${role.toLowerCase()}`
+                        }
+                        style={{
+                            width: `${percentage}%`
+                        }}
+                    />
+                </div>
+
+                <span>{percentage}%</span>
+
+            </div>
+
         </div>
     );
 }

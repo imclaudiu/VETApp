@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import Navbar from '../../shared/components/Navbar';
 
 import { getMyVeterinarian } from '../../features/veterinarian/services/veterinarianService';
@@ -9,130 +11,153 @@ import {
     markAppointmentNoShow
 } from '../../features/appointment/services/appointmentService';
 
-import { Link } from 'react-router-dom';
-
 import './VeterinarianAppointmentsPage.css';
 
-
 export default function VeterinarianAppointmentsPage() {
-
     const [appointments, setAppointments] = useState([]);
-    const [activeTab, setActiveTab] = useState('upcoming');
+    const [activeTab, setActiveTab] = useState('today');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
     const [updatingId, setUpdatingId] = useState(null);
     const [updatingAction, setUpdatingAction] = useState(null);
 
+    const [confirmation, setConfirmation] = useState(null);
+
     useEffect(() => {
-
         const loadAppointments = async () => {
-
             try {
-
                 setLoading(true);
                 setError(null);
 
                 const veterinarian = await getMyVeterinarian();
+                const data = await getAppointmentsByVeterinarian(veterinarian.id);
 
-                const data = await getAppointmentsByVeterinarian(
-                    veterinarian.id
-                );
-
-                setAppointments(data);
-
+                setAppointments(Array.isArray(data) ? data : []);
             } catch (err) {
-
-                console.error(
-                    'Could not load veterinarian appointments:',
-                    err
-                );
+                console.error('Could not load veterinarian appointments:', err);
 
                 setError(
+                    err.response?.data?.message ||
                     err.message ||
                     'Could not load appointments.'
                 );
-
             } finally {
-
                 setLoading(false);
             }
         };
 
-
         loadAppointments();
-
     }, []);
 
+    const isSameDay = (first, second) =>
+        first.getFullYear() === second.getFullYear() &&
+        first.getMonth() === second.getMonth() &&
+        first.getDate() === second.getDate();
+
+    const todayAppointments = useMemo(() => {
+        const today = new Date();
+
+        return appointments
+            .filter(appointment => {
+                const date = new Date(appointment.startOfAppointment);
+
+                return (
+                    isSameDay(date, today) &&
+                    ['PENDING', 'CONFIRMED'].includes(appointment.status)
+                );
+            })
+            .sort(
+                (a, b) =>
+                    new Date(a.startOfAppointment) -
+                    new Date(b.startOfAppointment)
+            );
+    }, [appointments]);
 
     const upcomingAppointments = useMemo(() => {
         const now = new Date();
 
         return appointments
-            .filter(appointment =>
-                ['PENDING', 'CONFIRMED'].includes(appointment.status) &&
-                new Date(appointment.startOfAppointment) >= now
-            )
-            .sort((a, b) =>
-                new Date(a.startOfAppointment) - new Date(b.startOfAppointment)
+            .filter(appointment => {
+                const date = new Date(appointment.startOfAppointment);
+
+                return (
+                    date > now &&
+                    !isSameDay(date, now) &&
+                    ['PENDING', 'CONFIRMED'].includes(appointment.status)
+                );
+            })
+            .sort(
+                (a, b) =>
+                    new Date(a.startOfAppointment) -
+                    new Date(b.startOfAppointment)
             );
     }, [appointments]);
 
-
-    const previousAppointments = useMemo(() => {
-        const now = new Date();
+    const historyAppointments = useMemo(() => {
+        const today = new Date();
 
         return appointments
-            .filter(appointment =>
-                appointment.status === 'CANCELED' ||
-                appointment.status === 'NO_SHOW' ||
-                appointment.status === 'FINISHED' ||
-                new Date(appointment.startOfAppointment) < now
-            )
-            .sort((a, b) =>
-                new Date(b.startOfAppointment) - new Date(a.startOfAppointment)
+            .filter(appointment => {
+                const date = new Date(appointment.startOfAppointment);
+
+                return (
+                    ['CANCELED', 'NO_SHOW', 'FINISHED'].includes(appointment.status) ||
+                    (date < today &&
+                        !isSameDay(date, today) &&
+                        !['PENDING', 'CONFIRMED'].includes(appointment.status))
+                );
+            })
+            .sort(
+                (a, b) =>
+                    new Date(b.startOfAppointment) -
+                    new Date(a.startOfAppointment)
             );
     }, [appointments]);
 
+    const pendingCount = useMemo(
+        () => appointments.filter(a => a.status === 'PENDING').length,
+        [appointments]
+    );
 
     const displayedAppointments =
-        activeTab === 'upcoming'
-            ? upcomingAppointments
-            : previousAppointments;
+        activeTab === 'today'
+            ? todayAppointments
+            : activeTab === 'upcoming'
+                ? upcomingAppointments
+                : historyAppointments;
 
-
-    const formatDate = (dateTime) => {
-
-        if (!dateTime) return '';
-
-        return new Intl.DateTimeFormat(
-            'en-GB',
-            {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric'
-            }
-        ).format(
-            new Date(dateTime)
-        );
+    const formatDate = dateTime => {
+        if (!dateTime) return '—';
+        return new Date(dateTime).toLocaleDateString('en-GB');
     };
 
+    const formatTime = dateTime => {
+        if (!dateTime) return '—';
 
-    const formatTime = (dateTime) => {
-
-        if (!dateTime) return '';
-
-        return new Intl.DateTimeFormat(
-            'en-GB',
-            {
-                hour: '2-digit',
-                minute: '2-digit'
-            }
-        ).format(
-            new Date(dateTime)
-        );
+        return new Date(dateTime).toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     };
 
-    const updateAppointmentStatusLocally = (appointmentId, status) => {
+    const getSex = sex => {
+        if (sex === 'M') return 'Male';
+        if (sex === 'F') return 'Female';
+        return sex || 'Unknown';
+    };
+
+    const getStatusLabel = status => {
+        if (status === 'NO_SHOW') return 'No show';
+        if (status === 'FINISHED') return 'Finished';
+        if (status === 'CANCELED') return 'Canceled';
+        if (status === 'CONFIRMED') return 'Confirmed';
+        if (status === 'PENDING') return 'Pending';
+
+        return status;
+    };
+
+    const updateStatusLocally = (appointmentId, status) => {
         setAppointments(current =>
             current.map(appointment =>
                 appointment.id === appointmentId
@@ -142,484 +167,470 @@ export default function VeterinarianAppointmentsPage() {
         );
     };
 
-    const handleConfirmAppointment = async (appointmentId) => {
+    const handleConfirm = async appointmentId => {
         try {
             setUpdatingId(appointmentId);
             setUpdatingAction('confirm');
             setError(null);
 
             await confirmAppointment(appointmentId);
-            updateAppointmentStatusLocally(appointmentId, 'CONFIRMED');
+            updateStatusLocally(appointmentId, 'CONFIRMED');
         } catch (err) {
-            setError(err.response?.data?.message || err.message || 'Could not confirm appointment.');
+            setError(
+                err.response?.data?.message ||
+                err.message ||
+                'Could not confirm appointment.'
+            );
         } finally {
             setUpdatingId(null);
             setUpdatingAction(null);
         }
     };
 
-    const handleCancelAppointment = async (appointmentId) => {
-        const confirmed = window.confirm('Are you sure you want to cancel this appointment?');
+    const executeConfirmation = async () => {
+        if (!confirmation) return;
 
-        if (!confirmed) return;
+        const { appointment, action } = confirmation;
 
         try {
-            setUpdatingId(appointmentId);
-            setUpdatingAction('cancel');
+            setUpdatingId(appointment.id);
+            setUpdatingAction(action);
             setError(null);
 
-            await cancelAppointment(appointmentId);
-            updateAppointmentStatusLocally(appointmentId, 'CANCELED');
+            if (action === 'cancel') {
+                await cancelAppointment(appointment.id);
+                updateStatusLocally(appointment.id, 'CANCELED');
+            }
+
+            if (action === 'no-show') {
+                await markAppointmentNoShow(appointment.id);
+                updateStatusLocally(appointment.id, 'NO_SHOW');
+            }
+
+            setConfirmation(null);
         } catch (err) {
-            setError(err.response?.data?.message || err.message || 'Could not cancel appointment.');
+            setError(
+                err.response?.data?.message ||
+                err.message ||
+                `Could not ${action === 'cancel' ? 'cancel appointment' : 'mark appointment as no-show'}.`
+            );
         } finally {
             setUpdatingId(null);
             setUpdatingAction(null);
         }
     };
 
-    const handleNoShow = async (appointmentId) => {
-        const confirmed = window.confirm('Mark this patient as no-show?');
-
-        if (!confirmed) return;
-
-        try {
-            setUpdatingId(appointmentId);
-            setUpdatingAction('no-show');
-            setError(null);
-
-            await markAppointmentNoShow(appointmentId);
-            updateAppointmentStatusLocally(appointmentId, 'NO_SHOW');
-        } catch (err) {
-            setError(err.response?.data?.message || err.message || 'Could not mark appointment as no-show.');
-        } finally {
-            setUpdatingId(null);
-            setUpdatingAction(null);
-        }
+    const openConfirmation = (appointment, action) => {
+        setConfirmation({ appointment, action });
     };
-
-    const getStatusClass = (status) => {
-        return `vet-appointment-status ${status?.toLowerCase()}`;
-    };
-
 
     if (loading) {
-
         return (
             <>
                 <Navbar />
 
-                <div className="vet-appointments-loading">
-                    Loading appointments...
-                </div>
+                <main className="vet-appointments-page">
+                    <div className="vet-appointments-loading">
+                        <div className="vet-appointments-spinner" />
+                        <p>Loading appointments...</p>
+                    </div>
+                </main>
             </>
         );
     }
-
 
     return (
         <>
             <Navbar />
 
             <main className="vet-appointments-page">
-
                 <div className="vet-appointments-container">
 
-
-                    {/* HEADER */}
-
-                    <section className="vet-appointments-header">
-
+                    <header className="vet-appointments-header">
                         <div>
-
-                            <p className="vet-appointments-eyebrow">
-                                VETERINARIAN
-                            </p>
-
-                            <h1>
-                                My appointments
-                            </h1>
-
-                            <p>
-                                View and manage your scheduled veterinary appointments.
-                            </p>
-
+                            <span>VETERINARIAN</span>
+                            <h1>Appointments</h1>
+                            <p>Manage your patients and today's veterinary visits.</p>
                         </div>
 
-                    </section>
-
-
-                    {/* ERROR */}
+                        <Link
+                            to="/veterinarian/schedule"
+                            className="primary-button"
+                        >
+                            Manage schedule
+                        </Link>
+                    </header>
 
                     {error && (
-
                         <div className="vet-appointments-error">
                             {error}
                         </div>
-
                     )}
 
-
-                    {/* SUMMARY */}
-
-                    <div className="vet-appointments-summary">
-
-                        <div>
-
-                            <span>
-                                UPCOMING
-                            </span>
-
-                            <strong>
-                                {upcomingAppointments.length}
-                            </strong>
-
+                    <section className="vet-summary-grid">
+                        <div className="vet-summary-card highlight">
+                            <span>TODAY</span>
+                            <strong>{todayAppointments.length}</strong>
                             <p>
-                                Scheduled visits
+                                {todayAppointments.length === 1
+                                    ? 'visit scheduled today'
+                                    : 'visits scheduled today'}
                             </p>
-
                         </div>
 
-
-                        <div>
-
-                            <span>
-                                TOTAL
-                            </span>
-
-                            <strong>
-                                {appointments.length}
-                            </strong>
-
-                            <p>
-                                All appointments
-                            </p>
-
+                        <div className="vet-summary-card">
+                            <span>PENDING</span>
+                            <strong>{pendingCount}</strong>
+                            <p>Waiting for confirmation</p>
                         </div>
 
-                    </div>
-
-
-                    {/* TABS */}
+                        <div className="vet-summary-card">
+                            <span>UPCOMING</span>
+                            <strong>{upcomingAppointments.length}</strong>
+                            <p>Future appointments</p>
+                        </div>
+                    </section>
 
                     <div className="vet-appointments-tabs">
+                        <button
+                            type="button"
+                            className={activeTab === 'today' ? 'active' : ''}
+                            onClick={() => setActiveTab('today')}
+                        >
+                            Today
+                            <span>{todayAppointments.length}</span>
+                        </button>
 
                         <button
                             type="button"
-                            className={
-                                activeTab === 'upcoming'
-                                    ? 'active'
-                                    : ''
-                            }
-                            onClick={() =>
-                                setActiveTab('upcoming')
-                            }
+                            className={activeTab === 'upcoming' ? 'active' : ''}
+                            onClick={() => setActiveTab('upcoming')}
                         >
-
                             Upcoming
-
-                            <span>
-                                {upcomingAppointments.length}
-                            </span>
-
+                            <span>{upcomingAppointments.length}</span>
                         </button>
-
 
                         <button
                             type="button"
-                            className={
-                                activeTab === 'history'
-                                    ? 'active'
-                                    : ''
-                            }
-                            onClick={() =>
-                                setActiveTab('history')
-                            }
+                            className={activeTab === 'history' ? 'active' : ''}
+                            onClick={() => setActiveTab('history')}
                         >
-
                             History
-
-                            <span>
-                                {previousAppointments.length}
-                            </span>
-
+                            <span>{historyAppointments.length}</span>
                         </button>
-
                     </div>
 
-
-                    {/* EMPTY */}
-
                     {displayedAppointments.length === 0 ? (
-
                         <div className="vet-appointments-empty">
-
-                            <div>
-                                +
-                            </div>
+                            <div>✓</div>
 
                             <h2>
-
-                                {activeTab === 'upcoming'
-                                    ? 'No upcoming appointments'
-                                    : 'No appointment history'
-                                }
-
+                                {activeTab === 'today'
+                                    ? 'No visits today'
+                                    : activeTab === 'upcoming'
+                                        ? 'No upcoming appointments'
+                                        : 'No appointment history'}
                             </h2>
 
                             <p>
-
-                                {activeTab === 'upcoming'
-                                    ? 'You currently have no scheduled veterinary visits.'
-                                    : 'Your previous appointments will appear here.'
-                                }
-
+                                {activeTab === 'today'
+                                    ? 'There are no veterinary visits scheduled for today.'
+                                    : activeTab === 'upcoming'
+                                        ? 'Your future appointments will appear here.'
+                                        : 'Finished, canceled and missed appointments will appear here.'}
                             </p>
-
                         </div>
-
                     ) : (
-
-                        /* APPOINTMENTS */
-
                         <div className="vet-appointments-list">
+                            {displayedAppointments.map(appointment => {
+                                const start = new Date(appointment.startOfAppointment);
+                                const now = new Date();
 
-                            {displayedAppointments.map(
-                                appointment => (
+                                const canCancel =
+                                    start > now &&
+                                    ['PENDING', 'CONFIRMED'].includes(
+                                        appointment.status
+                                    );
 
+                                const canStartVisit =
+                                    appointment.status === 'CONFIRMED' &&
+                                    start <= now;
+
+                                return (
                                     <article
                                         className="vet-appointment-card"
                                         key={appointment.id}
                                     >
-
-
-                                        {/* DATE BOX */}
-
-                                        <div className="vet-appointment-date">
-
+                                        <div className="vet-appointment-time">
                                             <strong>
-                                                {
-                                                    new Date(
-                                                        appointment.startOfAppointment
-                                                    ).getDate()
-                                                }
+                                                {formatTime(
+                                                    appointment.startOfAppointment
+                                                )}
                                             </strong>
 
                                             <span>
-                                                {
-                                                    new Date(
-                                                        appointment.startOfAppointment
-                                                    )
-                                                        .toLocaleString(
-                                                            'en-GB',
-                                                            {
-                                                                month: 'short'
-                                                            }
-                                                        )
-                                                        .toUpperCase()
-                                                }
+                                                {formatTime(
+                                                    appointment.endOfAppointment
+                                                )}
                                             </span>
-
                                         </div>
-
-
-                                        {/* APPOINTMENT */}
 
                                         <div className="vet-appointment-content">
 
-                                            <div className="vet-appointment-heading">
+                                            <div className="vet-appointment-top">
+                                                <div className="vet-patient">
+                                                    <div className="vet-patient-avatar">
+                                                        {appointment.petName
+                                                            ?.charAt(0)
+                                                            ?.toUpperCase() || 'P'}
+                                                    </div>
 
-                                                <div>
+                                                    <div>
+                                                        <h2>
+                                                            {appointment.petName ||
+                                                                'Patient'}
+                                                        </h2>
 
-                                                    <h2>
-                                                        {appointment.petName || 'Patient'}
-                                                    </h2>
+                                                        <p>
+                                                            {appointment.species ||
+                                                                'Unknown species'}
 
-                                                    <p>
+                                                            {appointment.race &&
+                                                                ` · ${appointment.race}`}
 
-                                                        {appointment.species || 'Unknown species'}
+                                                            {' · '}
 
-                                                        {appointment.race
-                                                            ? ` • ${appointment.race}`
-                                                            : ''
-                                                        }
-
-                                                        {appointment.sex
-                                                            ? ` • ${appointment.sex}`
-                                                            : ''
-                                                        }
-
-                                                    </p>
-
+                                                            {getSex(
+                                                                appointment.sex
+                                                            )}
+                                                        </p>
+                                                    </div>
                                                 </div>
 
+                                                <span
+                                                    className={`vet-appointment-status ${appointment.status?.toLowerCase()}`}
+                                                >
+                                                    {getStatusLabel(
+                                                        appointment.status
+                                                    )}
+                                                </span>
+                                            </div>
 
-                                                <div className="vet-appointment-heading-actions">
+                                            <div className="vet-appointment-info">
+                                                <div>
+                                                    <span>Date</span>
+                                                    <strong>
+                                                        {formatDate(
+                                                            appointment.startOfAppointment
+                                                        )}
+                                                    </strong>
+                                                </div>
 
-                                                    <span className={getStatusClass(appointment.status)}>
-                                                        {appointment.status}
-                                                    </span>
+                                                <div>
+                                                    <span>Time</span>
+                                                    <strong>
+                                                        {formatTime(
+                                                            appointment.startOfAppointment
+                                                        )}{' '}
+                                                        –{' '}
+                                                        {formatTime(
+                                                            appointment.endOfAppointment
+                                                        )}
+                                                    </strong>
+                                                </div>
 
-                                                    {(appointment.status === 'PENDING' || appointment.status === 'CONFIRMED') && (
-                                                        <div className="vet-appointment-action-buttons">
+                                                <div>
+                                                    <span>Service</span>
+                                                    <strong>
+                                                        {appointment.serviceName ||
+                                                            'Veterinary appointment'}
+                                                    </strong>
+                                                </div>
+                                            </div>
 
-                                                            {!['CANCELED', 'NO_SHOW'].includes(appointment.status) && (
-                                                                <>
-                                                                    <Link
-                                                                        to={`/veterinarian/pets/${appointment.petId}/medical-history/${appointment.id}`}
-                                                                        className="vet-history-button"
-                                                                    >
-                                                                        Medical history
-                                                                    </Link>
+                                            <div className="vet-appointment-actions">
 
-                                                                    <Link
-                                                                        to={`/pets/${appointment.petId}/edit`}
-                                                                        className="vet-edit-pet-button"
-                                                                    >
-                                                                        Edit pet
-                                                                    </Link>
-                                                                </>
-                                                            )}
+                                                {!['CANCELED', 'NO_SHOW'].includes(
+                                                    appointment.status
+                                                ) && (
+                                                        <>
+                                                            <Link
+                                                                to={`/veterinarian/pets/${appointment.petId}/medical-history/${appointment.id}`}
+                                                                className="vet-secondary-action"
+                                                            >
+                                                                Medical history
+                                                            </Link>
 
-                                                            {appointment.status === 'PENDING' && (
-                                                                <button
-                                                                    type="button"
-                                                                    className="vet-confirm-button"
-                                                                    disabled={updatingId === appointment.id}
-                                                                    onClick={() => handleConfirmAppointment(appointment.id)}
-                                                                >
-                                                                    {updatingId === appointment.id &&
-                                                                        updatingAction === 'confirm'
-                                                                        ? 'Confirming...'
-                                                                        : 'Confirm'}
-                                                                </button>
-                                                            )}
+                                                            <Link
+                                                                to={`/pets/${appointment.petId}/edit`}
+                                                                className="vet-secondary-action"
+                                                            >
+                                                                Edit patient
+                                                            </Link>
+                                                        </>
+                                                    )}
 
-                                                            {new Date(appointment.startOfAppointment) > new Date() &&
-                                                                ['PENDING', 'CONFIRMED'].includes(appointment.status) && (
-                                                                    <button
-                                                                        type="button"
-                                                                        className="vet-cancel-button"
-                                                                        disabled={updatingId === appointment.id}
-                                                                        onClick={() => handleCancelAppointment(appointment.id)}
-                                                                    >
-                                                                        Cancel
-                                                                    </button>
-                                                                )}
+                                                <div className="vet-main-actions">
 
-                                                            {appointment.status === 'CONFIRMED' &&
-                                                                new Date(appointment.startOfAppointment) <= new Date() && (
-                                                                    <>
-                                                                        <Link
-                                                                            to={`/veterinarian/appointments/${appointment.id}/medical-record`}
-                                                                            className="vet-complete-button"
-                                                                        >
-                                                                            Complete visit
-                                                                        </Link>
+                                                    {appointment.status ===
+                                                        'PENDING' && (
+                                                            <button
+                                                                type="button"
+                                                                className="vet-confirm-action"
+                                                                disabled={
+                                                                    updatingId ===
+                                                                    appointment.id
+                                                                }
+                                                                onClick={() =>
+                                                                    handleConfirm(
+                                                                        appointment.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                {updatingId ===
+                                                                    appointment.id &&
+                                                                    updatingAction ===
+                                                                    'confirm'
+                                                                    ? 'Confirming...'
+                                                                    : 'Confirm'}
+                                                            </button>
+                                                        )}
 
-                                                                        <button
-                                                                            type="button"
-                                                                            className="vet-no-show-button"
-                                                                            disabled={updatingId === appointment.id}
-                                                                            onClick={() => handleNoShow(appointment.id)}
-                                                                        >
-                                                                            No show
-                                                                        </button>
-                                                                    </>
-                                                                )}
+                                                    {canStartVisit && (
+                                                        <>
+                                                            <Link
+                                                                to={`/veterinarian/appointments/${appointment.id}/medical-record`}
+                                                                className="vet-complete-action"
+                                                            >
+                                                                Complete visit
+                                                            </Link>
 
-                                                        </div>
+                                                            <button
+                                                                type="button"
+                                                                className="vet-no-show-action"
+                                                                disabled={
+                                                                    updatingId ===
+                                                                    appointment.id
+                                                                }
+                                                                onClick={() =>
+                                                                    openConfirmation(
+                                                                        appointment,
+                                                                        'no-show'
+                                                                    )
+                                                                }
+                                                            >
+                                                                No show
+                                                            </button>
+                                                        </>
+                                                    )}
+
+                                                    {canCancel && (
+                                                        <button
+                                                            type="button"
+                                                            className="vet-cancel-action"
+                                                            disabled={
+                                                                updatingId ===
+                                                                appointment.id
+                                                            }
+                                                            onClick={() =>
+                                                                openConfirmation(
+                                                                    appointment,
+                                                                    'cancel'
+                                                                )
+                                                            }
+                                                        >
+                                                            Cancel
+                                                        </button>
                                                     )}
 
                                                 </div>
-
-                                            </div>
-
-
-                                            <div className="vet-appointment-details">
-
-
-                                                {/* DATE */}
-
-                                                <div>
-
-                                                    <span>
-                                                        DATE
-                                                    </span>
-
-                                                    <strong>
-                                                        {
-                                                            formatDate(
-                                                                appointment.startOfAppointment
-                                                            )
-                                                        }
-                                                    </strong>
-
-                                                </div>
-
-
-                                                {/* TIME */}
-
-                                                <div>
-
-                                                    <span>
-                                                        TIME
-                                                    </span>
-
-                                                    <strong>
-
-                                                        {
-                                                            formatTime(
-                                                                appointment.startOfAppointment
-                                                            )
-                                                        }
-
-                                                        {' — '}
-
-                                                        {
-                                                            formatTime(
-                                                                appointment.endOfAppointment
-                                                            )
-                                                        }
-
-                                                    </strong>
-
-                                                </div>
-
-
-                                                {/* SERVICE */}
-
-                                                <div>
-
-                                                    <span>
-                                                        SERVICE
-                                                    </span>
-
-                                                    <strong>
-                                                        {
-                                                            appointment.serviceName ||
-                                                            'Veterinary appointment'
-                                                        }
-                                                    </strong>
-
-                                                </div>
-
                                             </div>
 
                                         </div>
-
                                     </article>
-
-                                )
-                            )}
-
+                                );
+                            })}
                         </div>
-
                     )}
 
                 </div>
-
             </main>
+
+            {confirmation && (
+                <div
+                    className="vet-modal-backdrop"
+                    onMouseDown={() => {
+                        if (!updatingId) setConfirmation(null);
+                    }}
+                >
+                    <div
+                        className="vet-modal"
+                        onMouseDown={e => e.stopPropagation()}
+                    >
+                        <span>
+                            {confirmation.action === 'cancel'
+                                ? 'CANCEL APPOINTMENT'
+                                : 'NO SHOW'}
+                        </span>
+
+                        <h2>
+                            {confirmation.action === 'cancel'
+                                ? 'Cancel this appointment?'
+                                : 'Mark patient as no-show?'}
+                        </h2>
+
+                        <p>
+                            {confirmation.action === 'cancel'
+                                ? 'This appointment will be canceled and the pet owner will be notified.'
+                                : `${confirmation.appointment.petName || 'This patient'} will be marked as not having attended the scheduled appointment.`}
+                        </p>
+
+                        <div className="vet-modal-appointment">
+                            <strong>
+                                {confirmation.appointment.petName || 'Patient'}
+                            </strong>
+
+                            <span>
+                                {formatDate(
+                                    confirmation.appointment.startOfAppointment
+                                )}{' '}
+                                ·{' '}
+                                {formatTime(
+                                    confirmation.appointment.startOfAppointment
+                                )}
+                            </span>
+                        </div>
+
+                        <div className="vet-modal-actions">
+                            <button
+                                type="button"
+                                className="secondary-button"
+                                disabled={updatingId}
+                                onClick={() => setConfirmation(null)}
+                            >
+                                Go back
+                            </button>
+
+                            <button
+                                type="button"
+                                className={
+                                    confirmation.action === 'cancel'
+                                        ? 'vet-modal-danger'
+                                        : 'vet-modal-warning'
+                                }
+                                disabled={updatingId}
+                                onClick={executeConfirmation}
+                            >
+                                {updatingId
+                                    ? 'Updating...'
+                                    : confirmation.action === 'cancel'
+                                        ? 'Cancel appointment'
+                                        : 'Mark as no-show'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

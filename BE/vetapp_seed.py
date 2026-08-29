@@ -82,25 +82,37 @@ PET_NAMES = [
 ]
 
 SERVICES = [
-    ("General consultation", 30, 150.0, "General clinical examination and treatment recommendations."),
-    ("Vaccination", 30, 120.0, "Routine vaccination and preventive consultation."),
-    ("Dermatology consultation", 45, 220.0, "Skin, coat and allergy assessment."),
-    ("Dental consultation", 45, 200.0, "Oral and dental health assessment."),
-    ("Ultrasound", 45, 280.0, "Diagnostic ultrasound examination."),
-    ("Blood tests", 30, 190.0, "Blood collection and routine laboratory panel."),
-    ("Minor surgery", 60, 500.0, "Minor surgical procedure with postoperative recommendations."),
-    ("Emergency consultation", 45, 300.0, "Urgent veterinary evaluation."),
+    ("Consultație generală", 30, 150.0, "Examinare clinică generală și recomandări de tratament."),
+    ("Vaccinare", 30, 120.0, "Vaccinare de rutină și consultație preventivă."),
+    ("Consultație dermatologică", 45, 220.0, "Evaluarea pielii, blănii și a posibilelor alergii."),
+    ("Consultație stomatologică", 45, 200.0, "Evaluarea sănătății orale și dentare."),
+    ("Ecografie", 45, 280.0, "Examinare ecografică în scop diagnostic."),
+    ("Analize de sânge", 30, 190.0, "Recoltare de sânge și analize uzuale de laborator."),
+    ("Intervenție chirurgicală minoră", 60, 500.0, "Procedură chirurgicală minoră cu recomandări postoperatorii."),
+    ("Consultație de urgență", 45, 300.0, "Evaluare veterinară pentru cazuri urgente."),
 ]
 
 MEDICAL_CASES = [
-    ("Reduced appetite and lethargy", "Gastroenteritis", "Hydration, dietary management and clinical monitoring recommended."),
-    ("Ear scratching and head shaking", "Otitis externa", "Ear cleaning and topical treatment recommended."),
-    ("Itching and skin redness", "Allergic dermatitis", "Possible allergen exposure; symptomatic treatment and follow-up."),
-    ("Sneezing and nasal discharge", "Upper respiratory infection", "Supportive treatment and reassessment if symptoms persist."),
-    ("Eye redness and discharge", "Conjunctivitis", "Topical therapy and eye hygiene recommended."),
-    ("Bad breath and dental plaque", "Dental disease", "Dental cleaning and oral hygiene plan recommended."),
-    ("Routine preventive visit", "Clinically healthy", "Routine examination completed; preventive care discussed."),
-    ("Limping after activity", "Soft tissue injury", "Rest and activity restriction recommended with follow-up."),
+    ("Apetit scăzut, letargie și episoade de vărsături", "Gastroenterită acută", "Se recomandă hidratare, regim alimentar gastrointestinal și monitorizarea stării generale."),
+    ("Scărpinat frecvent la nivelul urechilor și scuturarea capului", "Otită externă", "Se recomandă igienizarea conductului auditiv și tratament topic conform indicațiilor medicului."),
+    ("Prurit intens și eritem cutanat", "Dermatită alergică", "Se suspectează expunerea la un alergen; se recomandă tratament simptomatic și control ulterior."),
+    ("Strănut, secreții nazale și stare generală ușor alterată", "Infecție a tractului respirator superior", "Se recomandă tratament suportiv și reevaluare dacă simptomele persistă sau se agravează."),
+    ("Roșeață oculară și secreții conjunctivale", "Conjunctivită", "Se recomandă tratament topic, igienă oculară și monitorizarea evoluției."),
+    ("Halenă, placă bacteriană și tartru dentar", "Boală parodontală", "Se recomandă detartraj profesional și stabilirea unui plan de igienă orală."),
+    ("Consultație preventivă de rutină, fără semne clinice", "Clinic sănătos", "Examenul clinic este în limite normale. S-au discutat măsurile de prevenție și controalele periodice."),
+    ("Șchiopătură apărută după efort fizic", "Leziune de țesuturi moi", "Se recomandă repaus, limitarea activității fizice și reevaluare clinică."),
+    ("Diaree, disconfort abdominal și apetit diminuat", "Enterocolită", "Se recomandă dietă gastrointestinală, hidratare și monitorizarea frecvenței scaunelor."),
+    ("Tuse, intoleranță la efort și respirație accelerată", "Traheobronșită", "Se recomandă repaus, tratament simptomatic și investigații suplimentare dacă simptomatologia persistă."),
+    ("Urinări frecvente și disconfort la urinare", "Cistită", "Se recomandă sumar de urină, sediment urinar și tratament în funcție de rezultatele investigațiilor."),
+    ("Sete crescută și urinări frecvente", "Suspiciune de diabet zaharat", "Se recomandă glicemie, profil biochimic și investigații suplimentare pentru confirmarea diagnosticului."),
+    ("Creștere în greutate și activitate fizică redusă", "Obezitate", "Se recomandă ajustarea aportului caloric, controlul porțiilor și creșterea graduală a activității fizice."),
+    ("Cădere excesivă a părului și zone de alopecie", "Dermatită de etiologie nedeterminată", "Se recomandă examen dermatologic complet și investigații pentru identificarea cauzei."),
+    ("Secreții auriculare abundente și miros neplăcut", "Otită externă bacteriană", "Se recomandă examen otoscopic, citologie auriculară și tratament local țintit."),
+    ("Durere la masticație și refuzul hranei dure", "Afecțiune dentară", "Se recomandă examinare orală completă și evaluarea necesității unei proceduri stomatologice."),
+    ("Febră, apatie și apetit redus", "Sindrom febril", "Se recomandă investigații hematologice și biochimice pentru identificarea cauzei."),
+    ("Vărsături repetate și sensibilitate abdominală", "Gastrită", "Se recomandă repaus alimentar temporar conform indicației medicului, hidratare și tratament simptomatic."),
+    ("Mâncărime la nivelul pielii și prezența paraziților externi", "Infestație cu ectoparaziți", "Se recomandă tratament antiparazitar extern și deparazitarea mediului."),
+    ("Mobilitate redusă și rigiditate după repaus", "Afecțiune articulară degenerativă", "Se recomandă controlul greutății, activitate fizică moderată și evaluare ortopedică."),
 ]
 
 
@@ -147,7 +159,7 @@ class DockerPostgres:
     def is_running(self) -> bool:
         p = subprocess.run(
             ["docker", "inspect", "-f", "{{.State.Running}}", self.container],
-            capture_output=True, text=True
+            capture_output=True, text=True, encoding="utf-8"
         )
         return p.returncode == 0 and p.stdout.strip().lower() == "true"
 
@@ -158,7 +170,7 @@ class DockerPostgres:
         ]
         if capture:
             cmd += ["-A", "-t", "-F", "\t"]
-        p = subprocess.run(cmd, input=sql, text=True, capture_output=True)
+        p = subprocess.run(cmd, input=sql, text=True, capture_output=True, encoding="utf-8")
         if p.returncode != 0:
             raise SeedError(
                 f"SQL failed in {self.container}/{self.database}:\n{p.stderr.strip()}\n\nSQL:\n{sql[:1800]}"
@@ -749,10 +761,10 @@ def try_seed_notification_db(all_user_ids: list[uuid.UUID], appointments: list[d
         columns = db.schema[table]
         rows: list[dict[str, Any]] = []
         messages = [
-            ("Appointment confirmed", "Your veterinary appointment has been confirmed."),
-            ("Appointment reminder", "You have an upcoming veterinary appointment."),
-            ("Medical record available", "A new medical record is available for your pet."),
-            ("Appointment updated", "There is an update regarding your veterinary appointment."),
+            ("Programare confirmată", "Programarea veterinară a fost confirmată."),
+            ("Memento programare", "Aveți o programare veterinară în perioada următoare."),
+            ("Fișă medicală disponibilă", "O nouă fișă medicală este disponibilă pentru animalul dumneavoastră."),
+            ("Programare actualizată", "Au apărut modificări privind programarea veterinară."),
         ]
 
         def value_for(meta: dict[str, str]) -> tuple[bool, Any]:
@@ -815,7 +827,7 @@ def try_seed_notification_db(all_user_ids: list[uuid.UUID], appointments: list[d
 def validate_docker() -> None:
     if shutil.which("docker") is None:
         raise SeedError("Docker CLI was not found. Start Docker Desktop and run this script from a terminal with docker available.")
-    p = subprocess.run(["docker", "info"], capture_output=True, text=True)
+    p = subprocess.run(["docker", "info"], capture_output=True, text=True, encoding="utf-8")
     if p.returncode != 0:
         raise SeedError("Docker is not running or the current user cannot access it.")
 

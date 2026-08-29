@@ -1,236 +1,81 @@
 import { Link } from 'react-router-dom';
 
 export default function PetList({ pets }) {
-
-    const getPetInitial = (name) => {
-        return name?.charAt(0)?.toUpperCase() || 'P';
-    };
-
-    const getSexLabel = (sex) => {
-        if (sex === 'M') {
-            return 'Male';
-        }
-
-        if (sex === 'F') {
-            return 'Female';
-        }
-
-        return sex || 'Unknown';
-    };
-
-    const formatDate = (dob) => {
-        if (!dob) {
-            return 'Unknown';
-        }
-
-        const datePart = dob.split('T')[0];
-
-        const [year, month, day] = datePart.split('-');
-
-        if (!year || !month || !day) {
-            return dob;
-        }
-
-        return `${day}.${month}.${year}`;
-    };
+    const getSex = (sex) => sex === 'M' ? 'Male' : sex === 'F' ? 'Female' : 'Unknown';
 
     const getAge = (dob) => {
-        if (!dob) {
-            return null;
-        }
-
-        const datePart = dob.split('T')[0];
-        const parts = datePart.split('-');
-
-        if (parts.length !== 3) {
-            return null;
-        }
-
-        const birthYear = Number(parts[0]);
-        const birthMonth = Number(parts[1]);
-        const birthDay = Number(parts[2]);
-
+        if (!dob) return 'Age unknown';
+        const birth = new Date(dob);
         const today = new Date();
-
-        let age = today.getFullYear() - birthYear;
-
-        const monthDifference =
-            today.getMonth() + 1 - birthMonth;
-
-        if (
-            monthDifference < 0 ||
-            (
-                monthDifference === 0 &&
-                today.getDate() < birthDay
-            )
-        ) {
-            age--;
-        }
-
-        if (age < 1) {
-            return 'Under 1 year';
-        }
-
-        return `${age} ${age === 1 ? 'year' : 'years'} old`;
+        let years = today.getFullYear() - birth.getFullYear();
+        if (today < new Date(today.getFullYear(), birth.getMonth(), birth.getDate())) years--;
+        return years < 1 ? 'Under 1 year' : `${years} ${years === 1 ? 'year' : 'years'} old`;
     };
 
-
-    if (pets.length === 0) {
+    if (!pets.length) {
         return (
-            <section className="pets-empty">
-
-                <div className="pets-empty-icon">
-                    +
-                </div>
-
-                <h2>No pets yet</h2>
-
-                <p>
-                    Add your first pet to start managing their
-                    information, appointments and medical history.
-                </p>
-
-                <Link
-                    to="/pets/new"
-                    className="pets-empty-button"
-                >
-                    Add your first pet
-                </Link>
-
-            </section>
+            <div className="pets-empty">
+                <div className="pets-empty-mark">+</div>
+                <h2>Add your first pet</h2>
+                <p>Your pets will appear here together with their details and medical history.</p>
+                <Link to="/pets/new" className="primary-button">Add pet</Link>
+            </div>
         );
     }
 
-
     return (
         <>
-            <div className="pets-summary">
-                <span>
-                    {pets.length}
-                    {' '}
-                    {pets.length === 1 ? 'pet' : 'pets'}
-                </span>
-            </div>
+            <div className="pets-count">{pets.length} {pets.length === 1 ? 'pet' : 'pets'} registered</div>
 
-            <div className="pets-grid">
+            <div className="pets-list">
+                {pets.map(pet => (
+                    <article className="pet-row" key={pet.id}>
+                        <div className="pet-row-avatar">{pet.name?.charAt(0)?.toUpperCase() || 'P'}</div>
 
-                {pets.map((pet) => {
-
-                    const age = getAge(pet.dob);
-
-                    return (
-                        <article
-                            key={pet.id}
-                            className="pet-card"
-                        >
-
-                            <div className="pet-card-top">
-
-                                <div className="pet-card-avatar">
-                                    {getPetInitial(pet.name)}
+                        <div className="pet-row-main">
+                            <div className="pet-row-heading">
+                                <div>
+                                    <h2>{pet.name}</h2>
+                                    <p>{pet.race || pet.species}</p>
                                 </div>
 
-                                <div className="pet-card-title">
-                                    <h2>
-                                        {pet.name}
-                                    </h2>
-
-                                    <p>
-                                        {pet.race || 'No breed specified'}
-                                    </p>
-                                </div>
-
+                                <Link to={`/pets/${pet.id}/medical-history`} className="pet-history-link">
+                                    Medical history →
+                                </Link>
                             </div>
 
+                            <div className="pet-row-details">
+                                <div>
+                                    <span>Species</span>
+                                    <strong>{pet.species || '—'}</strong>
+                                </div>
 
-                            <div className="pet-card-tags">
+                                <div>
+                                    <span>Sex</span>
+                                    <strong>{getSex(pet.sex)}</strong>
+                                </div>
 
-                                <span>
-                                    {pet.species}
-                                </span>
+                                <div>
+                                    <span>Age</span>
+                                    <strong>{getAge(pet.dob)}</strong>
+                                </div>
 
-                                <span>
-                                    {getSexLabel(pet.sex)}
-                                </span>
-
-                                {age && (
-                                    <span>
-                                        {age}
-                                    </span>
-                                )}
-
+                                <div>
+                                    <span>Date of birth</span>
+                                    <strong>{pet.dob ? new Date(pet.dob).toLocaleDateString('en-GB') : '—'}</strong>
+                                </div>
                             </div>
+                        </div>
+                    </article>
+                ))}
 
-
-                            <div className="pet-card-information">
-
-                                <div className="pet-information-row">
-                                    <span className="pet-information-label">
-                                        Species
-                                    </span>
-
-                                    <strong>
-                                        {pet.species}
-                                    </strong>
-                                </div>
-
-                                <div className="pet-information-row">
-                                    <span className="pet-information-label">
-                                        Breed
-                                    </span>
-
-                                    <strong>
-                                        {pet.race || '—'}
-                                    </strong>
-                                </div>
-
-                                <div className="pet-information-row">
-                                    <span className="pet-information-label">
-                                        Date of birth
-                                    </span>
-
-                                    <strong>
-                                        {formatDate(pet.dob)}
-                                    </strong>
-                                </div>
-
-                                <div className="pet-information-row">
-                                    <span className="pet-information-label">
-                                        Sex
-                                    </span>
-
-                                    <strong>
-                                        {getSexLabel(pet.sex)}
-                                    </strong>
-                                </div>
-
-                            </div>
-
-
-                            <div className="pet-card-readonly">
-                                Pet information can only be changed by a veterinarian.
-                            </div>
-
-                        </article>
-                    );
-                })}
-
-
-                <Link
-                    to="/pets/new"
-                    className="pet-add-card"
-                >
-                    <div className="pet-add-icon">
-                        +
+                <Link to="/pets/new" className="pets-add-row">
+                    <span>+</span>
+                    <div>
+                        <strong>Add another pet</strong>
+                        <p>Register another companion in your account.</p>
                     </div>
-
-                    <h3>Add another pet</h3>
-
-                    <p>
-                        Register a new companion in your account.
-                    </p>
                 </Link>
-
             </div>
         </>
     );
