@@ -11,7 +11,9 @@ import {
 
 import './VeterinarianProfilePage.css';
 
+
 export default function VeterinarianProfilePage() {
+
     const { veterinarianId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -20,92 +22,157 @@ export default function VeterinarianProfilePage() {
     const [clinic, setClinic] = useState(null);
 
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState('');
+
 
     useEffect(() => {
-        const loadProfile = async () => {
-            try {
-                setLoading(true);
-                setError(null);
 
-                const vet = await getVeterinarianById(veterinarianId);
+        const loadProfile = async () => {
+
+            try {
+
+                setLoading(true);
+                setError('');
+
+                const vet =
+                    await getVeterinarianById(
+                        veterinarianId
+                    );
 
                 setVeterinarian(vet);
 
+
                 if (vet.clinicId) {
+
                     try {
-                        const clinicData = await getClinicById(vet.clinicId);
+
+                        const clinicData =
+                            await getClinicById(
+                                vet.clinicId
+                            );
+
                         setClinic(clinicData);
+
                     } catch {
+
                         setClinic(null);
+
                     }
+
                 }
+
             } catch (err) {
+
                 setError(
                     err.response?.data?.detail ||
                     err.response?.data?.message ||
                     err.message ||
                     'Could not load veterinarian.'
                 );
+
             } finally {
+
                 setLoading(false);
+
             }
+
         };
 
+
         loadProfile();
+
     }, [veterinarianId]);
+
+
+    const name =
+        veterinarian?.name ||
+        'Veterinarian';
+
+
+    const initial =
+        name
+            .charAt(0)
+            .toUpperCase();
+
+
+    const specialization =
+        veterinarian?.surgeon
+            ? 'Veterinary surgery'
+            : 'General veterinary medicine';
+
 
     const clinicName =
         clinic?.name ||
         clinic?.denumire ||
-        'Not assigned';
+        '—';
+
 
     const clinicCity =
         clinic?.city ||
         clinic?.oras ||
         '—';
 
-    const clinicAddress =
-        clinic?.address ||
-        clinic?.adresa ||
-        '—';
 
     const clinicPhone =
         clinic?.phone ||
         clinic?.telefon ||
         '—';
 
-    const professionalRole = veterinarian?.surgeon
-        ? 'Veterinary surgeon'
-        : 'Veterinarian';
+
+    const clinicAddress =
+        clinic?.address ||
+        clinic?.adresa ||
+        '—';
+
 
     if (loading) {
+
         return (
             <>
                 <Navbar />
 
                 <main className="vet-profile-page">
+
                     <div className="vet-profile-loading">
+
                         <div className="vet-profile-spinner" />
-                        <p>Loading veterinarian profile...</p>
+
+                        <p>
+                            Loading veterinarian...
+                        </p>
+
                     </div>
+
                 </main>
             </>
         );
+
     }
 
+
     if (error || !veterinarian) {
+
         return (
             <>
                 <Navbar />
 
                 <main className="vet-profile-page">
+
                     <div className="vet-profile-container">
+
                         <div className="vet-profile-error-state">
-                            <h2>Veterinarian unavailable</h2>
+
+                            <div className="vet-profile-error-icon">
+                                !
+                            </div>
+
+                            <h2>
+                                Veterinarian unavailable
+                            </h2>
 
                             <p>
-                                {error || 'The veterinarian could not be found.'}
+                                {error ||
+                                    'The veterinarian could not be found.'}
                             </p>
 
                             <button
@@ -115,18 +182,24 @@ export default function VeterinarianProfilePage() {
                             >
                                 Go back
                             </button>
+
                         </div>
+
                     </div>
+
                 </main>
             </>
         );
+
     }
+
 
     return (
         <>
             <Navbar />
 
             <main className="vet-profile-page">
+
                 <div className="vet-profile-container">
 
                     <button
@@ -137,232 +210,352 @@ export default function VeterinarianProfilePage() {
                         ← Back
                     </button>
 
-                    <div className="vet-profile-layout">
 
-                        <div className="vet-profile-main">
+                    {/* =========================
+                        PROFILE HEADER
+                    ========================= */}
 
-                            <section className="vet-profile-hero">
-                                <div className="vet-profile-avatar">
-                                    {veterinarian.name
-                                        ?.charAt(0)
-                                        ?.toUpperCase() || 'V'}
-                                </div>
+                    <section className="vet-profile-header">
 
-                                <div className="vet-profile-heading">
-                                    <span>VETERINARIAN PROFILE</span>
+                        <div className="vet-profile-header-main">
 
-                                    <h1>
-                                        Dr. {veterinarian.name || 'Veterinarian'}
-                                    </h1>
+                            <div className="vet-profile-avatar">
+                                {initial}
+                            </div>
 
-                                    <div className="vet-profile-role-row">
-                                        <span className="vet-profile-role">
-                                            {professionalRole}
-                                        </span>
 
-                                        {veterinarian.surgeon && (
-                                            <span className="vet-profile-surgeon-badge">
-                                                Surgeon
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-                            </section>
+                            <div className="vet-profile-identity">
 
-                            <section className="vet-profile-section">
-                                <div className="vet-profile-section-heading">
-                                    <span>PROFESSIONAL INFORMATION</span>
+                                <span className="vet-profile-eyebrow">
+                                    VETERINARIAN PROFILE
+                                </span>
 
-                                    <h2>Veterinarian details</h2>
+                                <h1>
+                                    Dr. {name}
+                                </h1>
 
-                                    <p>
-                                        Professional information and current clinic assignment.
-                                    </p>
-                                </div>
+                                <p>
+                                    {specialization}
+                                </p>
 
-                                <div className="vet-profile-info-grid">
-
-                                    <Info
-                                        label="Veterinarian"
-                                        value={`Dr. ${veterinarian.name || 'Veterinarian'}`}
-                                    />
-
-                                    <Info
-                                        label="Professional role"
-                                        value={professionalRole}
-                                    />
-
-                                    <Info
-                                        label="Surgical practice"
-                                        value={
-                                            veterinarian.surgeon
-                                                ? 'Yes'
-                                                : 'No'
-                                        }
-                                    />
-
-                                    <Info
-                                        label="Clinic"
-                                        value={clinicName}
-                                    />
-
-                                </div>
-                            </section>
-
-                            <section className="vet-profile-section">
-                                <div className="vet-profile-section-heading">
-                                    <span>CLINIC</span>
-
-                                    <h2>
-                                        {clinicName}
-                                    </h2>
-
-                                    <p>
-                                        Clinic where this veterinarian currently practices.
-                                    </p>
-                                </div>
-
-                                <div className="vet-profile-clinic-details">
-
-                                    <div>
-                                        <span>City</span>
-                                        <strong>{clinicCity}</strong>
-                                    </div>
-
-                                    <div>
-                                        <span>Phone</span>
-                                        <strong>{clinicPhone}</strong>
-                                    </div>
-
-                                    <div className="full">
-                                        <span>Address</span>
-                                        <strong>{clinicAddress}</strong>
-                                    </div>
-
-                                </div>
-
-                                {clinic?.id && (
-                                    <Link
-                                        to={`/clinics/${clinic.id}`}
-                                        className="vet-profile-clinic-link"
-                                    >
-                                        View clinic details →
-                                    </Link>
-                                )}
-                            </section>
+                            </div>
 
                         </div>
 
-                        <aside className="vet-profile-sidebar">
 
-                            <section className="vet-profile-summary-card">
-                                <span className="vet-profile-sidebar-label">
-                                    PROFESSIONAL PROFILE
-                                </span>
+                        <div className="vet-profile-header-badges">
 
-                                <div className="vet-profile-summary-doctor">
-                                    <div className="vet-profile-summary-avatar">
-                                        {veterinarian.name
-                                            ?.charAt(0)
-                                            ?.toUpperCase() || 'V'}
-                                    </div>
-
-                                    <div>
-                                        <h2>
-                                            Dr. {veterinarian.name || 'Veterinarian'}
-                                        </h2>
-
-                                        <p>
-                                            {professionalRole}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="vet-profile-summary-details">
-
-                                    <div>
-                                        <span>Clinic</span>
-
-                                        <strong>
-                                            {clinicName}
-                                        </strong>
-                                    </div>
-
-                                    <div>
-                                        <span>City</span>
-
-                                        <strong>
-                                            {clinicCity}
-                                        </strong>
-                                    </div>
-
-                                    <div>
-                                        <span>Surgeon</span>
-
-                                        <strong>
-                                            {veterinarian.surgeon
-                                                ? 'Yes'
-                                                : 'No'}
-                                        </strong>
-                                    </div>
-
-                                </div>
-
-                                {user?.role === 'OWNER' && (
-                                    <Link
-                                        to={
-                                            `/appointments/new?clinicId=${veterinarian.clinicId}` +
-                                            `&veterinarianId=${veterinarian.id}`
-                                        }
-                                        className="primary-button vet-profile-book"
-                                    >
-                                        Book appointment
-                                    </Link>
-                                )}
-
-                                {clinic?.id && (
-                                    <Link
-                                        to={`/clinics/${clinic.id}`}
-                                        className="secondary-button vet-profile-view-clinic"
-                                    >
-                                        View clinic
-                                    </Link>
-                                )}
-                            </section>
+                            <span className="vet-profile-role">
+                                Veterinarian
+                            </span>
 
                             {veterinarian.surgeon && (
-                                <section className="vet-profile-surgery-card">
-                                    <div className="vet-profile-surgery-icon">
-                                        +
-                                    </div>
+                                <span className="vet-profile-surgeon">
+                                    Surgeon
+                                </span>
+                            )}
 
-                                    <div>
-                                        <strong>
-                                            Veterinary surgeon
-                                        </strong>
+                        </div>
 
-                                        <p>
-                                            This veterinarian is registered in VETApp as performing veterinary surgery.
-                                        </p>
-                                    </div>
-                                </section>
+                    </section>
+
+
+                    {/* =========================
+                        SUMMARY
+                    ========================= */}
+
+                    <section className="vet-profile-summary">
+
+                        <div className="vet-profile-summary-card primary">
+
+                            <span>
+                                SPECIALIZATION
+                            </span>
+
+                            <strong>
+                                {veterinarian.surgeon
+                                    ? 'Surgery'
+                                    : 'General medicine'}
+                            </strong>
+
+                            <p>
+                                Veterinary professional
+                            </p>
+
+                        </div>
+
+
+                        <div className="vet-profile-summary-card">
+
+                            <span>
+                                CLINIC
+                            </span>
+
+                            <strong>
+                                {clinicName}
+                            </strong>
+
+                            <p>
+                                Current workplace
+                            </p>
+
+                        </div>
+
+
+                        <div className="vet-profile-summary-card">
+
+                            <span>
+                                LOCATION
+                            </span>
+
+                            <strong>
+                                {clinicCity}
+                            </strong>
+
+                            <p>
+                                Clinic city
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <div className="vet-profile-layout">
+
+
+                        {/* =========================
+                            PROFESSIONAL INFO
+                        ========================= */}
+
+                        <section className="vet-profile-card">
+
+                            <div className="vet-profile-card-heading">
+
+                                <span>
+                                    PROFESSIONAL INFORMATION
+                                </span>
+
+                                <h2>
+                                    Veterinarian details
+                                </h2>
+
+                                <p>
+                                    Professional and clinic information.
+                                </p>
+
+                            </div>
+
+
+                            <div className="vet-profile-info-grid">
+
+                                <Info
+                                    label="Veterinarian"
+                                    value={`Dr. ${name}`}
+                                />
+
+                                <Info
+                                    label="Specialization"
+                                    value={specialization}
+                                />
+
+                                <Info
+                                    label="Professional role"
+                                    value={
+                                        veterinarian.surgeon
+                                            ? 'Veterinarian · Surgeon'
+                                            : 'Veterinarian'
+                                    }
+                                />
+
+                                <Info
+                                    label="Clinic"
+                                    value={clinicName}
+                                />
+
+                            </div>
+
+                        </section>
+
+
+                        {/* =========================
+                            CLINIC
+                        ========================= */}
+
+                        <aside className="vet-profile-clinic-card">
+
+                            <div className="vet-profile-clinic-heading">
+
+                                <span>
+                                    CURRENT CLINIC
+                                </span>
+
+                                <div className="vet-profile-clinic-avatar">
+                                    {clinicName !== '—'
+                                        ? clinicName
+                                            .charAt(0)
+                                            .toUpperCase()
+                                        : 'C'}
+                                </div>
+
+                                <h2>
+                                    {clinicName}
+                                </h2>
+
+                                <p>
+                                    {clinicCity}
+                                </p>
+
+                            </div>
+
+
+                            <div className="vet-profile-clinic-divider" />
+
+
+                            <ClinicInfo
+                                label="Address"
+                                value={clinicAddress}
+                            />
+
+                            <ClinicInfo
+                                label="Phone"
+                                value={clinicPhone}
+                            />
+
+                            {Number(clinic?.rating) > 0 && (
+                                <ClinicInfo
+                                    label="Google rating"
+                                    value={`${Number(
+                                        clinic.rating
+                                    ).toFixed(1)} / 5`}
+                                />
+                            )}
+
+
+                            {clinic && (
+                                <Link
+                                    to={`/clinics/${clinic.id}`}
+                                    className="vet-profile-clinic-link"
+                                >
+                                    View clinic →
+                                </Link>
                             )}
 
                         </aside>
 
                     </div>
 
+
+                    {/* =========================
+                        ACTIONS
+                    ========================= */}
+
+                    {user?.role === 'OWNER' && (
+                        <section className="vet-profile-booking">
+
+                            <div>
+
+                                <span>
+                                    APPOINTMENT
+                                </span>
+
+                                <h2>
+                                    Book with Dr. {name}
+                                </h2>
+
+                                <p>
+                                    Select a service, date and available appointment time.
+                                </p>
+
+                            </div>
+
+
+                            <Link
+                                to={
+                                    `/appointments/new?clinicId=${veterinarian.clinicId}` +
+                                    `&veterinarianId=${veterinarian.id}`
+                                }
+                                className="primary-button"
+                            >
+                                Book appointment
+                            </Link>
+
+                        </section>
+                    )}
+
+
+                    {user?.role === 'ADMIN' && clinic && (
+                        <section className="vet-profile-admin">
+
+                            <div>
+
+                                <span>
+                                    ADMINISTRATION
+                                </span>
+
+                                <h2>
+                                    Manage clinic
+                                </h2>
+
+                                <p>
+                                    Edit this veterinarian through the clinic administration page.
+                                </p>
+
+                            </div>
+
+
+                            <Link
+                                to={`/admin/clinics/${clinic.id}`}
+                                className="secondary-button"
+                            >
+                                Manage clinic
+                            </Link>
+
+                        </section>
+                    )}
+
                 </div>
+
             </main>
         </>
     );
+
 }
 
+
 function Info({ label, value }) {
+
     return (
         <div className="vet-profile-info">
-            <span>{label}</span>
-            <strong>{value || '—'}</strong>
+
+            <span>
+                {label}
+            </span>
+
+            <strong>
+                {value || '—'}
+            </strong>
+
         </div>
     );
+
+}
+
+
+function ClinicInfo({ label, value }) {
+
+    return (
+        <div className="vet-profile-clinic-info">
+
+            <span>
+                {label}
+            </span>
+
+            <strong>
+                {value || '—'}
+            </strong>
+
+        </div>
+    );
+
 }

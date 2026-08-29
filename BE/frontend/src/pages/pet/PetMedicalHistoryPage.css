@@ -1,221 +1,642 @@
-.medical-history-page {
-    min-height: calc(100vh - 72px);
-    background: #f8fafc;
+.pet-history-page {
+    min-height: calc(100vh - 68px);
+    background: var(--bg);
 }
 
-.medical-history-container {
-    width: 100%;
-    max-width: 1100px;
+.pet-history-container {
+    width: min(1050px, calc(100% - 64px));
     margin: 0 auto;
-    padding: 45px 40px 70px;
+    padding: 40px 0 75px;
 }
 
-.medical-history-back {
+/* BACK */
+
+.pet-history-back {
     display: inline-block;
-    margin-bottom: 28px;
-    color: #64748b;
-    font-size: 12px;
+    margin-bottom: 24px;
+    color: var(--text-soft, #69716c);
+    font-size: 11px;
     font-weight: 600;
     text-decoration: none;
 }
 
-.medical-history-back:hover {
-    color: #0f766e;
+.pet-history-back:hover {
+    color: var(--green);
 }
 
-.medical-history-header {
-    margin-bottom: 32px;
+
+/* =============================================
+   PATIENT HEADER
+============================================= */
+
+.pet-history-patient {
+    padding: 25px 27px;
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.medical-history-eyebrow {
-    margin: 0 0 8px;
-    color: #0d9488;
-    font-size: 10px;
-    font-weight: 750;
-    letter-spacing: 1.5px;
-}
-
-.medical-history-header h1 {
-    margin: 0;
-    color: #0f172a;
-    font-size: 34px;
-}
-
-.medical-history-header p:last-child {
-    margin: 8px 0 0;
-    color: #64748b;
-    font-size: 13px;
-}
-
-.medical-history-count {
-    min-width: 90px;
-    padding: 14px 18px;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    border: 1px solid #ccfbf1;
-    border-radius: 13px;
-    background: #f0fdfa;
-}
-
-.medical-history-count strong {
-    color: #0f766e;
-    font-size: 22px;
-}
-
-.medical-history-count span {
-    margin-top: 2px;
-    color: #64748b;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-}
-
-.medical-history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.medical-record-card {
-    padding: 24px;
-    border: 1px solid #e5eaf0;
-    border-radius: 16px;
+    justify-content: space-between;
+    gap: 35px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
     background: white;
 }
 
-.medical-record-top {
+.pet-history-patient-main {
+    min-width: 240px;
     display: flex;
-    justify-content: space-between;
-    gap: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #f1f5f9;
+    align-items: center;
+    gap: 14px;
 }
 
-.medical-record-date {
+.pet-history-avatar {
+    width: 57px;
+    height: 57px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.pet-history-eyebrow {
+    display: block;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.pet-history-patient-main h1 {
+    margin: 5px 0 0;
+    color: var(--text);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -.5px;
+}
+
+.pet-history-patient-main p {
+    margin: 4px 0 0;
+    color: var(--text-soft, #69716c);
+    font-size: 9px;
+}
+
+
+/* PATIENT DETAILS */
+
+.pet-history-patient-stats {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.pet-history-patient-stats>div {
+    min-width: 0;
+    padding: 10px 12px;
+    border-left: 1px solid #ecece8;
+}
+
+.pet-history-patient-stats span,
+.pet-history-patient-stats strong {
+    display: block;
+}
+
+.pet-history-patient-stats span {
+    margin-bottom: 5px;
+    color: var(--text-light, #929991);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+.pet-history-patient-stats strong {
+    overflow: hidden;
+    color: var(--text);
+    font-size: 9px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =============================================
+   ERROR
+============================================= */
+
+.pet-history-error {
+    margin-top: 15px;
+    padding: 13px 15px;
+    border: 1px solid #edcfcb;
+    border-radius: 8px;
+    background: var(--danger-soft, #faefed);
+    color: var(--danger, #a84f47);
+    font-size: 10px;
+}
+
+
+/* =============================================
+   SUMMARY
+============================================= */
+
+.pet-history-summary {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.pet-history-summary-card {
+    padding: 17px 19px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+}
+
+.pet-history-summary-card.primary {
+    border-color: #cadbcf;
+    background: #f2f7f4;
+}
+
+.pet-history-summary-card>span {
     display: block;
     margin-bottom: 7px;
-    color: #0d9488;
-    font-size: 10px;
+    color: var(--green);
+    font-size: 7px;
     font-weight: 700;
-    text-transform: uppercase;
+    letter-spacing: .8px;
 }
 
-.medical-record-top h2 {
-    margin: 0;
-    color: #0f172a;
-    font-size: 19px;
+.pet-history-summary-card>strong {
+    display: block;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 600;
 }
 
-.medical-record-clinic {
+.pet-history-summary-card>p {
+    margin: 4px 0 0;
+    color: var(--text-soft, #69716c);
+    font-size: 8px;
+}
+
+
+/* =============================================
+   SECTION
+============================================= */
+
+.pet-history-section {
+    margin-top: 30px;
+}
+
+.pet-history-section-heading {
+    margin-bottom: 17px;
     display: flex;
-    flex-direction: column;
     align-items: flex-end;
+    justify-content: space-between;
+    gap: 25px;
 }
 
-.medical-record-clinic span,
-.medical-record-meta span,
-.medical-record-section>span {
-    color: #94a3b8;
-    font-size: 9px;
+.pet-history-section-heading>div>span {
+    display: block;
+    color: var(--green);
+    font-size: 8px;
     font-weight: 700;
-    letter-spacing: 0.8px;
+    letter-spacing: .9px;
 }
 
-.medical-record-clinic strong {
-    margin-top: 5px;
-    color: #0f766e;
-    font-size: 12px;
+.pet-history-section-heading h2 {
+    margin: 5px 0 0;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 600;
 }
 
-.medical-record-meta {
-    padding: 18px 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    border-bottom: 1px solid #f1f5f9;
+.pet-history-section-heading p {
+    margin: 5px 0 0;
+    color: var(--text-soft, #69716c);
+    font-size: 9px;
 }
 
-.medical-record-meta div {
+.pet-history-section-heading>strong {
+    color: var(--text-light, #929991);
+    font-size: 9px;
+    font-weight: 600;
+}
+
+
+/* =============================================
+   TIMELINE
+============================================= */
+
+.pet-history-timeline {
     display: flex;
     flex-direction: column;
-    gap: 5px;
 }
 
-.medical-record-meta strong {
-    color: #334155;
-    font-size: 11px;
+.pet-history-record {
+    display: grid;
+    grid-template-columns: 25px minmax(0, 1fr);
 }
 
-.medical-record-section {
-    padding-top: 17px;
+.pet-history-timeline-column {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
-.medical-record-section p {
-    margin: 7px 0 0;
-    color: #475569;
-    font-size: 12px;
-    line-height: 1.65;
+.pet-history-timeline-dot {
+    z-index: 2;
+    width: 9px;
+    height: 9px;
+    margin-top: 25px;
+    flex-shrink: 0;
+    border: 2px solid var(--bg);
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 1px var(--green);
 }
 
-.medical-history-empty,
-.medical-history-loading {
-    padding: 60px 20px;
-    text-align: center;
-    color: #64748b;
+.pet-history-timeline-line {
+    position: absolute;
+    top: 34px;
+    bottom: -25px;
+    width: 1px;
+    background: #ced5cf;
 }
 
-.medical-history-empty {
-    border: 1px dashed #cbd5e1;
-    border-radius: 16px;
+
+/* =============================================
+   RECORD
+============================================= */
+
+.pet-history-record-card {
+    margin-bottom: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 10px;
     background: white;
 }
 
-.medical-history-empty>div {
-    color: #0d9488;
-    font-size: 30px;
+.pet-history-record-header {
+    padding: 20px 21px 17px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #ecece8;
 }
 
-.medical-history-empty h2 {
-    margin: 10px 0 6px;
-    color: #0f172a;
+.pet-history-record-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 650;
+}
+
+.pet-history-date-separator {
+    color: #adb3ae;
+}
+
+.pet-history-record-header h3 {
+    margin: 7px 0 0;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.pet-history-record-number {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.pet-history-record-number span,
+.pet-history-record-number strong {
+    display: block;
+}
+
+.pet-history-record-number span {
+    margin-bottom: 4px;
+    color: var(--text-light, #929991);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: .6px;
+}
+
+.pet-history-record-number strong {
+    color: var(--text-soft, #69716c);
+    font-size: 9px;
+    font-weight: 600;
+}
+
+
+/* META */
+
+.pet-history-record-meta {
+    padding: 14px 21px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+    border-bottom: 1px solid #ecece8;
+    background: #fafaf8;
+}
+
+.pet-history-meta-item {
+    min-width: 0;
+}
+
+.pet-history-meta-item span,
+.pet-history-meta-item strong {
+    display: block;
+}
+
+.pet-history-meta-item span {
+    margin-bottom: 5px;
+    color: var(--text-light, #929991);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: .45px;
+    text-transform: uppercase;
+}
+
+.pet-history-meta-item strong {
+    overflow: hidden;
+    color: var(--text);
+    font-size: 9px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =============================================
+   VITALS
+============================================= */
+
+.pet-history-vitals {
+    padding: 14px 21px;
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid #ecece8;
+}
+
+.pet-history-vital {
+    min-width: 120px;
+    padding: 10px 12px;
+    border: 1px solid #dfe4df;
+    border-radius: 7px;
+    background: #f7f9f7;
+}
+
+.pet-history-vital span,
+.pet-history-vital strong {
+    display: block;
+}
+
+.pet-history-vital span {
+    margin-bottom: 4px;
+    color: var(--green);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+.pet-history-vital strong {
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =============================================
+   MEDICAL DETAILS
+============================================= */
+
+.pet-history-record-details {
+    padding: 4px 21px 19px;
+}
+
+.pet-history-record-section {
+    padding: 15px 0 0;
+}
+
+.pet-history-record-section+.pet-history-record-section {
+    margin-top: 14px;
+    border-top: 1px solid #eeeeea;
+}
+
+.pet-history-record-section>span {
+    display: block;
+    color: var(--green);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+.pet-history-record-section p {
+    margin: 6px 0 0;
+    color: var(--text-soft, #69716c);
+    font-size: 10px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+}
+
+.pet-history-record-section p.empty {
+    color: var(--text-light, #929991);
+    font-style: italic;
+}
+
+
+/* =============================================
+   EMPTY
+============================================= */
+
+.pet-history-empty {
+    padding: 65px 30px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    text-align: center;
+}
+
+.pet-history-empty-icon {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 13px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
     font-size: 17px;
 }
 
-.medical-history-empty p {
+.pet-history-empty h3 {
     margin: 0;
-    font-size: 11px;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
 }
 
-.medical-history-error {
-    padding: 13px;
-    border: 1px solid #fecaca;
-    border-radius: 9px;
-    background: #fef2f2;
-    color: #b91c1c;
-    font-size: 11px;
+.pet-history-empty p {
+    max-width: 400px;
+    margin: 6px auto 0;
+    color: var(--text-soft, #69716c);
+    font-size: 9px;
+    line-height: 1.55;
 }
 
-@media (max-width: 750px) {
-    .medical-history-container {
-        padding: 30px 20px 55px;
+
+/* =============================================
+   LOADING
+============================================= */
+
+.pet-history-loading {
+    min-height: calc(100vh - 68px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 11px;
+    color: var(--text-soft, #69716c);
+    font-size: 10px;
+}
+
+.pet-history-loading p {
+    margin: 0;
+}
+
+.pet-history-spinner {
+    width: 29px;
+    height: 29px;
+    border: 3px solid var(--green-soft);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: pet-history-spin .7s linear infinite;
+}
+
+@keyframes pet-history-spin {
+    to {
+        transform: rotate(360deg);
     }
+}
 
-    .medical-history-header,
-    .medical-record-top {
+
+/* =============================================
+   NOT FOUND
+============================================= */
+
+.pet-history-not-found {
+    max-width: 480px;
+    margin: 60px auto;
+    padding: 38px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    text-align: center;
+}
+
+.pet-history-not-found h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.pet-history-not-found p {
+    margin: 8px 0 19px;
+    color: var(--text-soft, #69716c);
+    font-size: 10px;
+}
+
+
+/* =============================================
+   RESPONSIVE
+============================================= */
+
+@media (max-width: 850px) {
+
+    .pet-history-patient {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    .medical-record-clinic {
-        align-items: flex-start;
+    .pet-history-patient-stats {
+        width: 100%;
     }
 
-    .medical-record-meta {
+}
+
+
+@media (max-width: 650px) {
+
+    .pet-history-container {
+        width: calc(100% - 30px);
+        padding: 30px 0 55px;
+    }
+
+    .pet-history-patient {
+        padding: 20px;
+    }
+
+    .pet-history-patient-stats {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .pet-history-patient-stats>div {
+        border-left: 0;
+        border-top: 1px solid #ecece8;
+    }
+
+    .pet-history-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .pet-history-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .pet-history-record-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .pet-history-record-number {
+        text-align: left;
+    }
+
+    .pet-history-record-meta {
+        grid-template-columns: 1fr;
+    }
+
+    .pet-history-vitals {
+        flex-direction: column;
+    }
+
+    .pet-history-vital {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 420px) {
+
+    .pet-history-patient-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .pet-history-record {
+        grid-template-columns: 18px minmax(0, 1fr);
+    }
+
+    .pet-history-record-card {
+        margin-left: 2px;
+    }
+
 }
