@@ -63,13 +63,7 @@ public class AppointmentService {
         accessGuard.requireOwnerOrAdmin(pet.getOwnerID(), jwt);
 
         boolean petAlreadyHasAppointment = appointmentRepository.existsByPetIdAndStatusInAndEndOfAppointmentAfter(appointment.getPetId(),
-                                List.of(
-                                        Status.PENDING,
-                                        Status.CONFIRMED
-                                ), now()
-                        );
-
-
+                                List.of(Status.PENDING, Status.CONFIRMED), now());
         if (petAlreadyHasAppointment) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Acest animal are deja o programare activă.");
         }
@@ -105,11 +99,7 @@ public class AppointmentService {
 
        //programari existente
         List<Appointment> overlaps = appointmentRepository.findByVeterinarianIdAndStartOfAppointmentLessThanAndEndOfAppointmentGreaterThan(appointment.getVeterinarianId(), end, start);
-
-
         boolean conflict = overlaps.stream().anyMatch(existing -> existing.getStatus() != Status.CANCELED);
-
-
         if (conflict) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Medicul veterinar are deja o programare în acest interval.");
         }
@@ -117,9 +107,7 @@ public class AppointmentService {
         appointmentSave.setOwnerId(pet.getOwnerID());
         appointmentSave.setPetId(appointment.getPetId());
         appointmentSave.setVeterinarianId(appointment.getVeterinarianId());
-
         appointmentSave.setVetServiceId(appointment.getVetServiceId());
-
         appointmentSave.setStartOfAppointment(start);
 
         appointmentSave.setEndOfAppointment(end);
